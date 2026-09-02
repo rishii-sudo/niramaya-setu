@@ -1,26 +1,426 @@
 @import "tailwindcss";
 
+/* =========================================================
+   NIRAMAYA-SETU — GLOBAL DESIGN SYSTEM
+   ========================================================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5fbfb;
+  --foreground: #10233f;
+
+  --primary: #0b8f86;
+  --primary-dark: #08766f;
+  --primary-soft: #eaf9f7;
+
+  --border: #dfe9ec;
+  --muted: #61758d;
+
+  --surface: rgba(255, 255, 255, 0.94);
+  --surface-soft: rgba(255, 255, 255, 0.88);
+
+  --success: #15803d;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --info: #2563eb;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* =========================================================
+   BASE
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+  background: var(--background);
 }
 
 body {
+  min-height: 100vh;
+  margin: 0;
+
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(11, 143, 134, 0.16);
+  color: #10233f;
+}
+
+/* =========================================================
+   GLOBAL BACKGROUND COMPATIBILITY
+   ========================================================= */
+
+/*
+  Existing pages use Tailwind bg-slate-50 wrappers.
+  Make those wrappers transparent so the global
+  MedicalBackground component remains visible.
+*/
+
+.min-h-screen.bg-slate-50,
+main.min-h-screen.bg-slate-50,
+main.bg-slate-50,
+div.min-h-screen.bg-slate-50 {
+  background: transparent !important;
+}
+
+.bg-slate-50 {
+  --tw-bg-opacity: 0;
+}
+
+/* =========================================================
+   WHITE SURFACES
+   ========================================================= */
+
+.bg-white {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+}
+
+.bg-white\/95 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.bg-white\/90 {
+  background-color: rgba(255, 255, 255, 0.90) !important;
+}
+
+.bg-white\/85 {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.bg-white\/80 {
+  background-color: rgba(255, 255, 255, 0.80) !important;
+}
+
+.bg-white\/75 {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.bg-white\/70 {
+  background-color: rgba(255, 255, 255, 0.70) !important;
+}
+
+/* =========================================================
+   SLATE TRANSPARENCY
+   ========================================================= */
+
+.bg-slate-50\/80 {
+  background-color: rgba(248, 250, 252, 0.80) !important;
+}
+
+.bg-slate-50\/90 {
+  background-color: rgba(248, 250, 252, 0.90) !important;
+}
+
+.bg-slate-100\/80 {
+  background-color: rgba(241, 245, 249, 0.80) !important;
+}
+
+/* =========================================================
+   LAYOUT LAYERING
+   ========================================================= */
+
+header {
+  position: relative;
+  z-index: 20;
+}
+
+aside {
+  position: relative;
+  z-index: 20;
+}
+
+main {
+  position: relative;
+  z-index: 10;
+}
+
+section {
+  position: relative;
+}
+
+/* =========================================================
+   HEADER / SIDEBAR GLASS EFFECT
+   ========================================================= */
+
+header.bg-white {
+  background-color: rgba(255, 255, 255, 0.90) !important;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+aside.bg-white {
+  background-color: rgba(255, 255, 255, 0.82) !important;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* =========================================================
+   BORDERS
+   ========================================================= */
+
+.border-slate-200 {
+  border-color: rgba(203, 213, 225, 0.80) !important;
+}
+
+.border-slate-100 {
+  border-color: rgba(226, 232, 240, 0.82) !important;
+}
+
+/* =========================================================
+   TEAL SYSTEM
+   ========================================================= */
+
+.text-teal-700 {
+  color: #087f78 !important;
+}
+
+.text-teal-800 {
+  color: #066b65 !important;
+}
+
+.bg-teal-50 {
+  background-color: #eefaf8 !important;
+}
+
+.bg-teal-50\/70 {
+  background-color: rgba(238, 250, 248, 0.70) !important;
+}
+
+.border-teal-100 {
+  border-color: #cfeee9 !important;
+}
+
+.border-teal-200 {
+  border-color: #a9ddd6 !important;
+}
+
+/* =========================================================
+   FORM ELEMENTS
+   ========================================================= */
+
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+}
+
+input,
+select,
+textarea,
+button {
+  font-size: inherit;
+}
+
+/* New ASHA Visit page shared form style */
+
+.input-style {
+  width: 100%;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  padding: 0.7rem 0.75rem;
+
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+
+  color: #0f172a;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.input-style:hover {
+  border-color: #cbd5e1;
+}
+
+.input-style:focus {
+  border-color: #2dd4bf;
+
+  box-shadow:
+    0 0 0 3px rgba(20, 184, 166, 0.12);
+
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.input-style:disabled {
+  cursor: not-allowed;
+  background-color: #f8fafc;
+  color: #94a3b8;
+}
+
+/* =========================================================
+   BUTTONS / LINKS
+   ========================================================= */
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font-family: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(11, 143, 134, 0.45);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eef6f6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b8d8d8;
+  border-radius: 999px;
+  border: 2px solid #eef6f6;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #92c1c1;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #b8d8d8 #eef6f6;
+}
+
+/* =========================================================
+   TABLE / DATA SURFACES
+   ========================================================= */
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  vertical-align: middle;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .pointer-events-none.fixed.inset-0 {
+    opacity: 0.72;
+  }
+
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================================
+   PRINT
+   ========================================================= */
+
+@media print {
+  html,
+  body {
+    background: white !important;
+  }
+
+  body {
+    color: #10233f;
+
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body > div[aria-hidden="true"] {
+    display: none !important;
+  }
+
+  .no-print,
+  .print-hidden {
+    display: none !important;
+  }
+
+  .shadow,
+  .shadow-sm,
+  .shadow-md,
+  .shadow-lg,
+  .shadow-xl {
+    box-shadow: none !important;
+  }
+
+  main,
+  section,
+  div {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  input,
+  select,
+  textarea {
+    border: 1px solid #cbd5e1 !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
 }

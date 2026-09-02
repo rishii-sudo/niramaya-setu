@@ -233,7 +233,7 @@ export default async function PatientPage({
       </header>
 
       <section className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
-        {/* Heading */}
+        {/* Page heading */}
         <div>
           <p className="text-sm font-medium text-teal-700">
             PATIENT PROFILE
@@ -363,9 +363,9 @@ export default async function PatientPage({
           </div>
         </div>
 
-        {/* Referral + Visits */}
+        {/* Referral + Recent Visits */}
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          {/* Referral */}
+          {/* Active Referral */}
           <div className="rounded-2xl border border-slate-200 bg-white p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -401,6 +401,7 @@ export default async function PatientPage({
               <div className="mt-5 grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs text-slate-400">Reason</p>
+
                   <p className="mt-1 text-sm font-medium text-slate-800">
                     {patient.referralReason}
                   </p>
@@ -408,6 +409,7 @@ export default async function PatientPage({
 
                 <div>
                   <p className="text-xs text-slate-400">Created</p>
+
                   <p className="mt-1 flex items-center gap-1 text-sm font-medium text-slate-800">
                     <CalendarDays size={14} />
                     {patient.referralDate}
@@ -442,9 +444,26 @@ export default async function PatientPage({
 
         {/* Medical History */}
         <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="font-semibold text-slate-900">
-            Medical History
-          </h2>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="font-semibold text-slate-900">
+                Medical History
+              </h2>
+
+              <p className="mt-1 text-xs text-slate-500">
+                Current health information
+              </p>
+            </div>
+
+            {/* Medical Records button */}
+            <Link
+              href={`/patients/${id}/records`}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
+            >
+              <FileText size={17} />
+              View Medical Records
+            </Link>
+          </div>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Info
@@ -502,7 +521,9 @@ function JourneyStep({
         {title}
       </p>
 
-      <p className="mt-1 text-xs text-slate-500">{date}</p>
+      <p className="mt-1 text-xs text-slate-500">
+        {date}
+      </p>
     </div>
   );
 }
@@ -534,7 +555,9 @@ function Visit({
         {facility}
       </p>
 
-      <p className="mt-1 text-xs text-slate-500">{note}</p>
+      <p className="mt-1 text-xs text-slate-500">
+        {note}
+      </p>
     </div>
   );
 }
@@ -548,7 +571,9 @@ function Info({
 }) {
   return (
     <div className="rounded-xl bg-slate-50 p-4">
-      <p className="text-xs text-slate-400">{label}</p>
+      <p className="text-xs text-slate-400">
+        {label}
+      </p>
 
       <p className="mt-1 text-sm font-semibold text-slate-800">
         {value}
