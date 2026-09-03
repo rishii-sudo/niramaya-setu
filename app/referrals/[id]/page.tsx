@@ -1,3 +1,6 @@
+"use client";
+
+import { use, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -10,11 +13,21 @@ import {
   UserRound,
 } from "lucide-react";
 
+import { getAllReferralStates } from "@/app/data/referralState";
+
 type ReferralPageProps = {
   params: Promise<{
     id: string;
   }>;
 };
+
+type ReferralStatus =
+  | "Created"
+  | "In Transit"
+  | "Received"
+  | "Under Treatment"
+  | "Discharged"
+  | "Closed";
 
 type TimelineStatus = "completed" | "current" | "pending";
 
@@ -35,12 +48,11 @@ type ReferralRecord = {
   to: string;
   department: string;
   priority: "Routine" | "Urgent" | "Emergency";
-  status: string;
+  status: ReferralStatus;
   created: string;
   reason: string;
   notes: string;
   noShow: boolean;
-  timeline: TimelineItem[];
 };
 
 const referrals: Record<string, ReferralRecord> = {
@@ -60,50 +72,6 @@ const referrals: Record<string, ReferralRecord> = {
     notes:
       "Patient assessed at PHC Bassi and referred for specialist cardiology consultation.",
     noShow: false,
-    timeline: [
-      {
-        title: "Referral Created",
-        date: "28 Aug 2026 • 09:30 AM",
-        description:
-          "Referral created by ASHA / ANM at PHC Bassi.",
-        status: "completed",
-      },
-      {
-        title: "In Transit",
-        date: "28 Aug 2026 • 10:15 AM",
-        description:
-          "Patient is currently travelling to the receiving facility.",
-        status: "current",
-      },
-      {
-        title: "Received",
-        date: "Pending",
-        description:
-          "Receiving facility has not yet confirmed arrival.",
-        status: "pending",
-      },
-      {
-        title: "Under Treatment",
-        date: "Pending",
-        description:
-          "Treatment status will update after facility intake.",
-        status: "pending",
-      },
-      {
-        title: "Discharged",
-        date: "Pending",
-        description:
-          "Discharge information will appear here.",
-        status: "pending",
-      },
-      {
-        title: "Closed",
-        date: "Pending",
-        description:
-          "Referral closes after completion of the care journey.",
-        status: "pending",
-      },
-    ],
   },
 
   "NS-28478": {
@@ -122,50 +90,6 @@ const referrals: Record<string, ReferralRecord> = {
     notes:
       "Follow-up required for diabetes and hypertension management.",
     noShow: false,
-    timeline: [
-      {
-        title: "Referral Created",
-        date: "27 Aug 2026 • 09:10 AM",
-        description:
-          "Referral created at PHC Chomu.",
-        status: "completed",
-      },
-      {
-        title: "In Transit",
-        date: "27 Aug 2026 • 10:00 AM",
-        description:
-          "Patient travelled to District Hospital Jaipur.",
-        status: "completed",
-      },
-      {
-        title: "Received",
-        date: "27 Aug 2026 • 12:20 PM",
-        description:
-          "Receiving facility confirmed patient arrival.",
-        status: "current",
-      },
-      {
-        title: "Under Treatment",
-        date: "Pending",
-        description:
-          "Awaiting treatment update.",
-        status: "pending",
-      },
-      {
-        title: "Discharged",
-        date: "Pending",
-        description:
-          "Discharge information will appear here.",
-        status: "pending",
-      },
-      {
-        title: "Closed",
-        date: "Pending",
-        description:
-          "Referral will close after completion.",
-        status: "pending",
-      },
-    ],
   },
 
   "NS-28461": {
@@ -184,50 +108,6 @@ const referrals: Record<string, ReferralRecord> = {
     notes:
       "Routine review completed and care plan communicated back to the referring facility.",
     noShow: false,
-    timeline: [
-      {
-        title: "Referral Created",
-        date: "25 Aug 2026 • 09:00 AM",
-        description:
-          "Referral created at PHC Bagru.",
-        status: "completed",
-      },
-      {
-        title: "In Transit",
-        date: "25 Aug 2026 • 10:00 AM",
-        description:
-          "Patient travelled to the district hospital.",
-        status: "completed",
-      },
-      {
-        title: "Received",
-        date: "25 Aug 2026 • 11:15 AM",
-        description:
-          "Patient arrival confirmed.",
-        status: "completed",
-      },
-      {
-        title: "Under Treatment",
-        date: "25 Aug 2026 • 12:00 PM",
-        description:
-          "Clinical review completed.",
-        status: "completed",
-      },
-      {
-        title: "Discharged",
-        date: "25 Aug 2026 • 03:00 PM",
-        description:
-          "Patient discharged with follow-up instructions.",
-        status: "completed",
-      },
-      {
-        title: "Closed",
-        date: "25 Aug 2026 • 04:00 PM",
-        description:
-          "Referral closed after completion of care.",
-        status: "current",
-      },
-    ],
   },
 
   "NS-28432": {
@@ -246,59 +126,233 @@ const referrals: Record<string, ReferralRecord> = {
     notes:
       "Orthopedic consultation completed and treatment plan issued.",
     noShow: false,
-    timeline: [
-      {
-        title: "Referral Created",
-        date: "22 Aug 2026 • 08:45 AM",
-        description:
-          "Referral created at PHC Sanganer.",
-        status: "completed",
-      },
-      {
-        title: "In Transit",
-        date: "22 Aug 2026 • 09:30 AM",
-        description:
-          "Patient travelled to District Hospital Jaipur.",
-        status: "completed",
-      },
-      {
-        title: "Received",
-        date: "22 Aug 2026 • 11:00 AM",
-        description:
-          "Patient arrival confirmed.",
-        status: "completed",
-      },
-      {
-        title: "Under Treatment",
-        date: "22 Aug 2026 • 11:30 AM",
-        description:
-          "Orthopedic consultation conducted.",
-        status: "completed",
-      },
-      {
-        title: "Discharged",
-        date: "22 Aug 2026 • 03:30 PM",
-        description:
-          "Patient discharged with treatment instructions.",
-        status: "current",
-      },
-      {
-        title: "Closed",
-        date: "Pending",
-        description:
-          "Final referral closure confirmation pending.",
-        status: "pending",
-      },
-    ],
   },
 };
 
-export default async function ReferralDetailPage({
+const statusOrder: ReferralStatus[] = [
+  "Created",
+  "In Transit",
+  "Received",
+  "Under Treatment",
+  "Discharged",
+  "Closed",
+];
+
+function getSharedStatus(
+  referral: ReferralRecord,
+  referralStates: Record<string, string>
+): ReferralStatus {
+  const state =
+    referralStates[referral.patientId] ??
+    referralStates[referral.id];
+
+  if (
+    state === "Created" ||
+    state === "In Transit" ||
+    state === "Received" ||
+    state === "Under Treatment" ||
+    state === "Discharged" ||
+    state === "Closed"
+  ) {
+    return state;
+  }
+
+  return referral.status;
+}
+
+function getTimeline(
+  referral: ReferralRecord,
+  status: ReferralStatus
+): TimelineItem[] {
+  const currentIndex = statusOrder.indexOf(status);
+
+  const descriptions: Record<
+    ReferralStatus,
+    string
+  > = {
+    Created:
+      "Referral created by ASHA / ANM at the source facility.",
+    "In Transit":
+      "Patient is travelling from the source facility to the receiving facility.",
+    Received:
+      "Receiving facility has confirmed patient arrival.",
+    "Under Treatment":
+      "Clinical treatment is active at the receiving facility.",
+    Discharged:
+      "Patient has been discharged with treatment and follow-up instructions.",
+    Closed:
+      "Referral closed after completion of the care journey.",
+  };
+
+  const dates: Record<
+    ReferralStatus,
+    string
+  > = {
+    Created: `${referral.created} • 09:30 AM`,
+    "In Transit": `${referral.created} • 10:15 AM`,
+    Received: "Confirmed",
+    "Under Treatment": "Confirmed",
+    Discharged: "Confirmed",
+    Closed: "Confirmed",
+  };
+
+  return statusOrder.map((step, index) => {
+    if (index < currentIndex) {
+      return {
+        title: step,
+        date: dates[step],
+        description: descriptions[step],
+        status: "completed",
+      };
+    }
+
+    if (index === currentIndex) {
+      return {
+        title: step,
+        date: dates[step],
+        description: descriptions[step],
+        status: "current",
+      };
+    }
+
+    return {
+      title: step,
+      date: "Pending",
+      description:
+        step === "Closed"
+          ? "Referral closes after completion of treatment and follow-up."
+          : descriptions[step],
+      status: "pending",
+    };
+  });
+}
+
+function statusDescription(
+  status: ReferralStatus
+) {
+  switch (status) {
+    case "Created":
+      return "Referral has been created and is awaiting patient movement.";
+
+    case "In Transit":
+      return "The patient is currently travelling to the receiving facility.";
+
+    case "Received":
+      return "The receiving facility has confirmed patient arrival.";
+
+    case "Under Treatment":
+      return "The patient is currently under clinical treatment.";
+
+    case "Discharged":
+      return "The patient has completed the current treatment episode and has been discharged.";
+
+    case "Closed":
+      return "This referral journey has been completed and closed.";
+
+    default:
+      return "The referral is progressing through the care journey.";
+  }
+}
+
+function statusBadgeClass(status: ReferralStatus) {
+  switch (status) {
+    case "Closed":
+      return "bg-slate-100 text-slate-700";
+
+    case "Received":
+      return "bg-teal-50 text-teal-700";
+
+    case "Under Treatment":
+      return "bg-purple-50 text-purple-700";
+
+    case "Discharged":
+      return "bg-emerald-50 text-emerald-700";
+
+    case "Created":
+      return "bg-slate-100 text-slate-700";
+
+    case "In Transit":
+      return "bg-blue-50 text-blue-700";
+
+    default:
+      return "bg-slate-100 text-slate-700";
+  }
+}
+
+function priorityBadgeClass(
+  priority: ReferralRecord["priority"]
+) {
+  if (priority === "Emergency") {
+    return "bg-red-50 text-red-700";
+  }
+
+  if (priority === "Urgent") {
+    return "bg-amber-50 text-amber-700";
+  }
+
+  return "bg-slate-100 text-slate-700";
+}
+
+export default function ReferralDetailPage({
   params,
 }: ReferralPageProps) {
-  const { id } = await params;
+  const { id } = use(params);
 
-  const referral = referrals[id];
+  const [referralStates, setReferralStates] = useState<
+    Record<string, string>
+  >({});
+
+  const baseReferral = referrals[id];
+
+  useEffect(() => {
+    const syncReferralState = () => {
+      setReferralStates(getAllReferralStates());
+    };
+
+    syncReferralState();
+
+    window.addEventListener(
+      "focus",
+      syncReferralState
+    );
+
+    document.addEventListener(
+      "visibilitychange",
+      syncReferralState
+    );
+
+    return () => {
+      window.removeEventListener(
+        "focus",
+        syncReferralState
+      );
+
+      document.removeEventListener(
+        "visibilitychange",
+        syncReferralState
+      );
+    };
+  }, []);
+
+  const referral = useMemo(() => {
+    if (!baseReferral) {
+      return null;
+    }
+
+    const currentStatus = getSharedStatus(
+      baseReferral,
+      referralStates
+    );
+
+    return {
+      ...baseReferral,
+      status: currentStatus,
+      timeline: getTimeline(
+        baseReferral,
+        currentStatus
+      ),
+    };
+  }, [baseReferral, referralStates]);
 
   if (!referral) {
     return (
@@ -314,7 +368,7 @@ export default async function ReferralDetailPage({
 
           <Link
             href="/referrals"
-            className="mt-6 inline-flex rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white hover:bg-teal-800"
+            className="mt-6 inline-flex rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-teal-800"
           >
             Back to Referrals
           </Link>
@@ -324,13 +378,13 @@ export default async function ReferralDetailPage({
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-transparent">
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-slate-200 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link
             href="/referrals"
-            className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900"
+            className="flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
           >
             <ArrowLeft size={18} />
             Back to Referrals
@@ -354,50 +408,75 @@ export default async function ReferralDetailPage({
               REFERRAL DETAIL
             </p>
 
-            <h1 className="mt-2 text-3xl font-bold text-slate-900">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
               Referral #{referral.id}
             </h1>
 
             <p className="mt-2 text-sm text-slate-500">
-              Created on {referral.created}
+              Referral created on {referral.created}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
             <span
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
-                referral.status === "Closed"
-                  ? "bg-slate-100 text-slate-700"
-                  : referral.status === "Received"
-                    ? "bg-teal-50 text-teal-700"
-                    : referral.status === "Discharged"
-                      ? "bg-amber-50 text-amber-700"
-                      : "bg-blue-50 text-blue-700"
-              }`}
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold ${statusBadgeClass(
+                referral.status
+              )}`}
             >
               {referral.status}
             </span>
 
             <span
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
-                referral.priority === "Emergency"
-                  ? "bg-red-50 text-red-700"
-                  : referral.priority === "Urgent"
-                    ? "bg-amber-50 text-amber-700"
-                    : "bg-slate-100 text-slate-700"
-              }`}
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold ${priorityBadgeClass(
+                referral.priority
+              )}`}
             >
               {referral.priority}
             </span>
           </div>
         </div>
 
-        {/* Main Grid */}
+        {/* Current status */}
+        <section className="mt-6 rounded-3xl border border-teal-100 bg-teal-50/60 p-6 shadow-sm">
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
+                Current Status
+              </p>
+
+              <h2 className="mt-2 text-2xl font-bold text-slate-900">
+                {referral.status}
+              </h2>
+
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+                {statusDescription(referral.status)}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white bg-white px-5 py-4 shadow-sm">
+              <p className="text-xs text-slate-400">
+                Patient
+              </p>
+
+              <p className="mt-1 text-sm font-semibold text-slate-900">
+                {referral.patientName}
+              </p>
+
+              <p className="mt-1 text-xs text-slate-500">
+                {referral.patientId}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Main grid */}
         <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+
           {/* Left */}
           <div className="space-y-6">
-            {/* Patient */}
-            <section className="rounded-2xl border border-slate-200 bg-white p-6">
+
+            {/* Patient Details */}
+            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
                   <UserRound size={20} />
@@ -421,7 +500,7 @@ export default async function ReferralDetailPage({
                 />
 
                 <Detail
-                  label="SEVA Patient ID"
+                  label="NIRAMAYA Patient ID"
                   value={referral.patientId}
                 />
 
@@ -434,12 +513,22 @@ export default async function ReferralDetailPage({
                   label="Referral Reason"
                   value={referral.reason}
                 />
+
+                <Detail
+                  label="Department"
+                  value={referral.department}
+                />
+
+                <Detail
+                  label="Priority"
+                  value={referral.priority}
+                />
               </div>
 
               <div className="mt-5">
                 <Link
                   href={`/patients/${referral.patientId}`}
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-teal-700 hover:bg-slate-50"
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-teal-700 transition hover:bg-slate-50"
                 >
                   View Patient Profile
                   <ArrowLeft
@@ -450,8 +539,8 @@ export default async function ReferralDetailPage({
               </div>
             </section>
 
-            {/* Route */}
-            <section className="rounded-2xl border border-slate-200 bg-white p-6">
+            {/* Referral Route */}
+            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
                   <Hospital size={20} />
@@ -499,14 +588,14 @@ export default async function ReferralDetailPage({
                 />
 
                 <Detail
-                  label="Created"
-                  value={referral.created}
+                  label="Referral ID"
+                  value={referral.id}
                 />
               </div>
             </section>
 
-            {/* Notes */}
-            <section className="rounded-2xl border border-slate-200 bg-white p-6">
+            {/* Clinical Notes */}
+            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
                   <FileText size={20} />
@@ -527,14 +616,97 @@ export default async function ReferralDetailPage({
                 {referral.notes}
               </p>
             </section>
+
+            {/* Referral Lifecycle */}
+            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+                  <Clock3 size={20} />
+                </div>
+
+                <div>
+                  <h2 className="font-semibold text-slate-900">
+                    Referral Lifecycle
+                  </h2>
+
+                  <p className="text-xs text-slate-500">
+                    Live closed-loop care journey
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {referral.timeline.map(
+                  (step, index) => (
+                    <div
+                      key={step.title}
+                      className={`rounded-2xl border p-4 ${
+                        step.status === "current"
+                          ? "border-teal-200 bg-teal-50/50"
+                          : step.status === "completed"
+                            ? "border-slate-200 bg-white"
+                            : "border-slate-200 bg-slate-50"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border ${
+                            step.status === "completed"
+                              ? "border-teal-700 bg-teal-700 text-white"
+                              : step.status === "current"
+                                ? "border-teal-600 bg-white text-teal-700"
+                                : "border-slate-300 bg-white text-slate-400"
+                          }`}
+                        >
+                          {step.status === "completed" ? (
+                            <Check size={15} />
+                          ) : (
+                            index + 1
+                          )}
+                        </div>
+
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p
+                              className={`text-sm font-semibold ${
+                                step.status === "pending"
+                                  ? "text-slate-400"
+                                  : "text-slate-900"
+                              }`}
+                            >
+                              {step.title}
+                            </p>
+
+                            {step.status === "current" && (
+                              <span className="rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-semibold text-teal-700">
+                                CURRENT
+                              </span>
+                            )}
+                          </div>
+
+                          <p className="mt-1 text-xs text-slate-400">
+                            {step.date}
+                          </p>
+
+                          <p className="mt-2 text-xs leading-5 text-slate-500">
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
+            </section>
           </div>
 
           {/* Right */}
           <div className="space-y-6">
-            {/* Current Status */}
-            <section className="rounded-2xl border border-teal-100 bg-teal-50/60 p-6">
+
+            {/* Current Referral State */}
+            <section className="rounded-2xl border border-teal-100 bg-teal-50/60 p-6 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
-                Current Status
+                Current Referral State
               </p>
 
               <h2 className="mt-2 text-2xl font-bold text-slate-900">
@@ -542,20 +714,32 @@ export default async function ReferralDetailPage({
               </h2>
 
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                {referral.status === "In Transit"
-                  ? "The patient is currently travelling to the receiving facility."
-                  : referral.status === "Received"
-                    ? "The receiving facility has confirmed patient arrival."
-                    : referral.status === "Closed"
-                      ? "This referral journey has been completed and closed."
-                      : referral.status === "Discharged"
-                        ? "The patient has been discharged after treatment."
-                        : "The referral is progressing through the care journey."}
+                {statusDescription(referral.status)}
               </p>
+
+              <div className="mt-5 h-2 overflow-hidden rounded-full bg-white">
+                <div
+                  className="h-full rounded-full bg-teal-700 transition-all duration-500"
+                  style={{
+                    width: `${
+                      (statusOrder.indexOf(
+                        referral.status
+                      ) /
+                        (statusOrder.length - 1)) *
+                      100
+                    }%`,
+                  }}
+                />
+              </div>
+
+              <div className="mt-2 flex justify-between text-[10px] text-slate-400">
+                <span>Created</span>
+                <span>Closed</span>
+              </div>
             </section>
 
-            {/* Timeline */}
-            <section className="rounded-2xl border border-slate-200 bg-white p-6">
+            {/* Referral Journey */}
+            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
                   <Clock3 size={20} />
@@ -567,12 +751,12 @@ export default async function ReferralDetailPage({
                   </h2>
 
                   <p className="text-xs text-slate-500">
-                    Closed-loop referral lifecycle
+                    Live lifecycle status
                   </p>
                 </div>
               </div>
 
-              <div className="mt-6 space-y-5">
+              <div className="mt-6 space-y-0">
                 {referral.timeline.map(
                   (step, index) => (
                     <TimelineStep
@@ -586,14 +770,14 @@ export default async function ReferralDetailPage({
                         referral.timeline.length - 1
                       }
                     />
-                  ),
+                  )
                 )}
               </div>
             </section>
 
             {/* 48 Hour Follow-up */}
             <section
-              className={`rounded-2xl border p-6 ${
+              className={`rounded-2xl border p-6 shadow-sm ${
                 referral.noShow
                   ? "border-amber-200 bg-amber-50"
                   : "border-slate-200 bg-white"
@@ -601,7 +785,7 @@ export default async function ReferralDetailPage({
             >
               <div className="flex items-start gap-3">
                 <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
                     referral.noShow
                       ? "bg-amber-100 text-amber-700"
                       : "bg-teal-50 text-teal-700"
@@ -622,14 +806,16 @@ export default async function ReferralDetailPage({
                   <p className="mt-1 text-xs leading-5 text-slate-500">
                     {referral.noShow
                       ? "Patient arrival has crossed the expected window. ASHA follow-up is required."
-                      : "No 48-hour no-show alert is currently active for this referral."}
+                      : referral.status === "Closed"
+                        ? "Referral is closed. Community follow-up can continue through the assigned care worker."
+                        : "No 48-hour no-show alert is currently active for this referral."}
                   </p>
                 </div>
               </div>
             </section>
 
-            {/* Audit */}
-            <section className="rounded-2xl border border-slate-200 bg-white p-6">
+            {/* Access & Audit */}
+            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <h2 className="font-semibold text-slate-900">
                 Access & Audit
               </h2>
@@ -651,13 +837,52 @@ export default async function ReferralDetailPage({
                 />
 
                 <AuditRow
-                  label="Journey status"
+                  label="Current status"
                   value={referral.status}
                 />
               </div>
             </section>
+
+            {/* Secure access */}
+            <section className="rounded-2xl border border-teal-100 bg-teal-50/50 p-5">
+              <div className="flex items-start gap-3">
+                <ShieldCheck
+                  size={19}
+                  className="mt-0.5 shrink-0 text-teal-700"
+                />
+
+                <div>
+                  <p className="text-sm font-semibold text-slate-800">
+                    Secure referral access
+                  </p>
+
+                  <p className="mt-1 text-xs leading-5 text-slate-500">
+                    Patient information is intended for the
+                    authorized care workflow. QR payloads should
+                    contain only a referral identifier and a
+                    short-lived signed token.
+                  </p>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
+
+        {/* Prototype notice */}
+        <section className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+          <p className="font-semibold text-amber-900">
+            Prototype Notice
+          </p>
+
+          <p className="mt-1 text-sm leading-6 text-amber-800">
+            Referral information shown here uses mock frontend
+            data. The lifecycle status is synchronized with the
+            current prototype referral state stored in the browser.
+            Production implementation requires authenticated
+            backend persistence, RBAC, consent enforcement,
+            signed referral tokens and server-side audit logging.
+          </p>
+        </section>
       </section>
     </main>
   );
@@ -701,6 +926,7 @@ function Facility({
           size={16}
           className="mt-0.5 shrink-0 text-teal-700"
         />
+
         {name}
       </p>
     </div>
@@ -734,14 +960,16 @@ function TimelineStep({
         >
           {status === "completed" ? (
             <Check size={17} />
+          ) : status === "current" ? (
+            <span className="h-2.5 w-2.5 rounded-full bg-teal-600" />
           ) : (
-            <span className="text-xs">•</span>
+            <Clock3 size={15} />
           )}
         </div>
 
         {!isLast && (
           <div
-            className={`mt-1 min-h-9 w-px ${
+            className={`mt-1 min-h-10 w-px ${
               status === "completed"
                 ? "bg-teal-600"
                 : "bg-slate-200"
@@ -750,22 +978,30 @@ function TimelineStep({
         )}
       </div>
 
-      <div className="pb-2">
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+      <div className="pb-5">
+        <div className="flex flex-wrap items-center gap-2">
           <p
             className={`text-sm font-semibold ${
               status === "pending"
                 ? "text-slate-400"
-                : "text-slate-900"
+                : status === "current"
+                  ? "text-teal-700"
+                  : "text-slate-900"
             }`}
           >
             {title}
           </p>
 
-          <span className="text-xs text-slate-400">
-            {date}
-          </span>
+          {status === "current" && (
+            <span className="rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-semibold text-teal-700">
+              CURRENT
+            </span>
+          )}
         </div>
+
+        <p className="mt-1 text-xs text-slate-400">
+          {date}
+        </p>
 
         <p className="mt-1 text-xs leading-5 text-slate-500">
           {description}

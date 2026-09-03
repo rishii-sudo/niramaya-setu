@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import Link from "next/link";
 import {
@@ -108,9 +108,9 @@ const activity: ActivityItem[] = [
 export default function DoctorDashboardPage() {
   return (
     <main className="min-h-screen bg-transparent">
-      {/* Header */}
+      {/* Doctor header */}
       <header className="border-b border-slate-200 bg-white/85 backdrop-blur-md">
-        <div className="flex h-16 items-center justify-between px-5 sm:px-6">
+        <div className="flex h-16 items-center justify-between px-5 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-700 text-white shadow-sm">
               <HeartPulse size={20} />
@@ -142,6 +142,7 @@ export default function DoctorDashboardPage() {
               type="button"
               className="relative rounded-lg p-2 text-slate-500 transition hover:bg-slate-100"
               aria-label="Notifications"
+              onClick={() => {}}
             >
               <Bell size={20} />
 
@@ -151,392 +152,294 @@ export default function DoctorDashboardPage() {
         </div>
       </header>
 
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className="hidden min-h-[calc(100vh-64px)] w-64 shrink-0 border-r border-slate-200 bg-white/80 p-4 backdrop-blur-md md:block">
-          <nav className="space-y-1">
-            <NavItem
-              label="Dashboard"
-              href="/doctor"
-              active
-              icon={Activity}
-            />
-
-            <NavItem
-              label="Referrals"
-              href="/doctor/referrals"
-              icon={FileText}
-            />
-
-            <NavItem
-              label="Patients"
-              icon={Users}
-            />
-
-            <NavItem
-              label="Treatment"
-              icon={HeartPulse}
-            />
-
-            <NavItem
-              label="Appointments"
-              icon={CalendarDays}
-            />
-          </nav>
-
-          <div className="mt-8 rounded-xl border border-slate-200 bg-white/70 p-4">
-            <p className="text-xs font-semibold text-slate-800">
-              Care continuity
+      {/* Dashboard content */}
+      <section className="min-w-0 p-5 sm:p-6 lg:p-8">
+        {/* Page heading */}
+        <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+            <p className="text-sm font-medium text-teal-700">
+              DOCTOR DASHBOARD
             </p>
 
-            <p className="mt-2 text-xs leading-5 text-slate-500">
-              Review referred patients and keep their care journey
-              connected across facilities.
+            <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Good morning, Dr. Priya
+            </h1>
+
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+              Review incoming referrals, patient records and active
+              treatment journeys from one place.
             </p>
           </div>
 
-          <div className="mt-4 rounded-xl border border-teal-100 bg-teal-50/70 p-4">
-            <div className="flex items-center gap-2">
-              <CheckCircle2
-                size={16}
-                className="text-teal-700"
-              />
+          <div className="w-fit rounded-xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm backdrop-blur-sm">
+            <p className="text-xs text-slate-400">
+              Facility
+            </p>
 
-              <p className="text-xs font-semibold text-slate-800">
-                Secure access
-              </p>
-            </div>
-
-            <p className="mt-2 text-xs leading-5 text-slate-500">
-              Patient information is available according to role and
-              consent controls.
+            <p className="mt-1 text-sm font-semibold text-slate-900">
+              District Hospital Jaipur
             </p>
           </div>
-        </aside>
+        </div>
 
-        {/* Main */}
-        <section className="min-w-0 flex-1 p-5 sm:p-6 lg:p-8">
-          {/* Page heading */}
-          <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
-            <div>
-              <p className="text-sm font-medium text-teal-700">
-                DOCTOR DASHBOARD
-              </p>
+        {/* Stats */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <StatCard
+            icon={FileText}
+            label="Incoming Referrals"
+            value="8"
+            tone="teal"
+          />
 
-              <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                Good morning, Dr. Priya
-              </h1>
+          <StatCard
+            icon={AlertCircle}
+            label="Urgent"
+            value="2"
+            tone="amber"
+          />
 
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-                Review incoming referrals, patient records and active
-                treatment journeys from one place.
-              </p>
-            </div>
+          <StatCard
+            icon={Activity}
+            label="Under Treatment"
+            value="5"
+            tone="blue"
+          />
 
-            <div className="w-fit rounded-xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm backdrop-blur-sm">
-              <p className="text-xs text-slate-400">
-                Facility
-              </p>
+          <StatCard
+            icon={CheckCircle2}
+            label="Completed Today"
+            value="11"
+            tone="slate"
+          />
+        </div>
 
-              <p className="mt-1 text-sm font-semibold text-slate-900">
-                District Hospital Jaipur
-              </p>
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard
-              icon={FileText}
-              label="Incoming Referrals"
-              value="8"
-              tone="teal"
-            />
-
-            <StatCard
-              icon={AlertCircle}
-              label="Urgent"
-              value="2"
-              tone="amber"
-            />
-
-            <StatCard
-              icon={Activity}
-              label="Under Treatment"
-              value="5"
-              tone="blue"
-            />
-
-            <StatCard
-              icon={CheckCircle2}
-              label="Completed Today"
-              value="11"
-              tone="slate"
-            />
-          </div>
-
-          {/* Primary content */}
-          <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_360px]">
-            {/* Incoming referrals */}
-            <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-sm backdrop-blur-sm">
-              <div className="flex flex-col gap-3 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h2 className="font-semibold text-slate-900">
-                    Incoming Referrals
-                  </h2>
-
-                  <p className="mt-1 text-xs text-slate-500">
-                    Patients referred to your facility
-                  </p>
-                </div>
-
-                <Link
-                  href="/doctor/referrals"
-                  className="inline-flex w-fit items-center gap-1 text-sm font-semibold text-teal-700 hover:text-teal-800"
-                >
-                  View all
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
-
-              <div className="divide-y divide-slate-100">
-                {referrals.map((referral) => (
-                  <div
-                    key={referral.id}
-                    className="p-5 transition hover:bg-slate-50/80"
-                  >
-                    <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                      <div className="flex min-w-0 items-start gap-4">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-                          <UserRound size={20} />
-                        </div>
-
-                        <div className="min-w-0">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <p className="truncate font-semibold text-slate-900">
-                              {referral.patient}
-                            </p>
-
-                            <span className="text-xs text-slate-400">
-                              {referral.patientId}
-                            </span>
-                          </div>
-
-                          <p className="mt-1 text-sm text-slate-600">
-                            {referral.age} years • {referral.gender} •{" "}
-                            {referral.department}
-                          </p>
-
-                          <p className="mt-1 text-xs text-slate-500">
-                            {referral.from} • {referral.time}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-2 xl:justify-end">
-                        <PriorityBadge
-                          priority={referral.priority}
-                        />
-
-                        <StatusBadge
-                          status={referral.status}
-                        />
-
-                        <Link
-                          href={`/doctor/patients/${referral.patientId}`}
-                          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-teal-700 transition hover:bg-slate-50"
-                        >
-                          Review
-                          <ArrowRight size={14} />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Pending actions */}
-            <section className="rounded-2xl border border-slate-200 bg-white/95 shadow-sm backdrop-blur-sm">
-              <div className="border-b border-slate-100 p-5">
+        {/* Primary content */}
+        <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_360px]">
+          {/* Incoming referrals */}
+          <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-sm backdrop-blur-sm">
+            <div className="flex flex-col gap-3 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
                 <h2 className="font-semibold text-slate-900">
-                  Pending Actions
+                  Incoming Referrals
                 </h2>
 
                 <p className="mt-1 text-xs text-slate-500">
-                  Items requiring your attention
+                  Patients referred to your facility
                 </p>
               </div>
 
-              <div className="space-y-4 p-5">
-                <ActionCard
-                  title="Review urgent referral"
-                  patient="Sunita Devi"
-                  meta="General Medicine • Urgent"
-                  tone="amber"
-                />
+              <Link
+                href="/doctor/referrals"
+                className="inline-flex w-fit items-center gap-1 text-sm font-semibold text-teal-700 hover:text-teal-800"
+              >
+                View all
+                <ArrowRight size={15} />
+              </Link>
+            </div>
 
-                <ActionCard
-                  title="Update treatment status"
-                  patient="Sita Devi"
-                  meta="Orthopedics • Under Treatment"
-                  tone="blue"
-                />
+            <div className="divide-y divide-slate-100">
+              {referrals.map((referral) => (
+                <div
+                  key={referral.id}
+                  className="p-5 transition hover:bg-slate-50/80"
+                >
+                  <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                    <div className="flex min-w-0 items-start gap-4">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+                        <UserRound size={20} />
+                      </div>
 
-                <ActionCard
-                  title="Complete discharge note"
-                  patient="Mohan Lal"
-                  meta="General Medicine"
-                  tone="teal"
-                />
-              </div>
-            </section>
-          </div>
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="truncate font-semibold text-slate-900">
+                            {referral.patient}
+                          </p>
 
-          {/* Secondary content */}
-          <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            {/* Today's Care */}
-            <section className="rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-sm backdrop-blur-sm">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
-                  <CalendarDays size={19} />
-                </div>
+                          <span className="text-xs text-slate-400">
+                            {referral.patientId}
+                          </span>
+                        </div>
 
-                <div>
-                  <h2 className="font-semibold text-slate-900">
-                    Today&apos;s Care
-                  </h2>
+                        <p className="mt-1 text-sm text-slate-600">
+                          {referral.age} years • {referral.gender} •{" "}
+                          {referral.department}
+                        </p>
 
-                  <p className="text-xs text-slate-500">
-                    Current workload
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-5 grid grid-cols-2 gap-4">
-                <MiniMetric
-                  label="Appointments"
-                  value="14"
-                />
-
-                <MiniMetric
-                  label="Referrals"
-                  value="8"
-                />
-
-                <MiniMetric
-                  label="Follow-ups"
-                  value="6"
-                />
-
-                <MiniMetric
-                  label="Discharges"
-                  value="3"
-                />
-              </div>
-            </section>
-
-            {/* Recent activity */}
-            <section className="rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-sm backdrop-blur-sm">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
-                  <Clock3 size={19} />
-                </div>
-
-                <div>
-                  <h2 className="font-semibold text-slate-900">
-                    Recent Activity
-                  </h2>
-
-                  <p className="text-xs text-slate-500">
-                    Latest updates
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-5 space-y-4">
-                {activity.map((item) => (
-                  <div
-                    key={`${item.title}-${item.time}`}
-                    className="border-l-2 border-slate-200 pl-4"
-                  >
-                    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                      <p className="text-sm font-semibold text-slate-800">
-                        {item.title}
-                      </p>
-
-                      <span className="text-xs text-slate-400">
-                        {item.time}
-                      </span>
+                        <p className="mt-1 text-xs text-slate-500">
+                          {referral.from} • {referral.time}
+                        </p>
+                      </div>
                     </div>
 
-                    <p className="mt-1 text-xs text-slate-500">
-                      {item.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
+                    <div className="flex flex-wrap items-center gap-2 xl:justify-end">
+                      <PriorityBadge
+                        priority={referral.priority}
+                      />
 
-          {/* Footer note */}
-          <div className="mt-6 rounded-xl border border-teal-100 bg-white/80 p-4 backdrop-blur-sm">
-            <div className="flex items-start gap-3">
-              <ShieldIcon />
+                      <StatusBadge
+                        status={referral.status}
+                      />
+
+                      <Link
+                        href={`/doctor/patients/${referral.patientId}`}
+                        className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-teal-700 transition hover:bg-slate-50"
+                      >
+                        Review
+                        <ArrowRight size={14} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Pending actions */}
+          <section className="rounded-2xl border border-slate-200 bg-white/95 shadow-sm backdrop-blur-sm">
+            <div className="border-b border-slate-100 p-5">
+              <h2 className="font-semibold text-slate-900">
+                Pending Actions
+              </h2>
+
+              <p className="mt-1 text-xs text-slate-500">
+                Items requiring your attention
+              </p>
+            </div>
+
+            <div className="space-y-4 p-5">
+              <ActionCard
+                title="Review urgent referral"
+                patient="Sunita Devi"
+                meta="General Medicine • Urgent"
+                tone="amber"
+                href="/doctor/patients/NS-10279"
+              />
+
+              <ActionCard
+                title="Update treatment status"
+                patient="Sita Devi"
+                meta="Orthopedics • Under Treatment"
+                tone="blue"
+                href="/doctor/patients/NS-10255"
+              />
+
+              <ActionCard
+                title="Complete discharge note"
+                patient="Mohan Lal"
+                meta="General Medicine"
+                tone="teal"
+                href="/facility/discharge"
+              />
+            </div>
+          </section>
+        </div>
+
+        {/* Secondary content */}
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          {/* Today's Care */}
+          <section className="rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-sm backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+                <CalendarDays size={19} />
+              </div>
 
               <div>
-                <p className="text-sm font-semibold text-slate-800">
-                  Consent-based clinical access
-                </p>
+                <h2 className="font-semibold text-slate-900">
+                  Today&apos;s Care
+                </h2>
 
-                <p className="mt-1 text-xs leading-5 text-slate-500">
-                  Patient records are displayed only within the
-                  authorized doctor workspace. Production data will be
-                  loaded through the authenticated backend service.
+                <p className="text-xs text-slate-500">
+                  Current workload
                 </p>
               </div>
             </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-4">
+              <MiniMetric
+                label="Appointments"
+                value="14"
+              />
+
+              <MiniMetric
+                label="Referrals"
+                value="8"
+              />
+
+              <MiniMetric
+                label="Follow-ups"
+                value="6"
+              />
+
+              <MiniMetric
+                label="Discharges"
+                value="3"
+              />
+            </div>
+          </section>
+
+          {/* Recent activity */}
+          <section className="rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-sm backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+                <Clock3 size={19} />
+              </div>
+
+              <div>
+                <h2 className="font-semibold text-slate-900">
+                  Recent Activity
+                </h2>
+
+                <p className="text-xs text-slate-500">
+                  Latest updates
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-4">
+              {activity.map((item) => (
+                <div
+                  key={`${item.title}-${item.time}`}
+                  className="border-l-2 border-slate-200 pl-4"
+                >
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-sm font-semibold text-slate-800">
+                      {item.title}
+                    </p>
+
+                    <span className="text-xs text-slate-400">
+                      {item.time}
+                    </span>
+                  </div>
+
+                  <p className="mt-1 text-xs text-slate-500">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        {/* Footer note */}
+        <div className="mt-6 rounded-xl border border-teal-100 bg-white/80 p-4 backdrop-blur-sm">
+          <div className="flex items-start gap-3">
+            <ShieldIcon />
+
+            <div>
+              <p className="text-sm font-semibold text-slate-800">
+                Consent-based clinical access
+              </p>
+
+              <p className="mt-1 text-xs leading-5 text-slate-500">
+                Patient records are displayed only within the
+                authorized doctor workspace. Production data will be
+                loaded through the authenticated backend service.
+              </p>
+            </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </main>
-  );
-}
-
-function NavItem({
-  icon: Icon,
-  label,
-  href,
-  active = false,
-}: {
-  icon: React.ComponentType<{
-    size?: number;
-    className?: string;
-  }>;
-  label: string;
-  href?: string;
-  active?: boolean;
-}) {
-  const classes = `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-    active
-      ? "bg-teal-50 text-teal-800"
-      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-  }`;
-
-  if (href) {
-    return (
-      <Link href={href} className={classes}>
-        <Icon size={18} />
-        <span>{label}</span>
-      </Link>
-    );
-  }
-
-  return (
-    <div className={classes}>
-      <Icon size={18} />
-      <span>{label}</span>
-    </div>
   );
 }
 
@@ -631,19 +534,18 @@ function ActionCard({
   patient,
   meta,
   tone,
+  href,
 }: {
   title: string;
   patient: string;
   meta: string;
   tone: "amber" | "blue" | "teal";
+  href: string;
 }) {
   const styles = {
-    amber:
-      "border-amber-100 bg-amber-50/70",
-    blue:
-      "border-blue-100 bg-blue-50/70",
-    teal:
-      "border-teal-100 bg-teal-50/70",
+    amber: "border-amber-100 bg-amber-50/70",
+    blue: "border-blue-100 bg-blue-50/70",
+    teal: "border-teal-100 bg-teal-50/70",
   };
 
   return (
@@ -662,12 +564,12 @@ function ActionCard({
         {meta}
       </p>
 
-      <button
-        type="button"
-        className="mt-3 text-xs font-semibold text-teal-700 hover:text-teal-800"
+      <Link
+        href={href}
+        className="mt-3 inline-block text-xs font-semibold text-teal-700 hover:text-teal-800"
       >
         Open task →
-      </button>
+      </Link>
     </div>
   );
 }

@@ -11,14 +11,6 @@ export default function AppShell({
 }) {
   const pathname = usePathname();
 
-  /*
-   * Standalone routes:
-   * - Public patient entry
-   * - Patient portal
-   * - Internal authentication
-   *
-   * These pages must NOT show the application sidebar.
-   */
   const isStandaloneRoute =
     pathname === "/login" ||
     pathname.startsWith("/patient") ||
@@ -41,11 +33,16 @@ export default function AppShell({
 
   return (
     <div className="relative z-10 min-h-screen">
-      <MobileNav />
+      {/* Mobile navigation ONLY on mobile */}
+      <div className="md:hidden">
+        <MobileNav />
+      </div>
 
       <div className="flex min-h-screen">
+        {/* Desktop sidebar */}
         <Sidebar />
 
+        {/* Page content */}
         <div className="min-w-0 flex-1">
           {children}
         </div>

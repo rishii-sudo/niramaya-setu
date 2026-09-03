@@ -1,7 +1,22 @@
 "use client";
 
-import { ChangeEvent, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
+type PatientStatus =
+  | "Active"
+  | "Follow-up Due"
+  | "Discharged"
+  | "Under Treatment"
+  | "Referral Closed"
+  | "In-Transit";
 
 type Patient = {
   id: string;
@@ -10,45 +25,90 @@ type Patient = {
   gender: string;
   village: string;
   mobile: string;
-  referralStatus: string;
+  phone?: string;
+  address?: string;
+  condition?: string;
+  status: PatientStatus;
+  referralStatus?: string;
+  lastVisit?: string;
 };
 
-const patients: Patient[] = [
+type VisitRecord = {
+  id: string;
+  patientId: string;
+  patientName: string;
+  visitType: string;
+  visitDate: string;
+  visitTime: string;
+  symptoms: string;
+  bp: string;
+  pulse: string;
+  spo2: string;
+  temperature: string;
+  medicationAdherence: string;
+  instructionsFollowed: string;
+  referralStatus: string;
+  reachedFacility: string;
+  treatmentStarted: string;
+  noShowReason: string;
+  notes: string;
+  nextFollowUp: string;
+  createdAt: string;
+  synced: boolean;
+};
+
+const DEMO_PATIENTS: Patient[] = [
   {
     id: "NS-10284",
     name: "Ramesh Kumar",
     age: 54,
     gender: "Male",
-    village: "Rampura",
-    mobile: "98XXXXXX21",
-    referralStatus: "In-Transit",
+    village: "Jaipur",
+    mobile: "+91 98765 43210",
+    phone: "+91 98765 43210",
+    condition: "Cardiology",
+    status: "Discharged",
+    referralStatus: "Discharged",
+    lastVisit: "03 Sep 2026",
   },
   {
     id: "NS-10279",
     name: "Sunita Devi",
-    age: 46,
+    age: 47,
     gender: "Female",
-    village: "Khejroli",
-    mobile: "97XXXXXX64",
-    referralStatus: "Follow-up Due",
-  },
-  {
-    id: "NS-10271",
-    name: "Mohan Lal",
-    age: 62,
-    gender: "Male",
     village: "Chomu",
-    mobile: "96XXXXXX18",
-    referralStatus: "Under Treatment",
+    mobile: "+91 98765 12345",
+    phone: "+91 98765 12345",
+    condition: "General Medicine",
+    status: "Follow-up Due",
+    referralStatus: "Follow-up Due",
+    lastVisit: "02 Sep 2026",
   },
   {
     id: "NS-10263",
     name: "Kamla Devi",
-    age: 39,
+    age: 61,
     gender: "Female",
-    village: "Dhani",
-    mobile: "95XXXXXX47",
-    referralStatus: "Referral Closed",
+    village: "Bassi",
+    mobile: "+91 99887 66554",
+    phone: "+91 99887 66554",
+    condition: "General Medicine",
+    status: "Active",
+    referralStatus: "Under Treatment",
+    lastVisit: "01 Sep 2026",
+  },
+  {
+    id: "NS-10251",
+    name: "Mohan Lal",
+    age: 58,
+    gender: "Male",
+    village: "Sanganer",
+    mobile: "+91 97654 32109",
+    phone: "+91 97654 32109",
+    condition: "Diabetes",
+    status: "Active",
+    referralStatus: "Under Treatment",
+    lastVisit: "31 Aug 2026",
   },
 ];
 
@@ -59,20 +119,320 @@ const visitTypes = [
   "Medication Check",
 ];
 
-export default function ASHAVisitsPage() {
-  const [search, setSearch] = useState("");
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(
-    null
+const symptomsList = [
+  "Fever",
+  "Cough",
+  "Breathing difficulty",
+  "Chest pain",
+  "Weakness",
+  "Dizziness",
+  "Pain",
+  "No symptoms",
+];
+
+const PATIENT_STORAGE_KEYS = [
+  "niramaya-patients",
+  "niramaya_patients",
+  "niramayaPatients",
+  "registeredPatients",
+  "registered-patients",
+  "ashaPatients",
+  "asha-patients",
+  "patientRecords",
+  "patient-records",
+  "patients",
+];
+
+const VISIT_STORAGE_KEYS = [
+  "niramaya-visits",
+  "niramaya_visits",
+  "ashaVisits",
+  "asha-visits",
+  "visitRecords",
+  "visit-records",
+];
+
+function getToday() {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function getCurrentTime() {
+  const now = new Date();
+
+  return `${String(now.getHours()).padStart(2, "0")}:${String(
+    now.getMinutes(),
+  ).padStart(2, "0")}`;
+}
+
+function makeInitials(name: string) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function normalizePatient(raw: unknown): Patient | null {
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+
+  const item = raw as Record<string, unknown>;
+
+  const id =
+    String(
+      item.id ??
+        item.patientId ??
+        item.patient_id ??
+        item.patientID ??
+        "",
+    ).trim();
+
+  const name = String(item.name ?? item.patientName ?? "").trim();
+
+  if (!id || !name) {
+    return null;
+  }
+
+  const ageNumber = Number(item.age ?? 0);
+
+  const gender = String(item.gender ?? "Not specified").trim();
+
+  const village = String(
+    item.village ??
+      item.location ??
+      item.city ??
+      item.address ??
+      "Not specified",
+  ).trim();
+
+  const mobile = String(
+    item.mobile ?? item.phone ?? item.phoneNumber ?? "",
+  ).trim();
+
+  const condition = String(
+    item.condition ?? item.primaryCondition ?? "General Medicine",
+  ).trim();
+
+  const rawStatus = String(
+    item.status ??
+      item.referralStatus ??
+      "Active",
+  ).trim();
+
+  let status: PatientStatus = "Active";
+
+  if (
+    rawStatus === "Discharged" ||
+    rawStatus === "Referral Closed"
+  ) {
+    status = rawStatus as PatientStatus;
+  } else if (
+    rawStatus === "Follow-up Due" ||
+    rawStatus === "In-Transit" ||
+    rawStatus === "Under Treatment"
+  ) {
+    status = rawStatus as PatientStatus;
+  }
+
+  return {
+    id,
+    name,
+    age: Number.isFinite(ageNumber) && ageNumber > 0 ? ageNumber : 0,
+    gender,
+    village,
+    mobile,
+    phone: mobile,
+    address: String(item.address ?? ""),
+    condition,
+    status,
+    referralStatus: String(
+      item.referralStatus ?? rawStatus,
+    ),
+    lastVisit: String(
+      item.lastVisit ?? item.registeredDate ?? "",
+    ),
+  };
+}
+
+function extractPatients(value: unknown): Patient[] {
+  if (Array.isArray(value)) {
+    return value
+      .map(normalizePatient)
+      .filter((item): item is Patient => item !== null);
+  }
+
+  if (!value || typeof value !== "object") {
+    return [];
+  }
+
+  const object = value as Record<string, unknown>;
+
+  const possibleArrays = [
+    object.patients,
+    object.patientRecords,
+    object.records,
+    object.data,
+    object.items,
+  ];
+
+  for (const candidate of possibleArrays) {
+    if (Array.isArray(candidate)) {
+      const result = candidate
+        .map(normalizePatient)
+        .filter((item): item is Patient => item !== null);
+
+      if (result.length > 0) {
+        return result;
+      }
+    }
+  }
+
+  const directPatient = normalizePatient(value);
+
+  if (directPatient) {
+    return [directPatient];
+  }
+
+  const values = Object.values(object);
+
+  return values
+    .map(normalizePatient)
+    .filter((item): item is Patient => item !== null);
+}
+
+function loadPatientsFromLocalStorage(): Patient[] {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  const found: Patient[] = [];
+  const seen = new Set<string>();
+
+  const addPatients = (items: Patient[]) => {
+    for (const patient of items) {
+      const normalizedId = patient.id.trim().toLowerCase();
+
+      if (!normalizedId || seen.has(normalizedId)) {
+        continue;
+      }
+
+      seen.add(normalizedId);
+      found.push(patient);
+    }
+  };
+
+  for (const key of PATIENT_STORAGE_KEYS) {
+    try {
+      const raw = window.localStorage.getItem(key);
+
+      if (!raw) {
+        continue;
+      }
+
+      addPatients(extractPatients(JSON.parse(raw)));
+    } catch {
+      // Ignore invalid localStorage values.
+    }
+  }
+
+  /*
+   * Fallback:
+   * The registration page may use a different localStorage key.
+   * Scan all localStorage entries and detect patient-shaped data.
+   */
+  for (let index = 0; index < window.localStorage.length; index++) {
+    const key = window.localStorage.key(index);
+
+    if (!key || PATIENT_STORAGE_KEYS.includes(key)) {
+      continue;
+    }
+
+    try {
+      const raw = window.localStorage.getItem(key);
+
+      if (!raw) {
+        continue;
+      }
+
+      const parsed = JSON.parse(raw);
+      addPatients(extractPatients(parsed));
+    } catch {
+      // Ignore unrelated or invalid localStorage entries.
+    }
+  }
+
+  return found;
+}
+
+function loadVisits(): VisitRecord[] {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  for (const key of VISIT_STORAGE_KEYS) {
+    try {
+      const raw = window.localStorage.getItem(key);
+
+      if (!raw) {
+        continue;
+      }
+
+      const parsed = JSON.parse(raw);
+
+      if (Array.isArray(parsed)) {
+        return parsed as VisitRecord[];
+      }
+
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        Array.isArray(parsed.visits)
+      ) {
+        return parsed.visits as VisitRecord[];
+      }
+    } catch {
+      // Continue with next key.
+    }
+  }
+
+  return [];
+}
+
+function saveVisits(visits: VisitRecord[]) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.setItem(
+    "niramaya-visits",
+    JSON.stringify(visits),
   );
+}
+
+export default function ASHAVisitsPage() {
+  const searchParams = useSearchParams();
+
+  const [patients, setPatients] = useState<Patient[]>(DEMO_PATIENTS);
+  const [search, setSearch] = useState("");
+  const [selectedPatient, setSelectedPatient] =
+    useState<Patient | null>(null);
 
   const [visitType, setVisitType] = useState("Home Visit");
+  const [visitDate, setVisitDate] = useState(getToday());
+  const [visitTime, setVisitTime] = useState(getCurrentTime());
 
-  const [visitDate, setVisitDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
-
-  const [visitTime, setVisitTime] = useState(
-    new Date().toTimeString().slice(0, 5)
+  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>(
+    [],
   );
 
   const [symptoms, setSymptoms] = useState("");
@@ -82,8 +442,11 @@ export default function ASHAVisitsPage() {
   const [spo2, setSpo2] = useState("");
   const [temperature, setTemperature] = useState("");
 
-  const [medicationAdherence, setMedicationAdherence] = useState("");
-  const [instructionsFollowed, setInstructionsFollowed] = useState("");
+  const [medicationAdherence, setMedicationAdherence] =
+    useState("");
+
+  const [instructionsFollowed, setInstructionsFollowed] =
+    useState("");
 
   const [referralStatus, setReferralStatus] = useState("");
   const [reachedFacility, setReachedFacility] = useState("");
@@ -95,42 +458,144 @@ export default function ASHAVisitsPage() {
 
   const [saved, setSaved] = useState(false);
   const [savedAndSynced, setSavedAndSynced] = useState(false);
-  const [syncing, setSyncing] = useState(false);
-  const [pendingSync, setPendingSync] = useState(2);
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [syncing, setSyncing] = useState(false);
+
+  const [pendingSync, setPendingSync] = useState(() => {
+    if (typeof window === "undefined") {
+      return 0;
+    }
+
+    return loadVisits().filter((visit) => !visit.synced).length;
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>(
+    {},
+  );
+
+  useEffect(() => {
+    const storedPatients = loadPatientsFromLocalStorage();
+
+    if (storedPatients.length > 0) {
+      setPatients((current) => {
+        const merged = [...storedPatients];
+
+        for (const demoPatient of current) {
+          if (
+            !merged.some(
+              (patient) => patient.id === demoPatient.id,
+            )
+          ) {
+            merged.push(demoPatient);
+          }
+        }
+
+        return merged;
+      });
+    }
+
+    const handleStorage = () => {
+      const refreshed = loadPatientsFromLocalStorage();
+
+      if (refreshed.length > 0) {
+        setPatients((current) => {
+          const merged = [...refreshed];
+
+          for (const demoPatient of current) {
+            if (
+              !merged.some(
+                (patient) => patient.id === demoPatient.id,
+              )
+            ) {
+              merged.push(demoPatient);
+            }
+          }
+
+          return merged;
+        });
+      }
+
+      setPendingSync(
+        loadVisits().filter((visit) => !visit.synced).length,
+      );
+    };
+
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
+
+  useEffect(() => {
+    const patientId =
+      searchParams.get("patientId") ??
+      searchParams.get("id");
+
+    if (!patientId) {
+      return;
+    }
+
+    const patient = patients.find(
+      (item) => item.id === patientId,
+    );
+
+    if (patient) {
+      selectPatient(patient);
+    }
+  }, [searchParams, patients]);
 
   const filteredPatients = useMemo(() => {
     const query = search.trim().toLowerCase();
 
-    if (!query) return patients;
+    if (!query) {
+      return patients;
+    }
 
-    return patients.filter(
-      (patient) =>
+    return patients.filter((patient) => {
+      return (
         patient.name.toLowerCase().includes(query) ||
         patient.id.toLowerCase().includes(query) ||
-        patient.village.toLowerCase().includes(query)
-    );
-  }, [search]);
+        patient.village.toLowerCase().includes(query) ||
+        patient.mobile.toLowerCase().includes(query) ||
+        (patient.condition ?? "")
+          .toLowerCase()
+          .includes(query)
+      );
+    });
+  }, [patients, search]);
 
-  const selectPatient = (patient: Patient) => {
+  function selectPatient(patient: Patient) {
     setSelectedPatient(patient);
     setSearch(`${patient.name} (${patient.id})`);
     setSaved(false);
     setSavedAndSynced(false);
-  };
+    setErrors({});
+  }
 
-  /*
-   * ------------------------------------------------------
-   * INPUT FILTERS
-   * ------------------------------------------------------
-   */
+  function toggleSymptom(symptom: string) {
+    setSelectedSymptoms((current) => {
+      if (symptom === "No symptoms") {
+        return current.includes(symptom) ? [] : ["No symptoms"];
+      }
 
-  const onlyNumbers = (value: string) => {
+      const withoutNone = current.filter(
+        (item) => item !== "No symptoms",
+      );
+
+      if (withoutNone.includes(symptom)) {
+        return withoutNone.filter((item) => item !== symptom);
+      }
+
+      return [...withoutNone, symptom];
+    });
+  }
+
+  function onlyNumbers(value: string) {
     return value.replace(/\D/g, "");
-  };
+  }
 
-  const onlyDecimal = (value: string) => {
+  function onlyDecimal(value: string) {
     let cleaned = value.replace(/[^0-9.]/g, "");
 
     const firstDot = cleaned.indexOf(".");
@@ -142,72 +607,71 @@ export default function ASHAVisitsPage() {
     }
 
     return cleaned;
-  };
+  }
 
-  const onlyBloodPressure = (value: string) => {
+  function onlyBloodPressure(value: string) {
     return value.replace(/[^0-9/]/g, "");
-  };
+  }
 
-  const handlePulseChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = onlyNumbers(event.target.value).slice(0, 3);
-    setPulse(value);
+  function handleBpChange(
+    event: ChangeEvent<HTMLInputElement>,
+  ) {
+    setBp(
+      onlyBloodPressure(event.target.value).slice(0, 7),
+    );
 
-    setErrors((prev) => ({
-      ...prev,
-      pulse: "",
-    }));
-  };
-
-  const handleSpo2Change = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = onlyNumbers(event.target.value).slice(0, 3);
-    setSpo2(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      spo2: "",
-    }));
-  };
-
-  const handleTemperatureChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = onlyDecimal(event.target.value).slice(0, 5);
-    setTemperature(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      temperature: "",
-    }));
-  };
-
-  const handleBpChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = onlyBloodPressure(event.target.value).slice(0, 7);
-    setBp(value);
-
-    setErrors((prev) => ({
-      ...prev,
+    setErrors((previous) => ({
+      ...previous,
       bp: "",
     }));
-  };
+  }
 
-  /*
-   * ------------------------------------------------------
-   * VALIDATION
-   * ------------------------------------------------------
-   */
+  function handlePulseChange(
+    event: ChangeEvent<HTMLInputElement>,
+  ) {
+    setPulse(onlyNumbers(event.target.value).slice(0, 3));
 
-  const validateVitals = () => {
+    setErrors((previous) => ({
+      ...previous,
+      pulse: "",
+    }));
+  }
+
+  function handleSpo2Change(
+    event: ChangeEvent<HTMLInputElement>,
+  ) {
+    setSpo2(onlyNumbers(event.target.value).slice(0, 3));
+
+    setErrors((previous) => ({
+      ...previous,
+      spo2: "",
+    }));
+  }
+
+  function handleTemperatureChange(
+    event: ChangeEvent<HTMLInputElement>,
+  ) {
+    setTemperature(
+      onlyDecimal(event.target.value).slice(0, 5),
+    );
+
+    setErrors((previous) => ({
+      ...previous,
+      temperature: "",
+    }));
+  }
+
+  function validateVitals() {
     const newErrors: Record<string, string> = {};
 
-    // BP format
     if (bp.trim()) {
-      const bpMatch = bp.match(/^(\d{2,3})\/(\d{2,3})$/);
+      const match = bp.match(/^(\d{2,3})\/(\d{2,3})$/);
 
-      if (!bpMatch) {
+      if (!match) {
         newErrors.bp = "Use format like 120/80";
       } else {
-        const systolic = Number(bpMatch[1]);
-        const diastolic = Number(bpMatch[2]);
+        const systolic = Number(match[1]);
+        const diastolic = Number(match[2]);
 
         if (systolic < 50 || systolic > 250) {
           newErrors.bp = "Systolic should be 50–250";
@@ -217,46 +681,105 @@ export default function ASHAVisitsPage() {
       }
     }
 
-    // Pulse
     if (pulse.trim()) {
-      const pulseValue = Number(pulse);
+      const value = Number(pulse);
 
-      if (pulseValue < 30 || pulseValue > 220) {
+      if (value < 30 || value > 220) {
         newErrors.pulse = "Pulse should be 30–220 bpm";
       }
     }
 
-    // SpO2
     if (spo2.trim()) {
-      const spo2Value = Number(spo2);
+      const value = Number(spo2);
 
-      if (spo2Value < 50 || spo2Value > 100) {
+      if (value < 50 || value > 100) {
         newErrors.spo2 = "SpO₂ should be 50–100%";
       }
     }
 
-    // Temperature
     if (temperature.trim()) {
-      const tempValue = Number(temperature);
+      const value = Number(temperature);
 
-      if (tempValue < 80 || tempValue > 115) {
-        newErrors.temperature = "Temperature should be 80–115 °F";
+      if (value < 80 || value > 115) {
+        newErrors.temperature =
+          "Temperature should be 80–115 °F";
       }
     }
 
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
-  };
+  }
 
-  const saveVisit = (syncAfterSave = false) => {
-    if (!selectedPatient) return;
+  function buildVisit(): VisitRecord | null {
+    if (!selectedPatient) {
+      return null;
+    }
 
-    const vitalsValid = validateVitals();
+    const symptomsValue =
+      selectedSymptoms.length > 0
+        ? selectedSymptoms.join(", ")
+        : symptoms.trim();
 
-    if (!vitalsValid) {
+    return {
+      id: `VIS-${Date.now()}`,
+      patientId: selectedPatient.id,
+      patientName: selectedPatient.name,
+      visitType,
+      visitDate,
+      visitTime,
+      symptoms: symptomsValue,
+      bp,
+      pulse,
+      spo2,
+      temperature,
+      medicationAdherence,
+      instructionsFollowed,
+      referralStatus,
+      reachedFacility,
+      treatmentStarted,
+      noShowReason,
+      notes,
+      nextFollowUp,
+      createdAt: new Date().toISOString(),
+      synced: false,
+    };
+  }
+
+  function saveVisit(syncAfterSave = false) {
+    if (!selectedPatient) {
+      setErrors({
+        patient: "Please select a patient first.",
+      });
+
       return;
     }
+
+    if (!validateVitals()) {
+      return;
+    }
+
+    const visit = buildVisit();
+
+    if (!visit) {
+      return;
+    }
+
+    const existingVisits = loadVisits();
+
+    const visitToSave: VisitRecord = {
+      ...visit,
+      synced: syncAfterSave,
+    };
+
+    const updatedVisits = [
+      ...existingVisits.filter(
+        (item) => item.id !== visitToSave.id,
+      ),
+      visitToSave,
+    ];
+
+    saveVisits(updatedVisits);
 
     setSaved(true);
     setSavedAndSynced(false);
@@ -265,45 +788,213 @@ export default function ASHAVisitsPage() {
       setSyncing(true);
 
       setTimeout(() => {
+        const currentVisits = loadVisits();
+
+        const syncedVisits = currentVisits.map((item) =>
+          item.id === visit.id
+            ? {
+                ...item,
+                synced: true,
+              }
+            : item,
+        );
+
+        saveVisits(syncedVisits);
+
         setSyncing(false);
-        setPendingSync((value) => Math.max(0, value - 1));
+        setPendingSync(
+          syncedVisits.filter((item) => !item.synced).length,
+        );
         setSavedAndSynced(true);
-      }, 1200);
+      }, 1000);
 
       return;
     }
 
-    setPendingSync((value) => value + 1);
-  };
+    setPendingSync(
+      updatedVisits.filter((item) => !item.synced).length,
+    );
+  }
 
-  const syncPendingData = () => {
-    if (pendingSync === 0 || syncing) return;
+  function syncPendingData() {
+    if (syncing) {
+      return;
+    }
+
+    const currentVisits = loadVisits();
+    const pending = currentVisits.filter(
+      (item) => !item.synced,
+    );
+
+    if (pending.length === 0) {
+      setPendingSync(0);
+      return;
+    }
 
     setSyncing(true);
 
     setTimeout(() => {
+      const synced = currentVisits.map((item) => ({
+        ...item,
+        synced: true,
+      }));
+
+      saveVisits(synced);
+
       setPendingSync(0);
       setSyncing(false);
-    }, 1200);
-  };
+    }, 1000);
+  }
+
+  function resetForm() {
+    setSaved(false);
+    setSavedAndSynced(false);
+    setSelectedPatient(null);
+    setSearch("");
+
+    setVisitType("Home Visit");
+    setVisitDate(getToday());
+    setVisitTime(getCurrentTime());
+
+    setSelectedSymptoms([]);
+    setSymptoms("");
+
+    setBp("");
+    setPulse("");
+    setSpo2("");
+    setTemperature("");
+
+    setMedicationAdherence("");
+    setInstructionsFollowed("");
+
+    setReferralStatus("");
+    setReachedFacility("");
+    setTreatmentStarted("");
+    setNoShowReason("");
+
+    setNotes("");
+    setNextFollowUp("");
+
+    setErrors({});
+  }
+
+  if (saved && selectedPatient) {
+    return (
+      <main className="min-h-screen bg-slate-50">
+        <div className="mx-auto flex min-h-[calc(100vh-20px)] max-w-3xl items-center justify-center px-5 py-10">
+          <div className="w-full rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-2xl font-bold text-emerald-600">
+              ✓
+            </div>
+
+            <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-emerald-600">
+              Visit Recorded
+            </p>
+
+            <h1 className="mt-2 text-2xl font-bold text-slate-950">
+              Visit saved successfully
+            </h1>
+
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+              The visit for {selectedPatient.name} has been
+              recorded locally.
+            </p>
+
+            <div className="mx-auto mt-6 max-w-md rounded-xl border border-slate-200 bg-slate-50 p-4 text-left">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-100 text-sm font-bold text-teal-700">
+                  {makeInitials(selectedPatient.name)}
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {selectedPatient.name}
+                  </p>
+
+                  <p className="text-xs text-slate-500">
+                    {selectedPatient.id} • {visitType}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
+                <div className="rounded-lg bg-white p-3">
+                  <p className="text-slate-400">Date</p>
+                  <p className="mt-1 font-semibold text-slate-700">
+                    {visitDate}
+                  </p>
+                </div>
+
+                <div className="rounded-lg bg-white p-3">
+                  <p className="text-slate-400">Time</p>
+                  <p className="mt-1 font-semibold text-slate-700">
+                    {visitTime}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              {savedAndSynced ? (
+                <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                  ✓ Visit saved and synced
+                </div>
+              ) : (
+                <div className="rounded-xl bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700">
+                  Visit saved locally • Pending sync:{" "}
+                  {pendingSync}
+                </div>
+              )}
+            </div>
+
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <button
+                type="button"
+                onClick={resetForm}
+                className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                Record Another Visit
+              </button>
+
+              <Link
+                href="/asha"
+                className="rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+              >
+                Back to Dashboard
+              </Link>
+
+              <Link
+                href={`/asha/patients/${selectedPatient.id}`}
+                className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                View Patient
+              </Link>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-transparent">
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-slate-50">
+      <div className="mx-auto w-full max-w-[1250px] px-5 py-6 lg:px-7 lg:py-7">
         {/* HEADER */}
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="mb-2 flex items-center gap-2 text-sm text-slate-500">
               <Link
                 href="/asha"
-                className="transition hover:text-teal-700"
+                className="hover:text-teal-700"
               >
                 ASHA / ANM
               </Link>
 
               <span>/</span>
 
-              <span className="text-slate-700">Record Visit</span>
+              <span className="text-slate-700">
+                Record Visit
+              </span>
             </div>
 
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
@@ -311,8 +1002,8 @@ export default function ASHAVisitsPage() {
             </h1>
 
             <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
-              Record patient condition, field observations and referral
-              follow-up details.
+              Record patient observations, vitals and
+              follow-up information.
             </p>
           </div>
 
@@ -334,23 +1025,17 @@ export default function ASHAVisitsPage() {
             <button
               type="button"
               onClick={syncPendingData}
-              className="rounded-xl border border-slate-200 bg-white/90 px-4 py-3 text-left shadow-sm transition hover:border-teal-200 hover:bg-teal-50/50"
+              disabled={syncing}
+              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-left shadow-sm transition hover:border-teal-200 hover:bg-teal-50/50 disabled:opacity-60"
             >
               <div className="flex items-center gap-2">
-                <svg
-                  className={`h-4 w-4 text-teal-700 ${
+                <span
+                  className={`text-teal-700 ${
                     syncing ? "animate-spin" : ""
                   }`}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
                 >
-                  <path d="M20 11a8.1 8.1 0 0 0-15.5-2" />
-                  <path d="M4 5v4h4" />
-                  <path d="M4 13a8.1 8.1 0 0 0 15.5 2" />
-                  <path d="M20 19v-4h-4" />
-                </svg>
+                  ↻
+                </span>
 
                 <span className="text-sm font-semibold text-slate-800">
                   {syncing ? "Syncing..." : "Sync Now"}
@@ -365,20 +1050,11 @@ export default function ASHAVisitsPage() {
         </div>
 
         {/* WORKFLOW */}
-        <div className="mb-6 rounded-2xl border border-teal-100 bg-white/90 p-4 shadow-sm">
+        <div className="mb-6 rounded-2xl border border-teal-100 bg-white p-4 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-                <svg
-                  className="h-5 w-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                >
-                  <path d="M9 11l3 3L22 4" />
-                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                </svg>
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-lg text-teal-700">
+                ✓
               </div>
 
               <div>
@@ -387,7 +1063,8 @@ export default function ASHAVisitsPage() {
                 </p>
 
                 <p className="mt-1 text-xs text-slate-500">
-                  Patient → Visit → Vitals → Referral → Save → Sync
+                  Patient → Visit → Vitals → Referral →
+                  Save → Sync
                 </p>
               </div>
             </div>
@@ -401,42 +1078,44 @@ export default function ASHAVisitsPage() {
 
         {/* MAIN GRID */}
         <div className="grid gap-6 xl:grid-cols-[0.82fr_1.55fr]">
-          {/* PATIENT */}
-          <section className="rounded-2xl border border-slate-200 bg-white/90 shadow-sm">
+          {/* PATIENT SELECTION */}
+          <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="border-b border-slate-100 px-5 py-4">
               <h2 className="font-semibold text-slate-900">
                 1. Select Patient
               </h2>
 
               <p className="mt-1 text-xs text-slate-500">
-                Search by name, patient ID or village.
+                Search by name, patient ID, phone or village.
               </p>
             </div>
 
             <div className="p-5">
               <div className="relative">
-                <svg
-                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                >
-                  <circle cx="11" cy="11" r="7" />
-                  <path d="M20 20l-4-4" />
-                </svg>
+                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                  ⌕
+                </span>
 
                 <input
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(event) =>
+                    setSearch(event.target.value)
+                  }
                   placeholder="Search patient..."
                   className="w-full rounded-xl border border-slate-200 bg-white px-10 py-3 text-sm text-slate-900 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-100"
                 />
               </div>
 
-              <div className="mt-4 space-y-2">
+              {errors.patient && (
+                <p className="mt-2 text-xs font-medium text-red-600">
+                  {errors.patient}
+                </p>
+              )}
+
+              <div className="mt-4 max-h-[520px] space-y-2 overflow-y-auto pr-1">
                 {filteredPatients.map((patient) => {
-                  const active = selectedPatient?.id === patient.id;
+                  const active =
+                    selectedPatient?.id === patient.id;
 
                   return (
                     <button
@@ -450,23 +1129,32 @@ export default function ASHAVisitsPage() {
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="truncate font-semibold text-slate-900">
-                            {patient.name}
-                          </p>
+                        <div className="flex min-w-0 items-center gap-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-xs font-bold text-teal-700">
+                            {makeInitials(patient.name)}
+                          </div>
 
-                          <p className="mt-0.5 text-xs text-slate-500">
-                            {patient.id} • {patient.age} yrs •{" "}
-                            {patient.gender}
-                          </p>
+                          <div className="min-w-0">
+                            <p className="truncate font-semibold text-slate-900">
+                              {patient.name}
+                            </p>
 
-                          <p className="mt-1 text-xs text-slate-500">
-                            {patient.village}
-                          </p>
+                            <p className="mt-0.5 text-xs text-slate-500">
+                              {patient.id} • {patient.age} yrs •{" "}
+                              {patient.gender}
+                            </p>
+
+                            <p className="mt-1 truncate text-xs text-slate-500">
+                              {patient.village}
+                            </p>
+                          </div>
                         </div>
 
                         <ReferralStatus
-                          status={patient.referralStatus}
+                          status={
+                            patient.referralStatus ??
+                            patient.status
+                          }
                         />
                       </div>
                     </button>
@@ -481,7 +1169,7 @@ export default function ASHAVisitsPage() {
                   </p>
 
                   <p className="mt-1 text-xs text-slate-500">
-                    Try another name, ID or village.
+                    Try another name, ID, phone or village.
                   </p>
                 </div>
               )}
@@ -493,11 +1181,12 @@ export default function ASHAVisitsPage() {
                   </p>
 
                   <p className="mt-1 text-xs leading-5 text-teal-800">
-                    Register the patient first, then record the field visit.
+                    Register the patient first, then record
+                    the field visit.
                   </p>
 
                   <Link
-                    href="/patients/register"
+                    href="/asha/register-patient"
                     className="mt-3 inline-flex rounded-lg bg-teal-700 px-3 py-2 text-xs font-semibold text-white transition hover:bg-teal-800"
                   >
                     Register Patient
@@ -521,7 +1210,7 @@ export default function ASHAVisitsPage() {
                     </div>
 
                     <Link
-                      href={`/patients/${selectedPatient.id}`}
+                      href={`/asha/patients/${selectedPatient.id}`}
                       className="rounded-lg border border-teal-200 bg-white px-3 py-2 text-xs font-semibold text-teal-800 hover:bg-teal-50"
                     >
                       View Profile
@@ -533,7 +1222,7 @@ export default function ASHAVisitsPage() {
           </section>
 
           {/* VISIT FORM */}
-          <section className="rounded-2xl border border-slate-200 bg-white/90 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="border-b border-slate-100 px-5 py-4">
               <h2 className="font-semibold text-slate-900">
                 2. Visit Details
@@ -546,19 +1235,10 @@ export default function ASHAVisitsPage() {
 
             <div className="p-5">
               {!selectedPatient ? (
-                <div className="flex min-h-[540px] items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
+                <div className="flex min-h-[540px] items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center">
                   <div>
-                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-50 text-teal-700">
-                      <svg
-                        className="h-7 w-7"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                      >
-                        <circle cx="12" cy="8" r="4" />
-                        <path d="M4 21a8 8 0 0 1 16 0" />
-                      </svg>
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-50 text-xl text-teal-700">
+                      ♙
                     </div>
 
                     <h3 className="mt-4 font-semibold text-slate-900">
@@ -566,8 +1246,8 @@ export default function ASHAVisitsPage() {
                     </h3>
 
                     <p className="mx-auto mt-1 max-w-sm text-sm leading-6 text-slate-500">
-                      Select a patient from the left panel to start recording
-                      the visit.
+                      Select a patient from the left panel to
+                      start recording the visit.
                     </p>
                   </div>
                 </div>
@@ -583,8 +1263,8 @@ export default function ASHAVisitsPage() {
                       <Field label="Visit Type">
                         <select
                           value={visitType}
-                          onChange={(e) =>
-                            setVisitType(e.target.value)
+                          onChange={(event) =>
+                            setVisitType(event.target.value)
                           }
                           className="input-style"
                         >
@@ -598,8 +1278,8 @@ export default function ASHAVisitsPage() {
                         <input
                           type="date"
                           value={visitDate}
-                          onChange={(e) =>
-                            setVisitDate(e.target.value)
+                          onChange={(event) =>
+                            setVisitDate(event.target.value)
                           }
                           className="input-style"
                         />
@@ -609,8 +1289,8 @@ export default function ASHAVisitsPage() {
                         <input
                           type="time"
                           value={visitTime}
-                          onChange={(e) =>
-                            setVisitTime(e.target.value)
+                          onChange={(event) =>
+                            setVisitTime(event.target.value)
                           }
                           className="input-style"
                         />
@@ -619,15 +1299,46 @@ export default function ASHAVisitsPage() {
                   </div>
 
                   {/* SYMPTOMS */}
-                  <Field label="Symptoms / Patient Complaint">
+                  <div>
+                    <p className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-500">
+                      Symptoms
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {symptomsList.map((symptom) => {
+                        const active =
+                          selectedSymptoms.includes(symptom);
+
+                        return (
+                          <button
+                            key={symptom}
+                            type="button"
+                            onClick={() =>
+                              toggleSymptom(symptom)
+                            }
+                            className={`rounded-full border px-3 py-2 text-xs font-semibold transition ${
+                              active
+                                ? "border-teal-300 bg-teal-50 text-teal-700"
+                                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                            }`}
+                          >
+                            {active ? "✓ " : ""}
+                            {symptom}
+                          </button>
+                        );
+                      })}
+                    </div>
+
                     <textarea
                       rows={3}
                       value={symptoms}
-                      onChange={(e) => setSymptoms(e.target.value)}
-                      placeholder="Describe current symptoms or patient complaint..."
-                      className="input-style resize-none"
+                      onChange={(event) =>
+                        setSymptoms(event.target.value)
+                      }
+                      placeholder="Additional symptoms or patient complaint..."
+                      className="input-style mt-3 resize-none"
                     />
-                  </Field>
+                  </div>
 
                   {/* VITALS */}
                   <div>
@@ -722,14 +1433,20 @@ export default function ASHAVisitsPage() {
                       <Field label="Medication Adherence">
                         <select
                           value={medicationAdherence}
-                          onChange={(e) =>
-                            setMedicationAdherence(e.target.value)
+                          onChange={(event) =>
+                            setMedicationAdherence(
+                              event.target.value,
+                            )
                           }
                           className="input-style"
                         >
                           <option value="">Select</option>
-                          <option>Taking as prescribed</option>
-                          <option>Partially following</option>
+                          <option>
+                            Taking as prescribed
+                          </option>
+                          <option>
+                            Partially following
+                          </option>
                           <option>Not taking</option>
                           <option>Not applicable</option>
                         </select>
@@ -738,8 +1455,10 @@ export default function ASHAVisitsPage() {
                       <Field label="Referral Instructions Followed?">
                         <select
                           value={instructionsFollowed}
-                          onChange={(e) =>
-                            setInstructionsFollowed(e.target.value)
+                          onChange={(event) =>
+                            setInstructionsFollowed(
+                              event.target.value,
+                            )
                           }
                           className="input-style"
                         >
@@ -754,21 +1473,24 @@ export default function ASHAVisitsPage() {
                   </div>
 
                   {/* REFERRAL */}
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                     <p className="mb-1 text-xs font-bold uppercase tracking-wide text-slate-500">
                       Referral Follow-up
                     </p>
 
                     <p className="mb-4 text-xs text-slate-500">
-                      Update referral progress for a referred patient.
+                      Update referral progress for a referred
+                      patient.
                     </p>
 
                     <div className="grid gap-4 md:grid-cols-2">
                       <Field label="Current Referral Status">
                         <select
                           value={referralStatus}
-                          onChange={(e) =>
-                            setReferralStatus(e.target.value)
+                          onChange={(event) =>
+                            setReferralStatus(
+                              event.target.value,
+                            )
                           }
                           className="input-style"
                         >
@@ -785,8 +1507,10 @@ export default function ASHAVisitsPage() {
                       <Field label="Patient Reached Facility?">
                         <select
                           value={reachedFacility}
-                          onChange={(e) =>
-                            setReachedFacility(e.target.value)
+                          onChange={(event) =>
+                            setReachedFacility(
+                              event.target.value,
+                            )
                           }
                           className="input-style"
                         >
@@ -800,8 +1524,10 @@ export default function ASHAVisitsPage() {
                       <Field label="Treatment Started?">
                         <select
                           value={treatmentStarted}
-                          onChange={(e) =>
-                            setTreatmentStarted(e.target.value)
+                          onChange={(event) =>
+                            setTreatmentStarted(
+                              event.target.value,
+                            )
                           }
                           className="input-style"
                         >
@@ -815,8 +1541,10 @@ export default function ASHAVisitsPage() {
                       <Field label="No-show Reason">
                         <select
                           value={noShowReason}
-                          onChange={(e) =>
-                            setNoShowReason(e.target.value)
+                          onChange={(event) =>
+                            setNoShowReason(
+                              event.target.value,
+                            )
                           }
                           className="input-style"
                         >
@@ -838,7 +1566,9 @@ export default function ASHAVisitsPage() {
                       <textarea
                         rows={4}
                         value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
+                        onChange={(event) =>
+                          setNotes(event.target.value)
+                        }
                         placeholder="Add field observations, counselling notes or follow-up details..."
                         className="input-style resize-none"
                       />
@@ -848,8 +1578,8 @@ export default function ASHAVisitsPage() {
                       <input
                         type="date"
                         value={nextFollowUp}
-                        onChange={(e) =>
-                          setNextFollowUp(e.target.value)
+                        onChange={(event) =>
+                          setNextFollowUp(event.target.value)
                         }
                         className="input-style"
                       />
@@ -860,24 +1590,16 @@ export default function ASHAVisitsPage() {
                   <div className="border-t border-slate-100 pt-5">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        {savedAndSynced ? (
-                          <div className="flex items-center gap-2 text-sm font-semibold text-emerald-700">
-                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100">
-                              ✓
-                            </span>
-                            Visit saved and synced
-                          </div>
-                        ) : saved ? (
-                          <div className="flex items-center gap-2 text-sm font-semibold text-emerald-700">
-                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100">
-                              ✓
-                            </span>
-                            Visit saved locally
-                          </div>
-                        ) : (
-                          <p className="text-xs text-slate-500">
-                            Invalid vital values will be highlighted before
-                            saving.
+                        <p className="text-xs text-slate-500">
+                          Visit will be stored locally and can
+                          be synced later.
+                        </p>
+
+                        {pendingSync > 0 && (
+                          <p className="mt-1 text-xs font-medium text-amber-600">
+                            {pendingSync} visit
+                            {pendingSync !== 1 ? "s" : ""}{" "}
+                            pending sync
                           </p>
                         )}
                       </div>
@@ -928,31 +1650,30 @@ export default function ASHAVisitsPage() {
           <InfoCard
             title="Offline Capture"
             subtitle="Sync later"
-            text="Field data can be captured locally and synchronized when connectivity is available."
+            text="Field data is stored in browser localStorage and can be synchronized when connectivity is available."
             blue
           />
         </div>
 
         {/* NOTE */}
-        <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50/70 px-4 py-3">
+        <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
           <div className="flex items-start gap-3">
-            <svg
-              className="mt-0.5 h-4 w-4 shrink-0 text-blue-600"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 10v6" />
-              <path d="M12 7h.01" />
-            </svg>
+            <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-xs font-bold text-blue-600">
+              i
+            </div>
 
-            <p className="text-xs leading-5 text-blue-800">
-              Prototype workflow: patient records, offline state and sync
-              actions currently use demo frontend data. Backend storage and
-              real synchronization are not connected yet.
-            </p>
+            <div>
+              <p className="text-xs font-semibold text-blue-800">
+                Offline-first patient visits
+              </p>
+
+              <p className="mt-1 text-[11px] leading-5 text-blue-700">
+                Registered patients are loaded from browser
+                localStorage. Visit records are also stored
+                locally until backend synchronization is
+                connected.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -960,17 +1681,13 @@ export default function ASHAVisitsPage() {
   );
 }
 
-/* =========================================================
-   COMPONENTS
-   ========================================================= */
-
 function Field({
   label,
   children,
   error,
 }: {
   label: string;
-  children: React.ReactNode;
+  children: ReactNode;
   error?: string;
 }) {
   return (
@@ -990,12 +1707,21 @@ function Field({
   );
 }
 
-function ReferralStatus({ status }: { status: string }) {
+function ReferralStatus({
+  status,
+}: {
+  status: string;
+}) {
   const styles: Record<string, string> = {
-    "In-Transit": "bg-blue-50 text-blue-700",
+    Active: "bg-teal-50 text-teal-700",
     "Follow-up Due": "bg-amber-50 text-amber-700",
+    Discharged: "bg-emerald-50 text-emerald-700",
+    "In-Transit": "bg-blue-50 text-blue-700",
     "Under Treatment": "bg-violet-50 text-violet-700",
     "Referral Closed": "bg-slate-100 text-slate-600",
+    Closed: "bg-slate-100 text-slate-600",
+    Received: "bg-emerald-50 text-emerald-700",
+    Created: "bg-blue-50 text-blue-700",
   };
 
   return (
@@ -1025,17 +1751,19 @@ function InfoCard({
   const wrapper = amber
     ? "border-amber-200 bg-amber-50/80"
     : blue
-    ? "border-blue-200 bg-blue-50/80"
-    : "border-slate-200 bg-white/85";
+      ? "border-blue-200 bg-blue-50/80"
+      : "border-slate-200 bg-white";
 
   const label = amber
     ? "text-amber-700"
     : blue
-    ? "text-blue-700"
-    : "text-teal-700";
+      ? "text-blue-700"
+      : "text-teal-700";
 
   return (
-    <div className={`rounded-2xl border p-4 shadow-sm ${wrapper}`}>
+    <div
+      className={`rounded-2xl border p-4 shadow-sm ${wrapper}`}
+    >
       <p
         className={`text-[11px] font-bold uppercase tracking-wide ${label}`}
       >
