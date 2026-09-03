@@ -3,6 +3,7 @@
 import {
   ChangeEvent,
   ReactNode,
+  Suspense,
   useEffect,
   useMemo,
   useState,
@@ -188,14 +189,13 @@ function normalizePatient(raw: unknown): Patient | null {
 
   const item = raw as Record<string, unknown>;
 
-  const id =
-    String(
-      item.id ??
-        item.patientId ??
-        item.patient_id ??
-        item.patientID ??
-        "",
-    ).trim();
+  const id = String(
+    item.id ??
+      item.patientId ??
+      item.patient_id ??
+      item.patientID ??
+      "",
+  ).trim();
 
   const name = String(item.name ?? item.patientName ?? "").trim();
 
@@ -224,9 +224,7 @@ function normalizePatient(raw: unknown): Patient | null {
   ).trim();
 
   const rawStatus = String(
-    item.status ??
-      item.referralStatus ??
-      "Active",
+    item.status ?? item.referralStatus ?? "Active",
   ).trim();
 
   let status: PatientStatus = "Active";
@@ -255,12 +253,8 @@ function normalizePatient(raw: unknown): Patient | null {
     address: String(item.address ?? ""),
     condition,
     status,
-    referralStatus: String(
-      item.referralStatus ?? rawStatus,
-    ),
-    lastVisit: String(
-      item.lastVisit ?? item.registeredDate ?? "",
-    ),
+    referralStatus: String(item.referralStatus ?? rawStatus),
+    lastVisit: String(item.lastVisit ?? item.registeredDate ?? ""),
   };
 }
 
@@ -345,11 +339,6 @@ function loadPatientsFromLocalStorage(): Patient[] {
     }
   }
 
-  /*
-   * Fallback:
-   * The registration page may use a different localStorage key.
-   * Scan all localStorage entries and detect patient-shaped data.
-   */
   for (let index = 0; index < window.localStorage.length; index++) {
     const key = window.localStorage.key(index);
 
@@ -419,7 +408,7 @@ function saveVisits(visits: VisitRecord[]) {
   );
 }
 
-export default function ASHAVisitsPage() {
+function ASHAVisitsContent() {
   const searchParams = useSearchParams();
 
   const [patients, setPatients] = useState<Patient[]>(DEMO_PATIENTS);
@@ -979,7 +968,6 @@ export default function ASHAVisitsPage() {
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="mx-auto w-full max-w-[1250px] px-5 py-6 lg:px-7 lg:py-7">
-        {/* HEADER */}
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="mb-2 flex items-center gap-2 text-sm text-slate-500">
@@ -1049,7 +1037,6 @@ export default function ASHAVisitsPage() {
           </div>
         </div>
 
-        {/* WORKFLOW */}
         <div className="mb-6 rounded-2xl border border-teal-100 bg-white p-4 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3">
@@ -1076,9 +1063,7 @@ export default function ASHAVisitsPage() {
           </div>
         </div>
 
-        {/* MAIN GRID */}
         <div className="grid gap-6 xl:grid-cols-[0.82fr_1.55fr]">
-          {/* PATIENT SELECTION */}
           <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="border-b border-slate-100 px-5 py-4">
               <h2 className="font-semibold text-slate-900">
@@ -1221,7 +1206,6 @@ export default function ASHAVisitsPage() {
             </div>
           </section>
 
-          {/* VISIT FORM */}
           <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="border-b border-slate-100 px-5 py-4">
               <h2 className="font-semibold text-slate-900">
@@ -1253,7 +1237,6 @@ export default function ASHAVisitsPage() {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  {/* VISIT INFO */}
                   <div>
                     <p className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-500">
                       Visit Information
@@ -1298,7 +1281,6 @@ export default function ASHAVisitsPage() {
                     </div>
                   </div>
 
-                  {/* SYMPTOMS */}
                   <div>
                     <p className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-500">
                       Symptoms
@@ -1340,7 +1322,6 @@ export default function ASHAVisitsPage() {
                     />
                   </div>
 
-                  {/* VITALS */}
                   <div>
                     <p className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-500">
                       Vitals
@@ -1423,7 +1404,6 @@ export default function ASHAVisitsPage() {
                     </div>
                   </div>
 
-                  {/* MEDICATION */}
                   <div>
                     <p className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-500">
                       Medication & Instructions
@@ -1472,7 +1452,6 @@ export default function ASHAVisitsPage() {
                     </div>
                   </div>
 
-                  {/* REFERRAL */}
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                     <p className="mb-1 text-xs font-bold uppercase tracking-wide text-slate-500">
                       Referral Follow-up
@@ -1560,7 +1539,6 @@ export default function ASHAVisitsPage() {
                     </div>
                   </div>
 
-                  {/* NOTES */}
                   <div className="grid gap-4 md:grid-cols-[1fr_220px]">
                     <Field label="ASHA / ANM Notes">
                       <textarea
@@ -1586,7 +1564,6 @@ export default function ASHAVisitsPage() {
                     </Field>
                   </div>
 
-                  {/* SAVE */}
                   <div className="border-t border-slate-100 pt-5">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div>
@@ -1632,7 +1609,6 @@ export default function ASHAVisitsPage() {
           </section>
         </div>
 
-        {/* INFO CARDS */}
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           <InfoCard
             title="Care Continuity"
@@ -1655,7 +1631,6 @@ export default function ASHAVisitsPage() {
           />
         </div>
 
-        {/* NOTE */}
         <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
           <div className="flex items-start gap-3">
             <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-xs font-bold text-blue-600">
@@ -1778,5 +1753,21 @@ function InfoCard({
         {text}
       </p>
     </div>
+  );
+}
+
+export default function ASHAVisitsPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center bg-slate-50">
+          <div className="rounded-xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-500 shadow-sm">
+            Loading visit form...
+          </div>
+        </main>
+      }
+    >
+      <ASHAVisitsContent />
+    </Suspense>
   );
 }
