@@ -1,271 +1,303 @@
-import {
-  ArrowLeft,
-  CalendarDays,
-  FileText,
-  HeartPulse,
-  MapPin,
-  Phone,
-  ShieldCheck,
-  UserRound,
-} from "lucide-react";
+"use client";
+
+import { use, useState } from "react";
 import Link from "next/link";
 
-type PatientPageProps = {
-  params: Promise<{
-    id: string;
-  }>;
+type Status = "Normal" | "Abnormal" | "Pending" | "Active";
+
+const patient = {
+  id: "NS-10284",
+  name: "Ramesh Kumar",
+  age: 47,
+  gender: "Male",
+  bloodGroup: "B+",
+  mobile: "+91 98••••••42",
+  aadhaar: "•••• •••• 4821",
+  abha: "91-24XX-XXXX-7812",
+  allergies: ["Penicillin"],
+  chronicConditions: ["Hypertension"],
+  emergencyContact: "Sunita Kumar • +91 97••••••18",
+  referralId: "REF-24017",
+  referringFacility: "Primary Health Centre",
+  receivingFacility: "SMS Hospital",
+  referralReason: "Persistent headache, dizziness and uncontrolled BP",
+  referralStatus: "Received",
 };
 
-const patients = {
-  "NS-10284": {
-    name: "Ramesh Kumar",
-    age: 52,
-    gender: "Male",
-    aadhaar: "XXXX XXXX 4821",
-    abha: "91-XXXX-XXXX-1234",
-    mobile: "98XXXXXX42",
-    village: "Bassi, Jaipur",
-    bloodGroup: "B+",
-    status: "Active Patient",
-    referralId: "NS-28491",
-    referralFrom: "PHC Bassi",
-    referralTo: "District Hospital Jaipur",
-    referralReason: "Cardiology consultation",
-    referralStatus: "In Progress",
-    referralDate: "28 Aug 2026",
-    visits: [
-      {
-        date: "28 Aug 2026",
-        facility: "PHC Bassi",
-        note: "Initial assessment and referral created",
-      },
-      {
-        date: "15 Aug 2026",
-        facility: "Sub-Centre Bassi",
-        note: "Routine follow-up",
-      },
-      {
-        date: "02 Aug 2026",
-        facility: "PHC Bassi",
-        note: "Blood pressure and vitals recorded",
-      },
-    ],
-    history: {
-      hypertension: "Under monitoring",
-      diabetes: "No known history",
-      allergies: "None reported",
-      medication: "As prescribed",
-    },
+const diagnoses = [
+  {
+    name: "Hypertension",
+    type: "Primary diagnosis",
+    status: "Active",
+    date: "02 Sep 2026",
+    doctor: "Dr. Meera Sharma",
   },
-
-  "NS-10279": {
-    name: "Sunita Devi",
-    age: 46,
-    gender: "Female",
-    aadhaar: "XXXX XXXX 9176",
-    abha: "91-XXXX-XXXX-5612",
-    mobile: "97XXXXXX18",
-    village: "Chomu, Jaipur",
-    bloodGroup: "A+",
-    status: "Follow-up Due",
-    referralId: "NS-28478",
-    referralFrom: "PHC Chomu",
-    referralTo: "District Hospital Jaipur",
-    referralReason: "General medicine consultation",
-    referralStatus: "Follow-up Due",
-    referralDate: "27 Aug 2026",
-    visits: [
-      {
-        date: "27 Aug 2026",
-        facility: "PHC Chomu",
-        note: "Follow-up assessment completed",
-      },
-      {
-        date: "12 Aug 2026",
-        facility: "PHC Chomu",
-        note: "Initial consultation",
-      },
-      {
-        date: "04 Aug 2026",
-        facility: "Sub-Centre Chomu",
-        note: "Community health visit",
-      },
-    ],
-    history: {
-      hypertension: "Under monitoring",
-      diabetes: "Type 2 diabetes",
-      allergies: "None reported",
-      medication: "Metformin as prescribed",
-    },
+  {
+    name: "Mild Anemia",
+    type: "Secondary finding",
+    status: "Active",
+    date: "04 Sep 2026",
+    doctor: "District Diagnostic Centre",
   },
+];
 
-  "NS-10271": {
-    name: "Mohan Lal",
-    age: 61,
-    gender: "Male",
-    aadhaar: "XXXX XXXX 3045",
-    abha: "91-XXXX-XXXX-7821",
-    mobile: "96XXXXXX73",
-    village: "Bagru, Jaipur",
-    bloodGroup: "O+",
-    status: "Stable",
-    referralId: "NS-28461",
-    referralFrom: "PHC Bagru",
-    referralTo: "District Hospital Jaipur",
-    referralReason: "Routine specialist review",
-    referralStatus: "Completed",
-    referralDate: "25 Aug 2026",
-    visits: [
-      {
-        date: "25 Aug 2026",
-        facility: "PHC Bagru",
-        note: "Routine specialist review",
-      },
-      {
-        date: "10 Aug 2026",
-        facility: "PHC Bagru",
-        note: "Medication review",
-      },
-      {
-        date: "28 Jul 2026",
-        facility: "PHC Bagru",
-        note: "Vitals and health assessment",
-      },
-    ],
-    history: {
-      hypertension: "Controlled",
-      diabetes: "No known history",
-      allergies: "Penicillin reported",
-      medication: "Amlodipine 5mg",
-    },
+const vitals = [
+  ["Blood Pressure", "158/96", "mmHg"],
+  ["Pulse", "84", "bpm"],
+  ["Temperature", "98.4", "°F"],
+  ["SpO₂", "97", "%"],
+  ["Respiratory Rate", "18", "/min"],
+  ["Weight", "72", "kg"],
+];
+
+const labReports = [
+  {
+    test: "Complete Blood Count",
+    date: "04 Sep 2026",
+    status: "Abnormal" as Status,
+    finding: "Hemoglobin 10.8 g/dL",
   },
-
-  "NS-10263": {
-    name: "Kamla Devi",
-    age: 58,
-    gender: "Female",
-    aadhaar: "XXXX XXXX 6159",
-    abha: "91-XXXX-XXXX-3490",
-    mobile: "95XXXXXX26",
-    village: "Sanganer, Jaipur",
-    bloodGroup: "B-",
-    status: "Referral Closed",
-    referralId: "NS-28432",
-    referralFrom: "PHC Sanganer",
-    referralTo: "District Hospital Jaipur",
-    referralReason: "Orthopedic consultation",
-    referralStatus: "Closed",
-    referralDate: "22 Aug 2026",
-    visits: [
-      {
-        date: "22 Aug 2026",
-        facility: "District Hospital Jaipur",
-        note: "Specialist consultation completed",
-      },
-      {
-        date: "08 Aug 2026",
-        facility: "PHC Sanganer",
-        note: "Referral created",
-      },
-      {
-        date: "20 Jul 2026",
-        facility: "PHC Sanganer",
-        note: "Initial assessment",
-      },
-    ],
-    history: {
-      hypertension: "Under monitoring",
-      diabetes: "No known history",
-      allergies: "None reported",
-      medication: "Pain management as prescribed",
-    },
+  {
+    test: "Kidney Function Test",
+    date: "04 Sep 2026",
+    status: "Normal" as Status,
+    finding: "Creatinine 1.1 mg/dL",
   },
-};
+  {
+    test: "Blood Glucose",
+    date: "04 Sep 2026",
+    status: "Normal" as Status,
+    finding: "Fasting 96 mg/dL",
+  },
+];
 
-export default async function PatientPage({
-  params,
-}: PatientPageProps) {
-  const { id } = await params;
+const diagnostics = [
+  {
+    name: "12-Lead ECG",
+    date: "05 Sep 2026",
+    result: "Sinus rhythm, no acute abnormality noted",
+    status: "Normal" as Status,
+  },
+  {
+    name: "Chest X-Ray",
+    date: "06 Sep 2026",
+    result: "Radiology review pending",
+    status: "Pending" as Status,
+  },
+];
 
-  const patient = patients[id as keyof typeof patients];
+const medicines = [
+  {
+    name: "Amlodipine",
+    dose: "5 mg",
+    route: "Oral",
+    frequency: "Once daily",
+    duration: "30 days",
+  },
+  {
+    name: "Paracetamol",
+    dose: "500 mg",
+    route: "Oral",
+    frequency: "As needed",
+    duration: "5 days",
+  },
+];
 
-  if (!patient) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <h1 className="text-2xl font-bold text-slate-900">
-            Patient not found
-          </h1>
+const surgeries = [
+  {
+    procedure: "No surgery recorded",
+    date: "08 Sep 2026",
+    hospital: "SMS Hospital",
+    outcome: "Medical management continued",
+  },
+];
 
-          <p className="mt-2 text-sm text-slate-500">
-            No patient record exists for ID: {id}
-          </p>
+const admissions = [
+  {
+    id: "ADM-24017",
+    date: "07 Sep 2026",
+    ward: "Cardiology Observation",
+    reason: "Uncontrolled blood pressure + symptoms",
+    status: "Discharged",
+  },
+];
 
-          <Link
-            href="/patients"
-            className="mt-5 inline-flex rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
-          >
-            Back to Patients
-          </Link>
-        </div>
-      </main>
-    );
+const timeline = [
+  {
+    date: "02 Sep 2026",
+    title: "OPD Consultation",
+    description: "Patient assessed for headache, dizziness and elevated BP.",
+    tag: "Visit",
+  },
+  {
+    date: "02 Sep 2026",
+    title: "Hypertension Diagnosed",
+    description: "Primary diagnosis recorded and treatment initiated.",
+    tag: "Diagnosis",
+  },
+  {
+    date: "04 Sep 2026",
+    title: "Lab Investigations Completed",
+    description: "CBC, KFT and blood glucose results added.",
+    tag: "Lab",
+  },
+  {
+    date: "05 Sep 2026",
+    title: "ECG Completed",
+    description: "No acute abnormality noted.",
+    tag: "Diagnostic",
+  },
+  {
+    date: "07 Sep 2026",
+    title: "Referral Received",
+    description: "Patient received at SMS Hospital under referral REF-24017.",
+    tag: "Referral",
+  },
+  {
+    date: "07 Sep 2026",
+    title: "Specialist Admission",
+    description: "Short-stay admission for specialist evaluation.",
+    tag: "Admission",
+  },
+  {
+    date: "09 Sep 2026",
+    title: "Discharged",
+    description: "Patient stable and advised outpatient follow-up.",
+    tag: "Discharge",
+  },
+];
+
+function statusClasses(status: Status) {
+  switch (status) {
+    case "Normal":
+      return "border-emerald-200 bg-emerald-50 text-emerald-700";
+    case "Abnormal":
+      return "border-amber-200 bg-amber-50 text-amber-700";
+    case "Pending":
+      return "border-blue-200 bg-blue-50 text-blue-700";
+    case "Active":
+      return "border-teal-200 bg-teal-50 text-teal-700";
+    default:
+      return "border-slate-200 bg-slate-50 text-slate-600";
   }
+}
+
+export default function DoctorPatientPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+
+  const [activeTab, setActiveTab] = useState("Overview");
+
+  const tabs = [
+    "Overview",
+    "Medical History",
+    "Labs & Diagnostics",
+    "Medicines",
+    "Admissions & Surgery",
+    "Timeline",
+  ];
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
+    <div className="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        {/* Breadcrumb */}
+        <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-slate-500">
           <Link
-            href="/patients"
-            className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900"
+            href="/doctor"
+            className="transition hover:text-teal-700"
           >
-            <ArrowLeft size={18} />
-            Back to Patients
+            Doctor Dashboard
           </Link>
 
-          <div className="flex items-center gap-2 text-sm text-slate-500">
-            <ShieldCheck size={17} className="text-teal-700" />
-            Consent-based access
-          </div>
+          <span>/</span>
+
+          <Link
+            href="/doctor/referrals"
+            className="transition hover:text-teal-700"
+          >
+            Referrals
+          </Link>
+
+          <span>/</span>
+          <span>Patient {id}</span>
         </div>
-      </header>
 
-      <section className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
-        {/* Page heading */}
-        <div>
-          <p className="text-sm font-medium text-teal-700">
-            PATIENT PROFILE
-          </p>
-
-          <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">
+        {/* Header */}
+        <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
                 {patient.name}
               </h1>
 
-              <p className="mt-1 text-sm text-slate-500">
-                Patient ID: {id}
-              </p>
+              <span className="rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-bold text-teal-700">
+                {patient.id}
+              </span>
+
+              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+                Referral Received
+              </span>
             </div>
 
-            <span className="w-fit rounded-full bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-700">
-              {patient.status}
-            </span>
+            <p className="mt-1 text-sm text-slate-500">
+              Complete clinical view for referral and treatment decision-making.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/patients/${id}/records`}
+              className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-white"
+            >
+              Full Medical Records
+            </Link>
+
+            <Link
+              href={`/doctor/patients/${id}/treatment`}
+              className="rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700"
+            >
+              Start Treatment →
+            </Link>
           </div>
         </div>
 
-        {/* Identity */}
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        {/* Critical alerts */}
+        <div className="mb-6 grid gap-4 lg:grid-cols-3">
+          <ClinicalAlert
+            title="Allergy Alert"
+            value="Penicillin"
+            description="Verify drug allergies before medication orders."
+            tone="danger"
+          />
+
+          <ClinicalAlert
+            title="Current Diagnosis"
+            value="Hypertension"
+            description="Condition currently under active management."
+            tone="warning"
+          />
+
+          <ClinicalAlert
+            title="Pending Investigation"
+            value="Chest X-Ray"
+            description="Final radiology review is still pending."
+            tone="info"
+          />
+        </div>
+
+        {/* Patient profile */}
+        <section className="mb-6 rounded-2xl border border-teal-100 bg-white/85 p-5 shadow-sm backdrop-blur">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-teal-50 text-teal-700">
-                <UserRound size={28} />
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-teal-100 text-xl font-bold text-teal-700">
+                RK
               </div>
 
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">
+                <h2 className="font-bold text-slate-900">
                   {patient.name}
                 </h2>
 
@@ -274,295 +306,535 @@ export default async function PatientPage({
                   {patient.bloodGroup}
                 </p>
 
-                <div className="mt-2 flex items-center gap-2 text-sm text-slate-500">
-                  <MapPin size={15} />
-                  {patient.village}
-                </div>
+                <p className="mt-1 text-xs text-slate-400">
+                  ABHA: {patient.abha}
+                </p>
               </div>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-3">
-              <div>
-                <p className="text-xs text-slate-400">Aadhaar</p>
-                <p className="mt-1 text-sm font-medium text-slate-800">
-                  {patient.aadhaar}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs text-slate-400">ABHA</p>
-                <p className="mt-1 text-sm font-medium text-slate-800">
-                  {patient.abha}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs text-slate-400">Mobile</p>
-                <p className="mt-1 flex items-center gap-1 text-sm font-medium text-slate-800">
-                  <Phone size={14} />
-                  {patient.mobile}
-                </p>
-              </div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <MiniStat label="Diagnoses" value="2" />
+              <MiniStat label="Lab Reports" value="3" />
+              <MiniStat label="Medicines" value="2" />
+              <MiniStat label="Admissions" value="1" />
             </div>
           </div>
-        </div>
 
-        {/* Care Journey */}
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
-              <HeartPulse size={20} />
-            </div>
+          <div className="mt-5 grid gap-3 border-t border-slate-100 pt-5 md:grid-cols-2 xl:grid-cols-4">
+            <InfoCard label="Mobile" value={patient.mobile} />
+            <InfoCard label="Aadhaar" value={patient.aadhaar} />
+            <InfoCard
+              label="Allergy"
+              value={patient.allergies.join(", ")}
+              danger
+            />
+            <InfoCard
+              label="Chronic Condition"
+              value={patient.chronicConditions.join(", ")}
+            />
+          </div>
+        </section>
 
+        {/* Referral card */}
+        <section className="mb-6 rounded-2xl border border-blue-100 bg-blue-50/60 p-5 shadow-sm">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div>
-              <h2 className="font-semibold text-slate-900">
-                Current Care Journey
-              </h2>
-
-              <p className="text-xs text-slate-500">
-                Latest referral and treatment progression
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-7 overflow-x-auto">
-            <div className="flex min-w-[700px] items-center">
-              <JourneyStep
-                title="PHC Visit"
-                date={patient.visits[0]?.date ?? "-"}
-                completed
-              />
-
-              <JourneyLine completed />
-
-              <JourneyStep
-                title="Referral Created"
-                date={patient.referralDate}
-                completed
-              />
-
-              <JourneyLine completed />
-
-              <JourneyStep
-                title={patient.referralTo}
-                date={patient.referralStatus}
-                active
-              />
-
-              <JourneyLine />
-
-              <JourneyStep
-                title="Specialist"
-                date={
-                  patient.referralStatus === "Closed"
-                    ? "Completed"
-                    : "Pending"
-                }
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Referral + Recent Visits */}
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          {/* Active Referral */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="font-semibold text-slate-900">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-bold uppercase tracking-wide text-blue-700">
                   Active Referral
-                </h2>
+                </span>
 
-                <p className="mt-1 text-xs text-slate-500">
-                  Latest referral record
-                </p>
-              </div>
+                <span className="rounded-full border border-blue-200 bg-white px-2.5 py-1 text-xs font-bold text-blue-700">
+                  {patient.referralId}
+                </span>
 
-              <FileText className="text-teal-700" size={21} />
-            </div>
-
-            <div className="mt-5 rounded-xl bg-slate-50 p-4">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="font-semibold text-slate-900">
-                    Referral #{patient.referralId}
-                  </p>
-
-                  <p className="mt-1 text-xs text-slate-500">
-                    {patient.referralFrom} → {patient.referralTo}
-                  </p>
-                </div>
-
-                <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
                   {patient.referralStatus}
                 </span>
               </div>
 
-              <div className="mt-5 grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs text-slate-400">Reason</p>
-
-                  <p className="mt-1 text-sm font-medium text-slate-800">
-                    {patient.referralReason}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-xs text-slate-400">Created</p>
-
-                  <p className="mt-1 flex items-center gap-1 text-sm font-medium text-slate-800">
-                    <CalendarDays size={14} />
-                    {patient.referralDate}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Visits */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-6">
-            <h2 className="font-semibold text-slate-900">
-              Recent Visits
-            </h2>
-
-            <p className="mt-1 text-xs text-slate-500">
-              Latest care interactions
-            </p>
-
-            <div className="mt-5 space-y-4">
-              {patient.visits.map((visit) => (
-                <Visit
-                  key={`${visit.date}-${visit.facility}`}
-                  date={visit.date}
-                  facility={visit.facility}
-                  note={visit.note}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Medical History */}
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="font-semibold text-slate-900">
-                Medical History
+              <h2 className="mt-2 font-bold text-slate-900">
+                {patient.referralReason}
               </h2>
 
-              <p className="mt-1 text-xs text-slate-500">
-                Current health information
+              <p className="mt-1 text-xs text-slate-600">
+                {patient.referringFacility} → {patient.receivingFacility}
               </p>
             </div>
 
-            {/* Medical Records button */}
             <Link
-              href={`/patients/${id}/records`}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
+              href={`/referrals/${patient.referralId}`}
+              className="rounded-xl border border-blue-200 bg-white px-4 py-2.5 text-center text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
             >
-              <FileText size={17} />
-              View Medical Records
+              View Referral
             </Link>
           </div>
+        </section>
 
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Info
-              label="Hypertension"
-              value={patient.history.hypertension}
-            />
-
-            <Info
-              label="Diabetes"
-              value={patient.history.diabetes}
-            />
-
-            <Info
-              label="Allergies"
-              value={patient.history.allergies}
-            />
-
-            <Info
-              label="Current Medication"
-              value={patient.history.medication}
-            />
+        {/* Tabs */}
+        <section className="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white/80 shadow-sm backdrop-blur">
+          <div className="overflow-x-auto">
+            <div className="flex min-w-max border-b border-slate-100">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-3.5 text-xs font-bold transition ${
+                    activeTab === tab
+                      ? "border-b-2 border-teal-600 text-teal-700"
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
+        </section>
+
+        {/* OVERVIEW */}
+        {activeTab === "Overview" && (
+          <div className="space-y-6">
+            {/* Vitals */}
+            <SectionCard
+              title="Latest Vitals"
+              subtitle="Most recent recorded observations"
+              action="View History"
+            >
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                {vitals.map(([name, value, unit]) => (
+                  <div
+                    key={name}
+                    className="rounded-xl border border-slate-100 bg-slate-50/80 p-4"
+                  >
+                    <div className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                      {name}
+                    </div>
+
+                    <div className="mt-2 text-xl font-bold text-slate-900">
+                      {value}
+                    </div>
+
+                    <div className="text-xs text-slate-500">{unit}</div>
+                  </div>
+                ))}
+              </div>
+            </SectionCard>
+
+            <div className="grid gap-6 xl:grid-cols-2">
+              {/* Diagnoses */}
+              <SectionCard
+                title="Current Diagnoses"
+                subtitle="Conditions relevant to current treatment"
+              >
+                <div className="space-y-3">
+                  {diagnoses.map((diagnosis) => (
+                    <div
+                      key={diagnosis.name}
+                      className="rounded-xl border border-slate-100 bg-slate-50/60 p-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h3 className="text-sm font-bold text-slate-900">
+                            {diagnosis.name}
+                          </h3>
+
+                          <p className="mt-1 text-xs text-slate-500">
+                            {diagnosis.type} • {diagnosis.date}
+                          </p>
+
+                          <p className="mt-2 text-xs text-slate-500">
+                            Recorded by {diagnosis.doctor}
+                          </p>
+                        </div>
+
+                        <span
+                          className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${statusClasses(
+                            "Active",
+                          )}`}
+                        >
+                          {diagnosis.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </SectionCard>
+
+              {/* Medicines */}
+              <SectionCard
+                title="Current Medicines"
+                subtitle="Active / recently prescribed medication"
+              >
+                <div className="space-y-3">
+                  {medicines.map((medicine) => (
+                    <div
+                      key={medicine.name}
+                      className="rounded-xl border border-slate-100 bg-slate-50/60 p-4"
+                    >
+                      <div className="flex gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pink-50 text-lg">
+                          💊
+                        </div>
+
+                        <div className="min-w-0">
+                          <h3 className="text-sm font-bold text-slate-900">
+                            {medicine.name} {medicine.dose}
+                          </h3>
+
+                          <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-slate-500">
+                            <span>Route: {medicine.route}</span>
+                            <span>Frequency: {medicine.frequency}</span>
+                            <span>Duration: {medicine.duration}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </SectionCard>
+            </div>
+
+            {/* Latest labs */}
+            <SectionCard
+              title="Latest Investigations"
+              subtitle="Recent laboratory and diagnostic information"
+            >
+              <InvestigationTable />
+            </SectionCard>
+
+            {/* Timeline preview */}
+            <SectionCard
+              title="Recent Care Timeline"
+              subtitle="Most recent patient events"
+              action="View Full Timeline"
+              onAction={() => setActiveTab("Timeline")}
+            >
+              <Timeline compact />
+            </SectionCard>
+          </div>
+        )}
+
+        {/* MEDICAL HISTORY */}
+        {activeTab === "Medical History" && (
+          <div className="grid gap-6 lg:grid-cols-2">
+            <SectionCard
+              title="Known Conditions"
+              subtitle="Recorded medical history"
+            >
+              <div className="space-y-3">
+                {patient.chronicConditions.map((condition) => (
+                  <HistoryItem
+                    key={condition}
+                    title={condition}
+                    description="Chronic condition requiring ongoing monitoring."
+                    date="Recorded 02 Sep 2026"
+                  />
+                ))}
+
+                <HistoryItem
+                  title="No documented cardiac surgery"
+                  description="No previous cardiac surgery recorded in available records."
+                  date="History review"
+                />
+              </div>
+            </SectionCard>
+
+            <SectionCard title="Allergies" subtitle="Safety-critical information">
+              <div className="rounded-xl border border-red-100 bg-red-50 p-4">
+                <div className="text-xs font-bold uppercase tracking-wide text-red-700">
+                  Known Drug Allergy
+                </div>
+
+                <div className="mt-2 text-lg font-bold text-red-900">
+                  Penicillin
+                </div>
+
+                <p className="mt-1 text-xs leading-5 text-red-800">
+                  Verify reaction details in the full allergy record before
+                  medication orders.
+                </p>
+              </div>
+            </SectionCard>
+
+            <SectionCard title="Family History">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <HistoryItem
+                  title="Hypertension"
+                  description="Reported in first-degree relative."
+                />
+                <HistoryItem
+                  title="Diabetes"
+                  description="No documented family history available."
+                />
+              </div>
+            </SectionCard>
+
+            <SectionCard title="Lifestyle & Risk Factors">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <InfoCard label="Smoking" value="Not recorded" />
+                <InfoCard label="Alcohol" value="Not recorded" />
+                <InfoCard label="Diet" value="Mixed diet" />
+                <InfoCard label="Activity" value="Low activity reported" />
+              </div>
+            </SectionCard>
+          </div>
+        )}
+
+        {/* LABS */}
+        {activeTab === "Labs & Diagnostics" && (
+          <div className="space-y-6">
+            <SectionCard
+              title="Laboratory Reports"
+              subtitle="Recent investigation results"
+            >
+              <InvestigationTable />
+            </SectionCard>
+
+            <SectionCard
+              title="Imaging & Diagnostics"
+              subtitle="ECG, radiology and other diagnostic studies"
+            >
+              <div className="grid gap-4 md:grid-cols-2">
+                {diagnostics.map((item) => (
+                  <DiagnosticCard key={item.name} item={item} />
+                ))}
+              </div>
+            </SectionCard>
+          </div>
+        )}
+
+        {/* MEDICINES */}
+        {activeTab === "Medicines" && (
+          <SectionCard
+            title="Medication History"
+            subtitle="Current and recent prescriptions"
+          >
+            <div className="grid gap-4 md:grid-cols-2">
+              {medicines.map((medicine) => (
+                <div
+                  key={medicine.name}
+                  className="rounded-2xl border border-slate-200 bg-white p-5"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex gap-3">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-pink-50 text-lg">
+                        💊
+                      </div>
+
+                      <div>
+                        <h3 className="font-bold text-slate-900">
+                          {medicine.name}
+                        </h3>
+
+                        <p className="mt-1 text-xs text-slate-500">
+                          {medicine.dose} • {medicine.route}
+                        </p>
+                      </div>
+                    </div>
+
+                    <span className="rounded-full border border-teal-200 bg-teal-50 px-2.5 py-1 text-[10px] font-bold text-teal-700">
+                      Active
+                    </span>
+                  </div>
+
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    <DetailBox
+                      label="Frequency"
+                      value={medicine.frequency}
+                    />
+                    <DetailBox
+                      label="Duration"
+                      value={medicine.duration}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+        )}
+
+        {/* ADMISSIONS & SURGERY */}
+        {activeTab === "Admissions & Surgery" && (
+          <div className="space-y-6">
+            <SectionCard
+              title="Hospital Admissions"
+              subtitle="Previous and current admission history"
+            >
+              <div className="space-y-3">
+                {admissions.map((admission) => (
+                  <div
+                    key={admission.id}
+                    className="rounded-xl border border-slate-200 bg-white p-4"
+                  >
+                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                      <div>
+                        <h3 className="font-bold text-slate-900">
+                          Specialist Admission
+                        </h3>
+
+                        <p className="mt-1 text-xs text-slate-500">
+                          {admission.id} • {admission.date}
+                        </p>
+                      </div>
+
+                      <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700">
+                        {admission.status}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 grid gap-3 md:grid-cols-3">
+                      <DetailBox
+                        label="Ward"
+                        value={admission.ward}
+                      />
+                      <DetailBox
+                        label="Reason"
+                        value={admission.reason}
+                      />
+                      <DetailBox
+                        label="Facility"
+                        value="SMS Hospital"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </SectionCard>
+
+            <SectionCard
+              title="Surgeries & Procedures"
+              subtitle="Operative history and procedures"
+            >
+              {surgeries.map((surgery) => (
+                <div
+                  key={surgery.procedure}
+                  className="rounded-xl border border-slate-200 bg-slate-50/60 p-4"
+                >
+                  <div className="flex gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-lg">
+                      🏥
+                    </div>
+
+                    <div>
+                      <h3 className="font-bold text-slate-900">
+                        {surgery.procedure}
+                      </h3>
+
+                      <p className="mt-1 text-xs text-slate-500">
+                        {surgery.date} • {surgery.hospital}
+                      </p>
+
+                      <p className="mt-2 text-sm text-slate-600">
+                        {surgery.outcome}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </SectionCard>
+          </div>
+        )}
+
+        {/* TIMELINE */}
+        {activeTab === "Timeline" && (
+          <SectionCard
+            title="Complete Care Timeline"
+            subtitle="Chronological history of patient care"
+          >
+            <Timeline />
+          </SectionCard>
+        )}
+
+        {/* Bottom actions */}
+        <section className="mt-6 rounded-2xl border border-teal-100 bg-teal-50/70 p-5">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h2 className="font-bold text-teal-900">
+                Ready for clinical action?
+              </h2>
+
+              <p className="mt-1 text-xs leading-5 text-teal-800">
+                Review the available patient information before starting the
+                treatment workflow.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href={`/doctor/patients/${id}/treatment`}
+                className="rounded-xl bg-teal-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-700"
+              >
+                Open Treatment Workspace →
+              </Link>
+
+              <button
+                onClick={() => window.print()}
+                className="rounded-xl border border-teal-200 bg-white px-5 py-2.5 text-sm font-bold text-teal-700 transition hover:bg-teal-100"
+              >
+                Print Clinical Summary
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <div className="mt-6 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-xs leading-5 text-amber-900">
+          <strong>Prototype Notice:</strong> Clinical information shown here
+          is mock data for the NIRAMAYA-SETU demonstration. Production use
+          requires authenticated access, consent enforcement, validated
+          clinical workflows, secure storage and audit logging.
         </div>
-      </section>
-    </main>
+      </div>
+    </div>
   );
 }
 
-function JourneyStep({
+/* ---------------- Components ---------------- */
+
+function ClinicalAlert({
   title,
-  date,
-  completed,
-  active,
+  value,
+  description,
+  tone,
 }: {
   title: string;
-  date: string;
-  completed?: boolean;
-  active?: boolean;
+  value: string;
+  description: string;
+  tone: "danger" | "warning" | "info";
 }) {
+  const styles = {
+    danger: {
+      box: "border-red-100 bg-red-50/70",
+      title: "text-red-700",
+    },
+    warning: {
+      box: "border-amber-100 bg-amber-50/70",
+      title: "text-amber-700",
+    },
+    info: {
+      box: "border-blue-100 bg-blue-50/70",
+      title: "text-blue-700",
+    },
+  };
+
+  const style = styles[tone];
+
   return (
-    <div className="flex min-w-[140px] flex-col items-center text-center">
-      <div
-        className={`flex h-9 w-9 items-center justify-center rounded-full border-2 ${
-          completed
-            ? "border-teal-700 bg-teal-700 text-white"
-            : active
-              ? "border-teal-600 bg-teal-50 text-teal-700"
-              : "border-slate-300 bg-white text-slate-400"
-        }`}
-      >
-        {completed ? "✓" : "•"}
+    <div className={`rounded-2xl border p-4 ${style.box}`}>
+      <div className={`text-[10px] font-bold uppercase tracking-wide ${style.title}`}>
+        {title}
       </div>
 
-      <p className="mt-3 text-sm font-semibold text-slate-800">
-        {title}
-      </p>
+      <div className="mt-1 text-sm font-bold text-slate-900">{value}</div>
 
-      <p className="mt-1 text-xs text-slate-500">
-        {date}
+      <p className="mt-1 text-xs leading-5 text-slate-600">
+        {description}
       </p>
     </div>
   );
 }
 
-function JourneyLine({ completed }: { completed?: boolean }) {
-  return (
-    <div
-      className={`h-0.5 min-w-[70px] flex-1 ${
-        completed ? "bg-teal-600" : "bg-slate-200"
-      }`}
-    />
-  );
-}
-
-function Visit({
-  date,
-  facility,
-  note,
-}: {
-  date: string;
-  facility: string;
-  note: string;
-}) {
-  return (
-    <div className="border-l-2 border-slate-200 pl-4">
-      <p className="text-xs font-medium text-teal-700">{date}</p>
-
-      <p className="mt-1 text-sm font-semibold text-slate-900">
-        {facility}
-      </p>
-
-      <p className="mt-1 text-xs text-slate-500">
-        {note}
-      </p>
-    </div>
-  );
-}
-
-function Info({
+function MiniStat({
   label,
   value,
 }: {
@@ -570,14 +842,254 @@ function Info({
   value: string;
 }) {
   return (
-    <div className="rounded-xl bg-slate-50 p-4">
-      <p className="text-xs text-slate-400">
+    <div className="rounded-xl border border-slate-100 bg-slate-50/80 px-4 py-3 text-center">
+      <div className="text-lg font-bold text-slate-900">{value}</div>
+      <div className="mt-0.5 text-[10px] font-semibold text-slate-500">
         {label}
+      </div>
+    </div>
+  );
+}
+
+function InfoCard({
+  label,
+  value,
+  danger = false,
+}: {
+  label: string;
+  value: string;
+  danger?: boolean;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3">
+      <div className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
+        {label}
+      </div>
+
+      <div
+        className={`mt-1 text-sm font-semibold ${
+          danger ? "text-red-700" : "text-slate-700"
+        }`}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function SectionCard({
+  title,
+  subtitle,
+  action,
+  onAction,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  action?: string;
+  onAction?: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm backdrop-blur">
+      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-bold text-slate-900">{title}</h2>
+
+          {subtitle && (
+            <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
+          )}
+        </div>
+
+        {action && (
+          <button
+            onClick={onAction}
+            className="text-xs font-bold text-teal-700 transition hover:text-teal-900"
+          >
+            {action}
+          </button>
+        )}
+      </div>
+
+      {children}
+    </section>
+  );
+}
+
+function DetailBox({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+      <div className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
+        {label}
+      </div>
+
+      <div className="mt-1 text-xs font-semibold text-slate-700">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function HistoryItem({
+  title,
+  description,
+  date,
+}: {
+  title: string;
+  description: string;
+  date?: string;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-100 bg-slate-50/60 p-4">
+      <h3 className="text-sm font-bold text-slate-900">{title}</h3>
+
+      <p className="mt-1 text-xs leading-5 text-slate-500">
+        {description}
       </p>
 
-      <p className="mt-1 text-sm font-semibold text-slate-800">
-        {value}
+      {date && (
+        <p className="mt-2 text-[10px] font-semibold text-slate-400">
+          {date}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function InvestigationTable() {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[650px] text-left">
+        <thead>
+          <tr className="border-b border-slate-100">
+            <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+              Investigation
+            </th>
+            <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+              Date
+            </th>
+            <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+              Result / Finding
+            </th>
+            <th className="px-3 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+              Status
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {labReports.map((report) => (
+            <tr
+              key={report.test}
+              className="border-b border-slate-50 last:border-0"
+            >
+              <td className="px-3 py-4 text-sm font-semibold text-slate-800">
+                {report.test}
+              </td>
+
+              <td className="px-3 py-4 text-xs text-slate-500">
+                {report.date}
+              </td>
+
+              <td className="px-3 py-4 text-xs text-slate-600">
+                {report.finding}
+              </td>
+
+              <td className="px-3 py-4">
+                <span
+                  className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${statusClasses(
+                    report.status,
+                  )}`}
+                >
+                  {report.status}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function DiagnosticCard({
+  item,
+}: {
+  item: {
+    name: string;
+    date: string;
+    result: string;
+    status: Status;
+  };
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-bold text-slate-900">{item.name}</h3>
+          <p className="mt-1 text-xs text-slate-500">{item.date}</p>
+        </div>
+
+        <span
+          className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${statusClasses(
+            item.status,
+          )}`}
+        >
+          {item.status}
+        </span>
+      </div>
+
+      <p className="mt-4 text-sm leading-6 text-slate-600">
+        {item.result}
       </p>
+
+      <button className="mt-4 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-xs font-bold text-teal-700">
+        View Report
+      </button>
+    </div>
+  );
+}
+
+function Timeline({ compact = false }: { compact?: boolean }) {
+  const items = compact ? timeline.slice(-5) : timeline;
+
+  return (
+    <div className="space-y-5">
+      {items.map((item, index) => (
+        <div key={`${item.date}-${item.title}`} className="relative flex gap-4">
+          {index !== items.length - 1 && (
+            <div className="absolute left-[7px] top-5 h-full w-px bg-slate-200" />
+          )}
+
+          <div className="relative z-10 mt-1 h-4 w-4 shrink-0 rounded-full border-4 border-teal-100 bg-teal-600" />
+
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-bold text-teal-700">
+                {item.date}
+              </span>
+
+              <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-500">
+                {item.tag}
+              </span>
+            </div>
+
+            <h3 className="mt-1 text-sm font-bold text-slate-900">
+              {item.title}
+            </h3>
+
+            <p className="mt-1 text-xs leading-5 text-slate-500">
+              {item.description}
+            </p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
