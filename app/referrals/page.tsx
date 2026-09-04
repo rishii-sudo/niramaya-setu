@@ -591,17 +591,10 @@ export default function ReferralsPage() {
           </div>
         </section>
 
-        {/* ================================================================= */}
-        {/* Prototype Notice                                                  */}
-        {/* ================================================================= */}
-
-        <div className="mt-6 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-xs leading-5 text-amber-900">
-          <strong>Prototype Notice:</strong>{" "}
-          Referral records and lifecycle status are demo data
-          stored in browser state. Production implementation
-          requires backend persistence, authenticated access,
-          RBAC, consent enforcement, secure APIs and audit logs.
-        </div>
+        {/* Prototype note */}
+        <p className="mt-6 text-center text-[11px] text-slate-400">
+          Care Continuity Referrals • Demo dataset • Production integration planned
+        </p>
       </section>
     </main>
   );

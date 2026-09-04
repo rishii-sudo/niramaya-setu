@@ -515,17 +515,10 @@ export default function IncomingReferralsPage() {
           </div>
         </section>
 
-        {/* ================================================================= */}
-        {/* Prototype                                                         */}
-        {/* ================================================================= */}
-
-        <div className="mt-6 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-xs leading-5 text-amber-900">
-          <strong>Prototype Notice:</strong>{" "}
-          Referral records shown here use mock frontend data.
-          Production deployment requires authenticated facility
-          access, role-based authorization, backend persistence,
-          consent enforcement and audit logging.
-        </div>
+        {/* Prototype note */}
+        <p className="mt-6 text-center text-[11px] text-slate-400">
+          Facility referral intake • Demonstration records • Production facility integration planned
+        </p>
       </section>
     </main>
   );

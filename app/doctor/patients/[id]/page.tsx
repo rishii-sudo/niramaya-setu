@@ -745,17 +745,10 @@ function DoctorPatientWorkspace({
           </aside>
         </div>
 
-        {/* ================================================================= */}
-        {/* Prototype Notice                                                  */}
-        {/* ================================================================= */}
-
-        <div className="mt-6 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-xs leading-5 text-amber-900">
-          <strong>Prototype Notice:</strong>{" "}
-          Clinical information shown here is mock data for
-          NIRAMAYA-SETU. Production deployment requires
-          authenticated access, role-based authorization,
-          consent enforcement, secure storage and audit logging.
-        </div>
+        {/* Prototype note */}
+        <p className="mt-6 text-center text-[11px] text-slate-400">
+          Doctor Patient Workspace • Clinical demonstration data • Backend EHR integration planned
+        </p>
       </section>
 
       {/* ================================================================== */}

@@ -675,16 +675,10 @@ export default function FacilityDashboardPage() {
           />
         </div>
 
-        {/* ================================================================= */}
-        {/* Prototype notice                                                  */}
-        {/* ================================================================= */}
-
-        <div className="mt-6 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-xs leading-5 text-amber-900">
-          <strong>Prototype Notice:</strong>{" "}
-          Facility capacity, staffing, medicine stock and diagnostic
-          availability are demo values. Production deployment should
-          source these values from authenticated facility systems.
-        </div>
+        {/* Prototype note */}
+        <p className="mt-6 text-center text-[11px] text-slate-400">
+          Facility Operations • Prototype dataset • Production HIS/EMR integration planned
+        </p>
       </section>
     </main>
   );

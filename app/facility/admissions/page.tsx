@@ -586,17 +586,10 @@ export default function FacilityAdmissionsPage() {
           </div>
         </section>
 
-        {/* ================================================================= */}
-        {/* Prototype                                                          */}
-        {/* ================================================================= */}
-
-        <div className="mt-6 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-xs leading-5 text-amber-900">
-          <strong>Prototype Notice:</strong>{" "}
-          Admission and bed data are demo values stored in browser state.
-          Production deployment requires transactional backend persistence,
-          authenticated facility access, bed-capacity validation and audit
-          logging.
-        </div>
+        {/* Prototype note */}
+        <p className="mt-6 text-center text-[11px] text-slate-400">
+          Admissions and bed occupancy • Demonstration records • Transactional HIS persistence planned
+        </p>
       </section>
     </main>
   );

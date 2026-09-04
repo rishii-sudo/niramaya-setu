@@ -48,7 +48,7 @@ function AppointmentsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState<AppointmentStatus | "All">("Confirmed");
+  const [activeTab, setActiveTab] = useState<"Today" | "Upcoming" | "Completed" | "Cancelled" | "All">("Today");
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [showBookingModal, setShowBookingModal] = useState(false);
 
@@ -173,12 +173,15 @@ function AppointmentsPageContent() {
 
   const filteredAppointments = appointments.filter((apt) => {
     if (activeTab === "All") return true;
-    if (activeTab === "Confirmed") {
-      return apt.status === "Confirmed" && (isSameDay(apt.date) || isFutureDay(apt.date));
+    if (activeTab === "Today") {
+      return apt.status === "Confirmed" && isSameDay(apt.date);
+    }
+    if (activeTab === "Upcoming") {
+      return apt.status === "Confirmed" && isFutureDay(apt.date);
     }
     if (activeTab === "Completed") return apt.status === "Completed";
     if (activeTab === "Cancelled") return apt.status === "Cancelled";
-    return apt.status === activeTab;
+    return true;
   });
 
   return (
@@ -227,7 +230,7 @@ function AppointmentsPageContent() {
 
           {/* Tab Filter */}
           <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm text-xs font-semibold">
-            {(["Confirmed", "Completed", "Cancelled", "All"] as const).map((tab) => (
+            {(["Today", "Upcoming", "Completed", "Cancelled", "All"] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
@@ -238,7 +241,7 @@ function AppointmentsPageContent() {
                     : "text-slate-600 hover:bg-slate-50"
                 }`}
               >
-                {tab === "Confirmed" ? "Upcoming" : tab}
+                {tab}
               </button>
             ))}
           </div>

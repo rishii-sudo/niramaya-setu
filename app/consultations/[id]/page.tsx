@@ -119,7 +119,7 @@ export default function ConsultationRoomPage({
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20 mb-4">
               <AlertTriangle size={32} />
             </div>
-            <h2 className="text-lg font-bold text-white">Invalid or Expired Consultation</h2>
+            <h2 className="text-lg font-bold text-white">Invalid or Expired Consultation Session</h2>
             <p className="mt-2 text-xs text-slate-300 leading-relaxed">
               The consultation session identifier <code className="font-mono text-rose-300 bg-slate-950 px-2 py-0.5 rounded border border-rose-900/50">{sessionId}</code> does not correspond to an active appointment or has expired.
             </p>
@@ -215,19 +215,19 @@ export default function ConsultationRoomPage({
           {/* Simulated Doctor Video Stream */}
           {videoEnabled && activeMode === "Video" ? (
             <div className="relative w-full h-full flex flex-col items-center justify-center text-center">
-              {/* Doctor Avatar / Camera placeholder stream */}
-              <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-tr from-teal-700 to-emerald-500 shadow-2xl ring-4 ring-teal-500/30 animate-pulse">
-                <Stethoscope size={56} className="text-white" />
+              {/* Doctor Avatar / Clean Video Stream Placeholder */}
+              <div className="relative flex h-28 w-28 items-center justify-center rounded-2xl bg-slate-800 border border-slate-700 shadow-md text-teal-400">
+                <Stethoscope size={48} />
               </div>
-              <h2 className="mt-5 text-lg font-bold text-white">{doctorName}</h2>
+              <h2 className="mt-4 text-lg font-bold text-white">{doctorName}</h2>
               <p className="text-xs font-semibold text-teal-400">{doctorSpecialty}</p>
               <p className="mt-1 font-mono text-[11px] text-slate-400">
                 Doctor Temporary ID: {tempDoctorId}
               </p>
 
-              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-3 py-1 text-[10px] font-semibold text-emerald-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" />
-                Simulated Video Preview (Prototype Mode)
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-[10px] font-medium text-slate-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                Simulated Video Preview • Connection Stable
               </div>
             </div>
           ) : (

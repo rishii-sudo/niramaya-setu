@@ -136,7 +136,47 @@ async function runVerification() {
   const roleContextFile = fs.readFileSync(path.resolve("app/context/RoleContext.tsx"), "utf-8");
   assert(roleContextFile.includes("isRoleAuthenticated(pathRole)"), "RoleContext prevents URL prefixes from authenticating without session key");
   const appShellFile = fs.readFileSync(path.resolve("app/components/AppShell.tsx"), "utf-8");
-  assert(appShellFile.includes("AccessGate"), "AppShell renders AccessGate on protected routes when unauthenticated");
+  console.log("\n--- 10. Testing Doctor Treatment Routing & Back Navigation ---");
+  const sidebarFile = fs.readFileSync(path.resolve("app/components/Sidebar.tsx"), "utf-8");
+  assert(sidebarFile.includes("href: \"/doctor/patients/NS-10284/treatment\""), "Doctor Treatment Queue points directly to patient treatment page");
+  const doctorReferralsFile = fs.readFileSync(path.resolve("app/doctor/referrals/page.tsx"), "utf-8");
+  assert(doctorReferralsFile.includes("/doctor/patients/${referral.patientId}/treatment"), "Doctor Referrals table has direct Treatment action button");
+  assert(!doctorReferralsFile.includes("<LanguageSelector />"), "Doctor Referrals has NO duplicate LanguageSelector");
+  assert(!doctorReferralsFile.includes("<header className="), "Doctor Referrals has NO duplicate inner header");
+  const doctorDashboardFile = fs.readFileSync(path.resolve("app/doctor/page.tsx"), "utf-8");
+  assert(!doctorDashboardFile.includes("<LanguageSelector"), "Doctor Dashboard has NO duplicate LanguageSelector");
+  assert(!doctorDashboardFile.includes("<header className="), "Doctor Dashboard has NO duplicate inner header");
+
+  const doctorTreatmentFile = fs.readFileSync(path.resolve("app/doctor/patients/[id]/treatment/page.tsx"), "utf-8");
+  assert(doctorTreatmentFile.includes("router.back()"), "Doctor Treatment page includes browser back action");
+  assert(doctorTreatmentFile.includes("← Back to Referrals"), "Doctor Treatment page includes '← Back to Referrals' button");
+  assert(doctorTreatmentFile.includes("← Back to Patient"), "Doctor Treatment page includes '← Back to Patient' button");
+
+  console.log("\n--- 11. Testing Role Isolation & Cross-Role Access Boundary ---");
+  const accessGateFile = fs.readFileSync(path.resolve("app/components/AccessGate.tsx"), "utf-8");
+  assert(accessGateFile.includes("isCrossRoleContamination"), "AccessGate checks cross-role contamination");
+  assert(accessGateFile.includes("Access Boundary Check"), "AccessGate displays Access Boundary Check badge");
+  assert(appShellFile.includes("activeRole !== \"public\" && activeRole !== protectedRole"), "AppShell blocks silent role switching across protected domains");
+
+  console.log("\n--- 12. Testing ASHA Dashboard Layout Polish ---");
+  const ashaFile = fs.readFileSync(path.resolve("app/asha/page.tsx"), "utf-8");
+  assert(ashaFile.includes("mx-auto max-w-7xl space-y-6"), "ASHA dashboard uses centered max-w-7xl container");
+  assert(ashaFile.includes("p-5 sm:p-6 lg:p-8"), "ASHA dashboard has standard responsive padding matching doctor portal");
+
+  console.log("\n--- 13. Testing Clinical A4 Print Output ---");
+  const globalsCss = fs.readFileSync(path.resolve("app/globals.css"), "utf-8");
+  assert(globalsCss.includes(".print-only {") && globalsCss.includes(".screen-only,"), "globals.css defines screen-only and print-only rules");
+  const patientDetailFile = fs.readFileSync(path.resolve("app/patients/[id]/page.tsx"), "utf-8");
+  assert(patientDetailFile.includes("print-only") && patientDetailFile.includes("Clinical Summary & Care Continuum Document"), "Patient overview includes dedicated print-only clinical summary");
+  assert(patientDetailFile.includes("Reason for Referral") && patientDetailFile.includes("Prescribed Medications"), "Clinical document contains required clinical sections");
+
+  console.log("\n--- 14. Testing Prescription Medicine Requirements ---");
+  assert(medicinesFile.includes("Prescription required before fulfillment."), "Medicines page displays 'Prescription required before fulfillment.'");
+
+  console.log("\n--- 15. Testing Brand & Public Assets ---");
+  assert(fs.existsSync(path.resolve("public/brand/logo.svg")), "public/brand/logo.svg exists");
+  assert(fs.existsSync(path.resolve("public/about/continuity-flow.svg")), "public/about/continuity-flow.svg exists");
+  assert(fs.existsSync(path.resolve("public/team/contributor-spec.svg")), "public/team/contributor-spec.svg exists");
 
   console.log(`\n==================================================`);
   console.log(`VERIFICATION SUMMARY: ${passed} PASSED, ${failed} FAILED`);

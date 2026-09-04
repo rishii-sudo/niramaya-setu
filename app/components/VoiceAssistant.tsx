@@ -270,7 +270,7 @@ export default function VoiceAssistant() {
           aria-label="Open Voice Assistant"
         >
           <Mic size={18} className="animate-pulse text-teal-200" />
-          <span className="hidden sm:inline">Voice Assistant</span>
+          <span className="hidden sm:inline">Voice & Text Assistance</span>
         </button>
       </div>
 
@@ -285,8 +285,8 @@ export default function VoiceAssistant() {
                   <Bot size={20} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">NIRAMAYA-SETU Assistant</h3>
-                  <p className="text-[10px] text-slate-400">Multilingual Voice & Information Guide</p>
+                  <h3 className="text-sm font-bold text-slate-900">Prototype Voice & Text Assistance</h3>
+                  <p className="text-[10px] text-slate-400">Multilingual Voice & Care Guidance (EN • HI • MR)</p>
                 </div>
               </div>
               <button

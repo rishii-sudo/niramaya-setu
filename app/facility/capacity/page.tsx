@@ -904,16 +904,10 @@ export default function FacilityCapacityPage() {
           </div>
         </section>
 
-        {/* ================================================================= */}
-        {/* Prototype                                                         */}
-        {/* ================================================================= */}
-
-        <div className="mt-6 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-xs leading-5 text-amber-900">
-          <strong>Prototype Notice:</strong>{" "}
-          Bed inventory and patient assignments are demo data stored
-          in browser state. Production deployment requires backend
-          capacity management and transactional admission updates.
-        </div>
+        {/* Prototype note */}
+        <p className="mt-6 text-center text-[11px] text-slate-400">
+          Bed capacity management • Demo values • Real-time bed registry integration planned
+        </p>
       </section>
     </main>
   );

@@ -223,8 +223,9 @@ export default function DoctorPatientPage({
   ];
 
   return (
-    <div className="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+    <>
+      <div className="screen-only min-h-screen px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
         {/* Breadcrumb */}
         <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-slate-500">
           <Link
@@ -805,6 +806,181 @@ export default function DoctorPatientPage({
         </div>
       </div>
     </div>
+
+    {/* PROFESSIONAL A4 CLINICAL SUMMARY DOCUMENT (PRINT ONLY) */}
+    <div className="print-only mx-auto max-w-4xl bg-white p-8 text-slate-900 font-sans">
+      {/* Document Header */}
+      <div className="mb-6 border-b-2 border-slate-800 pb-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              NIRAMAYA-SETU
+            </h1>
+            <p className="text-xs font-semibold uppercase tracking-wider text-teal-800">
+              Clinical Summary & Care Continuum Document
+            </p>
+          </div>
+          <div className="text-right text-xs text-slate-600">
+            <p className="font-semibold text-slate-900">Document Date: 05 Sep 2026</p>
+            <p>Confidential Medical Summary</p>
+            <p className="text-[10px] text-slate-400">Prototype Health Record Architecture</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Section 1: Patient Information */}
+      <div className="mb-6 rounded-lg border border-slate-300 p-4">
+        <h2 className="mb-3 border-b border-slate-200 pb-1 text-xs font-bold uppercase tracking-wider text-slate-700">
+          Patient Information
+        </h2>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4 text-xs">
+          <div>
+            <span className="block font-medium text-slate-500">Patient Name:</span>
+            <span className="font-bold text-slate-900 text-sm">{patient.name}</span>
+          </div>
+          <div>
+            <span className="block font-medium text-slate-500">Patient ID:</span>
+            <span className="font-mono font-bold text-slate-900">{patient.id}</span>
+          </div>
+          <div>
+            <span className="block font-medium text-slate-500">Age / Gender:</span>
+            <span className="font-semibold text-slate-900">{patient.age} Y / {patient.gender}</span>
+          </div>
+          <div>
+            <span className="block font-medium text-slate-500">Blood Group:</span>
+            <span className="font-semibold text-slate-900">{patient.bloodGroup}</span>
+          </div>
+          <div>
+            <span className="block font-medium text-slate-500">Referral ID:</span>
+            <span className="font-mono font-bold text-slate-900">{patient.referralId}</span>
+          </div>
+          <div>
+            <span className="block font-medium text-slate-500">Referring Facility:</span>
+            <span className="font-semibold text-slate-900">{patient.referringFacility}</span>
+          </div>
+          <div>
+            <span className="block font-medium text-slate-500">Receiving Facility:</span>
+            <span className="font-semibold text-slate-900">{patient.receivingFacility}</span>
+          </div>
+          <div>
+            <span className="block font-medium text-slate-500">Attending Doctor:</span>
+            <span className="font-semibold text-slate-900">Dr. Priya Singh (Cardiologist)</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Section 2: Clinical Information */}
+      <div className="space-y-4 text-xs">
+        <div className="rounded-lg border border-slate-300 p-4">
+          <h2 className="mb-2 border-b border-slate-200 pb-1 text-xs font-bold uppercase tracking-wider text-slate-700">
+            Clinical Assessment & Diagnosis
+          </h2>
+          <div className="space-y-2">
+            <div>
+              <span className="font-semibold text-slate-700">Reason for Referral: </span>
+              <span className="text-slate-900">{patient.referralReason}</span>
+            </div>
+            <div>
+              <span className="font-semibold text-slate-700">Assessment / Diagnosis: </span>
+              <span className="font-semibold text-slate-900">{patient.chronicConditions?.join(", ") || "Coronary Artery Disease with Type 2 Diabetes Mellitus"}</span>
+            </div>
+            <div>
+              <span className="font-semibold text-slate-700">Known Allergies: </span>
+              <span className="font-semibold text-red-700">{patient.allergies?.join(", ") || "No known drug allergies recorded"}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-slate-300 p-4">
+          <h2 className="mb-2 border-b border-slate-200 pb-1 text-xs font-bold uppercase tracking-wider text-slate-700">
+            Treatment & Clinical Summary
+          </h2>
+          <p className="leading-relaxed text-slate-800">
+            Patient evaluated for exertional chest tightness and glycemic monitoring. Diagnostic ECG and cardiac enzyme panel reviewed. Inpatient stabilization completed; vitals hemodynamically stable. Adjusted oral hypoglycemic regimen and dual antiplatelet therapy prescribed. Patient counseled on lifestyle modifications and signs of acute decompensation.
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-slate-300 p-4">
+          <h2 className="mb-2 border-b border-slate-200 pb-1 text-xs font-bold uppercase tracking-wider text-slate-700">
+            Prescribed Medications
+          </h2>
+          <table className="w-full border-collapse text-left text-xs">
+            <thead>
+              <tr className="border-b border-slate-300 text-slate-600">
+                <th className="py-1.5 font-semibold">Medication</th>
+                <th className="py-1.5 font-semibold">Dosage</th>
+                <th className="py-1.5 font-semibold">Frequency</th>
+                <th className="py-1.5 font-semibold">Duration</th>
+                <th className="py-1.5 font-semibold">Instructions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200">
+              <tr>
+                <td className="py-1.5 font-semibold">Metformin 500mg</td>
+                <td className="py-1.5">500 mg</td>
+                <td className="py-1.5">Twice daily</td>
+                <td className="py-1.5">30 days</td>
+                <td className="py-1.5 text-slate-600">Take with food</td>
+              </tr>
+              <tr>
+                <td className="py-1.5 font-semibold">Aspirin 75mg</td>
+                <td className="py-1.5">75 mg</td>
+                <td className="py-1.5">Once daily</td>
+                <td className="py-1.5">30 days</td>
+                <td className="py-1.5 text-slate-600">Morning post-breakfast</td>
+              </tr>
+              <tr>
+                <td className="py-1.5 font-semibold">Atorvastatin 20mg</td>
+                <td className="py-1.5">20 mg</td>
+                <td className="py-1.5">Once daily</td>
+                <td className="py-1.5">30 days</td>
+                <td className="py-1.5 text-slate-600">Bedtime</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="rounded-lg border border-slate-300 p-4">
+            <h2 className="mb-2 border-b border-slate-200 pb-1 text-xs font-bold uppercase tracking-wider text-slate-700">
+              Investigations Completed
+            </h2>
+            <ul className="list-inside list-disc space-y-1 text-slate-800">
+              <li>12-Lead Electrocardiogram (Normal sinus rhythm)</li>
+              <li>HbA1c Glycated Hemoglobin (7.2% - Controlled)</li>
+              <li>Serum Creatinine & Electrolytes (Normal limits)</li>
+              <li>Lipid Profile (LDL: 112 mg/dL, HDL: 44 mg/dL)</li>
+            </ul>
+          </div>
+
+          <div className="rounded-lg border border-slate-300 p-4">
+            <h2 className="mb-2 border-b border-slate-200 pb-1 text-xs font-bold uppercase tracking-wider text-slate-700">
+              Follow-up & Referral Status
+            </h2>
+            <div className="space-y-1.5 text-slate-800">
+              <p><span className="font-semibold">Next Follow-up Date:</span> 19 Sep 2026</p>
+              <p><span className="font-semibold">Assigned Care Worker:</span> Sunita Sharma (ASHA Worker)</p>
+              <p><span className="font-semibold">Care Instructions:</span> Monitor blood pressure twice weekly.</p>
+              <p><span className="font-semibold">Referral Status:</span> <span className="font-bold text-slate-900">{patient.referralStatus}</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Document Sign-off & Subtle Footer */}
+      <div className="mt-8 flex items-end justify-between border-t border-slate-300 pt-4 text-xs text-slate-500">
+        <div>
+          <p className="font-semibold text-slate-700">Attending Clinician</p>
+          <p className="mt-4 font-mono text-[10px] text-slate-400">Digitally authenticated via NIRAMAYA-SETU Provider Session</p>
+          <p className="text-[10px] text-slate-500">Dr. Priya Singh, MD (Cardiology) • Reg: RJ-MED-44912</p>
+        </div>
+        <div className="text-right">
+          <p className="text-[10px] text-slate-400">NIRAMAYA-SETU Care Continuity Platform</p>
+          <p className="text-[10px] text-slate-400">Page 1 of 1 • Prototype Clinical Summary Output</p>
+        </div>
+      </div>
+    </div>
+  </>
   );
 }
 

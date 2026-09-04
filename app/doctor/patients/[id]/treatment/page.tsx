@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Activity,
   ArrowLeft,
@@ -109,6 +110,7 @@ function TreatmentWorkspace({
 }: {
   patient: PatientRecord;
 }) {
+  const router = useRouter();
   const [activeStep, setActiveStep] =
     useState<TreatmentStep>("Assessment");
 
@@ -285,26 +287,58 @@ function TreatmentWorkspace({
 
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <Link
-            href={`/doctor/patients/${patient.patientId}`}
-            className="flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
-          >
-            <ArrowLeft size={18} />
-            Back to Patient Review
-          </Link>
+      {/* Contextual Navigation Bar */}
+      <div className="border-b border-slate-200 bg-white/90 backdrop-blur-sm">
+        <div className="mx-auto flex min-h-14 max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:text-slate-900"
+            >
+              <ArrowLeft size={15} />
+              Back
+            </button>
 
-          <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
-            <ShieldCheck
-              size={16}
-              className="text-teal-700"
-            />
-            Secure Clinical Workspace
+            <span className="text-slate-300">|</span>
+
+            <Link
+              href="/doctor/referrals"
+              className="font-medium text-slate-500 hover:text-teal-700"
+            >
+              Referrals
+            </Link>
+
+            <span className="text-slate-400">/</span>
+
+            <Link
+              href={`/doctor/patients/${patient.patientId}`}
+              className="font-medium text-slate-500 hover:text-teal-700"
+            >
+              Patient Review ({patient.name})
+            </Link>
+
+            <span className="text-slate-400">/</span>
+
+            <span className="font-semibold text-slate-900">Treatment Plan</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Link
+              href="/doctor/referrals"
+              className="inline-flex items-center gap-1 rounded-lg border border-teal-100 bg-teal-50/70 px-2.5 py-1 text-xs font-semibold text-teal-800 transition hover:bg-teal-100"
+            >
+              ← Back to Referrals
+            </Link>
+            <Link
+              href={`/doctor/patients/${patient.patientId}`}
+              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              ← Back to Patient
+            </Link>
           </div>
         </div>
-      </header>
+      </div>
 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
         {/* Patient Header */}
@@ -1409,15 +1443,10 @@ function TreatmentWorkspace({
               </div>
             </section>
 
-            <section className="rounded-2xl border border-amber-100 bg-amber-50/70 p-5">
-              <p className="text-xs font-bold uppercase tracking-wide text-amber-800">
-                Prototype Notice
-              </p>
-
-              <p className="mt-2 text-xs leading-5 text-amber-900">
-                This treatment workspace uses mock data. Real deployment requires authenticated access, validated clinical workflows, secure persistence and audit logging.
-              </p>
-            </section>
+            {/* Prototype note */}
+            <p className="mt-4 text-center text-[11px] text-slate-400">
+              Treatment workspace demonstration data • Authenticated clinical workflows planned
+            </p>
           </aside>
         </div>
       </div>

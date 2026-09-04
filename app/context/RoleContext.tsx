@@ -59,14 +59,76 @@ export function getRoleFromPathname(pathname: string): Role | null {
   return null;
 }
 
+export function getDashboardForRole(role: Role): string {
+  switch (role) {
+    case "asha":
+      return "/asha";
+    case "doctor":
+      return "/doctor";
+    case "facility":
+      return "/facility/dashboard";
+    case "admin":
+      return "/dashboard";
+    case "patient":
+      return "/patient";
+    default:
+      return "/";
+  }
+}
+
+export function getRoleDetails(role: Role) {
+  switch (role) {
+    case "asha":
+      return {
+        displayName: "ASHA / ANM",
+        subtitle: "Field Care Worker",
+      };
+    case "doctor":
+      return {
+        displayName: "Doctor",
+        subtitle: "Clinical Workspace",
+      };
+    case "facility":
+      return {
+        displayName: "Facility Staff",
+        subtitle: "Facility Operations",
+      };
+    case "admin":
+      return {
+        displayName: "Administrator",
+        subtitle: "System Administration",
+      };
+    case "patient":
+      return {
+        displayName: "Patient",
+        subtitle: "Personal Health Portal",
+      };
+    default:
+      return {
+        displayName: "Guest User",
+        subtitle: "Care Continuity Platform",
+      };
+  }
+}
+
 export function RoleProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [activeRole, setActiveRoleState] = useState<Role>("public");
 
   useEffect(() => {
     const pathRole = getRoleFromPathname(pathname);
+    const stored = typeof window !== "undefined" ? (localStorage.getItem(ROLE_STORAGE_KEY) as Role | null) : null;
+    const isStoredValid = stored && ["asha", "doctor", "facility", "admin", "patient"].includes(stored) && isRoleAuthenticated(stored);
+
     if (pathRole) {
-      // URL prefix alone must NOT establish an authenticated role without valid session!
+      // If user is already authenticated in an active role that differs from pathRole,
+      // DO NOT silently switch activeRole. Preserve current role so AppShell can enforce the access boundary!
+      if (isStoredValid && stored !== pathRole) {
+        setActiveRoleState(stored);
+        return;
+      }
+
+      // If user is directly accessing their own role's route and has valid session:
       if (isRoleAuthenticated(pathRole)) {
         setActiveRoleState(pathRole);
         if (typeof window !== "undefined") {
@@ -77,17 +139,10 @@ export function RoleProvider({ children }: { children: ReactNode }) {
         setActiveRoleState("public");
       }
     } else {
-      if (typeof window !== "undefined") {
-        const stored = localStorage.getItem(ROLE_STORAGE_KEY) as Role | null;
-        if (stored && ["asha", "doctor", "facility", "admin", "patient"].includes(stored)) {
-          if (isRoleAuthenticated(stored)) {
-            setActiveRoleState(stored);
-          } else {
-            setActiveRoleState("public");
-          }
-        } else {
-          setActiveRoleState("public"); // Default to public, NEVER to admin!
-        }
+      if (isStoredValid) {
+        setActiveRoleState(stored);
+      } else {
+        setActiveRoleState("public"); // Default to public, NEVER to admin!
       }
     }
   }, [pathname]);
@@ -96,58 +151,6 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     setActiveRoleState(role);
     if (typeof window !== "undefined") {
       localStorage.setItem(ROLE_STORAGE_KEY, role);
-    }
-  };
-
-  const getDashboardForRole = (role: Role): string => {
-    switch (role) {
-      case "asha":
-        return "/asha";
-      case "doctor":
-        return "/doctor";
-      case "facility":
-        return "/facility/dashboard";
-      case "admin":
-        return "/dashboard";
-      case "patient":
-        return "/patient";
-      default:
-        return "/";
-    }
-  };
-
-  const getRoleDetails = (role: Role) => {
-    switch (role) {
-      case "asha":
-        return {
-          displayName: "ASHA / ANM",
-          subtitle: "Field Care Worker",
-        };
-      case "doctor":
-        return {
-          displayName: "Doctor",
-          subtitle: "Clinical Workspace",
-        };
-      case "facility":
-        return {
-          displayName: "Facility Staff",
-          subtitle: "Facility Operations",
-        };
-      case "admin":
-        return {
-          displayName: "Administrator",
-          subtitle: "System Administration",
-        };
-      case "patient":
-        return {
-          displayName: "Patient",
-          subtitle: "Personal Health Portal",
-        };
-      default:
-        return {
-          displayName: "Guest User",
-          subtitle: "Care Continuity Platform",
-        };
     }
   };
 

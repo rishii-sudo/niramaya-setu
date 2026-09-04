@@ -73,8 +73,8 @@ export default function AshaDashboardPage() {
   const { language } = useLanguage();
 
   return (
-    <main className="min-h-screen bg-transparent">
-      <div className="space-y-6">
+    <main className="min-h-screen bg-slate-50/60 p-5 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-7xl space-y-6">
         {/* HEADER */}
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>

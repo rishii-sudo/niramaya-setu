@@ -94,10 +94,29 @@ export default function AppShell({
     return <div className="relative z-10 min-h-screen">{children}</div>;
   }
 
-  // PROTECTED ROUTE AUTHENTICATION GATE
+  // PROTECTED ROUTE AUTHENTICATION GATE & CROSS-ROLE BOUNDARY
   const protectedRole = getProtectedRoleForPath(pathname);
-  if (protectedRole && !isRoleAuthenticated(protectedRole)) {
-    return <AccessGate requiredRole={protectedRole} pathname={pathname} />;
+  if (protectedRole) {
+    // 1. Fresh browser or unauthenticated for this role
+    if (!isRoleAuthenticated(protectedRole)) {
+      return (
+        <AccessGate
+          requiredRole={protectedRole}
+          currentRole={activeRole}
+          pathname={pathname}
+        />
+      );
+    }
+    // 2. Cross-role boundary check (e.g. Doctor navigating to Facility, or Facility to Doctor)
+    if (activeRole !== "public" && activeRole !== protectedRole) {
+      return (
+        <AccessGate
+          requiredRole={protectedRole}
+          currentRole={activeRole}
+          pathname={pathname}
+        />
+      );
+    }
   }
 
   if (isAlwaysStandalone || isSharedStandalone) {

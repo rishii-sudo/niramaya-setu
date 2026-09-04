@@ -444,9 +444,9 @@ export default function PatientMedicinesPage() {
 
                   {hasPrescriptionItems && (
                     <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-[11px] text-amber-800">
-                      <p className="font-bold">Prescription Required Notice</p>
+                      <p className="font-bold text-amber-900">Prescription required before fulfillment.</p>
                       <p className="mt-0.5">
-                        Your cart contains prescription items. An authorized clinician prescription or doctor referral summary will be verified prior to dispatch.
+                        Your order contains regulated prescription items. An authorized clinician prescription or doctor referral summary will be verified prior to dispatch.
                       </p>
                     </div>
                   )}
@@ -490,15 +490,16 @@ export default function PatientMedicinesPage() {
                   </div>
 
                   {hasPrescriptionItems && (
-                    <div>
-                      <label className="mb-1 block font-semibold text-slate-700">Attach Prescription Summary (Optional in Prototype)</label>
+                    <div className="rounded-xl border border-amber-200 bg-amber-50 p-3">
+                      <p className="font-bold text-amber-900">Prescription required before fulfillment.</p>
+                      <label className="mt-1 mb-1 block font-semibold text-slate-700">Attach Prescription Summary (Verified on delivery)</label>
                       <input
                         type="file"
                         onChange={(e) => setUploadedRxName(e.target.files?.[0]?.name || "")}
-                        className="w-full rounded-xl border border-slate-200 p-2 text-xs"
+                        className="w-full rounded-xl border border-slate-200 p-2 text-xs bg-white"
                       />
                       {uploadedRxName && (
-                        <p className="mt-1 text-[11px] text-emerald-700">✓ Attached: {uploadedRxName}</p>
+                        <p className="mt-1 text-[11px] text-emerald-700 font-semibold">✓ Attached: {uploadedRxName}</p>
                       )}
                     </div>
                   )}

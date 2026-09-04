@@ -282,7 +282,16 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Visual Architecture Diagram */}
+          <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
+            <img
+              src="/about/continuity-flow.svg"
+              alt="NIRAMAYA-SETU Care Continuity Architecture Flow: ACCESS, RECORD, REFER, FOLLOW"
+              className="mx-auto w-full max-w-4xl"
+            />
+          </div>
+
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-sm font-bold text-teal-800">
                 01

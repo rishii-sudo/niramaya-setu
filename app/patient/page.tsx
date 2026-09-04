@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { logoutUser } from "../utils/auth";
 import LanguageSelector from "../components/LanguageSelector";
+import { getDynamicGreeting } from "../utils/timeUtils";
+import { useLanguage } from "../context/LanguageContext";
 
 const patient = {
   name: "Ramesh Kumar",
@@ -117,6 +119,7 @@ const recentActivity = [
 ];
 
 export default function PatientPage() {
+  const { language } = useLanguage();
   const [mobile, setMobile] = useState("");
 
   useEffect(() => {
@@ -235,7 +238,7 @@ export default function PatientPage() {
 
                 <div>
                   <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-                    Hello, {patient.name}
+                    {getDynamicGreeting(language)}, {patient.name}
                   </h1>
 
                   <p className="mt-1 text-sm text-slate-500">

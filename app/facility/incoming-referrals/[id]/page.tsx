@@ -697,18 +697,10 @@ export default function FacilityIntakePage({
               </div>
             </section>
 
-            {/* Prototype */}
-            <section className="rounded-2xl border border-amber-100 bg-amber-50/70 p-5">
-              <p className="text-xs font-bold uppercase tracking-wide text-amber-800">
-                Prototype Notice
-              </p>
-
-              <p className="mt-2 text-xs leading-5 text-amber-900">
-                Department and bed allocation are demonstration
-                values. Production systems should validate capacity
-                and persist intake events through the backend.
-              </p>
-            </section>
+            {/* Prototype note */}
+            <p className="mt-4 text-center text-[11px] text-slate-400">
+              Department and bed allocation demo data • Production capacity validation planned
+            </p>
           </aside>
         </div>
       </section>

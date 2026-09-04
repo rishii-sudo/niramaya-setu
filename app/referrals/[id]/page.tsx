@@ -885,21 +885,10 @@ export default function ReferralDetailPage({
           </div>
         </div>
 
-        {/* Prototype notice */}
-        <section className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-          <p className="font-semibold text-amber-900">
-            Prototype Notice
-          </p>
-
-          <p className="mt-1 text-sm leading-6 text-amber-800">
-            Referral information shown here uses mock frontend
-            data. The lifecycle status is synchronized with the
-            current prototype referral state stored in the browser.
-            Production implementation requires authenticated
-            backend persistence, RBAC, consent enforcement,
-            signed referral tokens and server-side audit logging.
-          </p>
-        </section>
+        {/* Prototype note */}
+        <p className="mt-6 text-center text-[11px] text-slate-400">
+          Demo referral record • Synchronized with local session state • Production ABDM integration planned
+        </p>
       </section>
     </main>
   );

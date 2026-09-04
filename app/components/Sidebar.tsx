@@ -176,7 +176,7 @@ function getRoleConfig(role: Role) {
               },
               {
                 label: "Treatment Queue",
-                href: "/doctor",
+                href: "/doctor/patients/NS-10284/treatment",
                 icon: <Activity size={18} />,
               },
               {

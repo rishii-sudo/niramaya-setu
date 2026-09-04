@@ -679,16 +679,10 @@ export default function FacilitySpecialistsPage() {
           </div>
         </section>
 
-        {/* ================================================================= */}
-        {/* Prototype                                                         */}
-        {/* ================================================================= */}
-
-        <div className="mt-6 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-xs leading-5 text-amber-900">
-          <strong>Prototype Notice:</strong>{" "}
-          Doctor roster, workload and availability are demonstration
-          values. Production data should come from authenticated
-          facility staffing and scheduling systems.
-        </div>
+        {/* Prototype note */}
+        <p className="mt-6 text-center text-[11px] text-slate-400">
+          Specialist roster • Facility demo dataset • Production scheduling integration planned
+        </p>
       </section>
 
       {/* =================================================================== */}

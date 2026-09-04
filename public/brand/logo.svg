@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" fill="none">
+  <!-- Brand Icon Container -->
+  <rect x="8" y="8" width="48" height="48" rx="14" fill="#0b8f86"/>
+  <!-- Healthcare Cross & Continuity Bridge Curve -->
+  <path d="M32 20v24M20 32h24" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+  <path d="M18 42c8 4 20 4 28 0" stroke="#a7f3d0" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Brand Name Typography -->
+  <text x="70" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="800" fill="#0f172a" letter-spacing="0.5">NIRAMAYA-SETU</text>
+  <text x="70" y="48" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#0b8f86" letter-spacing="1.2">CARE CONTINUITY PLATFORM</text>
+</svg>

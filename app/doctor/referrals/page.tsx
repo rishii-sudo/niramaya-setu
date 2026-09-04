@@ -10,7 +10,6 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { getAllReferralStates } from "@/app/data/referralState";
-import LanguageSelector from "@/app/components/LanguageSelector";
 
 type Priority = "Routine" | "Urgent" | "Emergency";
 
@@ -185,94 +184,36 @@ export default function DoctorReferralsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white">
-        <div className="flex h-16 items-center justify-between px-6">
-          <div>
-            <h1 className="text-lg font-bold text-slate-900">
-              Doctor Referrals
-            </h1>
-
-            <p className="text-xs text-slate-500">
-              NIRAMAYA-SETU / Doctor Workspace
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <LanguageSelector />
-            <Link
-              href="/doctor"
-              className="text-sm font-semibold text-teal-800 hover:text-teal-900"
-            >
-              Back to Dashboard
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className="hidden min-h-[calc(100vh-64px)] w-64 border-r border-slate-200 bg-white p-4 md:block">
-          <nav className="space-y-1">
-            <NavItem
-              href="/doctor"
-              label="Dashboard"
-            />
-
-            <NavItem
-              href="/doctor/referrals"
-              label="Referrals"
-              active
-            />
-
-            <NavItem
-              href="/patients"
-              label="Patients"
-            />
-
-            <NavItem
-              href="/doctor"
-              label="Treatment"
-            />
-
-            <NavItem
-              href="/doctor/appointments"
-              label="Appointments"
-            />
-          </nav>
-
-          <div className="mt-8 rounded-xl bg-slate-50 p-4">
-            <p className="text-xs font-semibold text-slate-700">
-              Referral review
-            </p>
-
-            <p className="mt-2 text-xs leading-5 text-slate-500">
-              Review referrals, inspect patient context and continue
-              the care journey without losing the referral trail.
-            </p>
-          </div>
-        </aside>
-
-        {/* Main */}
-        <section className="w-full p-6 lg:p-8">
+    <main className="min-h-screen bg-slate-50/60 p-5 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-7xl space-y-6">
+        {/* Page Heading */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-medium text-teal-700">
               REFERRAL WORKSPACE
             </p>
 
-            <h2 className="mt-1 text-3xl font-bold text-slate-900">
+            <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
               Incoming Referrals
-            </h2>
+            </h1>
 
-            <p className="mt-2 max-w-2xl text-sm text-slate-500">
-              Review patients referred to your facility and filter
-              cases by status, priority and department.
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+              Review patients referred to your facility and filter cases by status, priority and department.
             </p>
           </div>
 
-          {/* Search */}
-          <div className="mt-8 flex flex-col gap-3 lg:flex-row">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/doctor"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+            >
+              ← Back to Doctor Dashboard
+            </Link>
+          </div>
+        </div>
+
+        {/* Search */}
+        <div className="mt-8 flex flex-col gap-3 lg:flex-row">
             <div className="relative flex-1">
               <Search
                 size={18}
@@ -530,13 +471,21 @@ export default function DoctorReferralsPage() {
                         </td>
 
                         <td className="px-5 py-4">
-                          <Link
-                            href={`/referrals/${referral.id}`}
-                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-teal-700 hover:bg-slate-50"
-                          >
-                            Review
-                            <ArrowRight size={14} />
-                          </Link>
+                          <div className="flex items-center gap-2">
+                            <Link
+                              href={`/referrals/${referral.id}`}
+                              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-teal-700 hover:bg-slate-50"
+                            >
+                              Review
+                              <ArrowRight size={14} />
+                            </Link>
+                            <Link
+                              href={`/doctor/patients/${referral.patientId}/treatment`}
+                              className="inline-flex items-center gap-1 rounded-lg bg-teal-700 px-3 py-2 text-xs font-semibold text-white hover:bg-teal-800"
+                            >
+                              Treatment
+                            </Link>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -579,37 +528,10 @@ export default function DoctorReferralsPage() {
               authenticated doctor&apos;s assigned facility through the
               backend API.
             </p>
-          </div>
-        </section>
+        </div>
       </div>
     </main>
   );
-}
-
-function NavItem({
-  href,
-  label,
-  active = false,
-}: {
-  href?: string;
-  label: string;
-  active?: boolean;
-}) {
-  const className = `block rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-    active
-      ? "bg-teal-50 text-teal-800"
-      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-  }`;
-
-  if (href) {
-    return (
-      <Link href={href} className={className}>
-        {label}
-      </Link>
-    );
-  }
-
-  return <div className={className}>{label}</div>;
 }
 
 function SummaryCard({

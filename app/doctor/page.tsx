@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { getDynamicGreeting } from "../utils/timeUtils";
 import { useLanguage } from "../context/LanguageContext";
-import LanguageSelector from "../components/LanguageSelector";
 
 type Priority = "Routine" | "Urgent" | "Emergency";
 
@@ -112,54 +111,9 @@ export default function DoctorDashboardPage() {
   const { language } = useLanguage();
 
   return (
-    <main className="min-h-screen bg-transparent">
-      {/* Doctor header */}
-      <header className="border-b border-slate-200 bg-white/85 backdrop-blur-md">
-        <div className="flex h-16 items-center justify-between px-5 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-700 text-white shadow-sm">
-              <HeartPulse size={20} />
-            </div>
-
-            <div>
-              <p className="text-sm font-bold text-slate-900">
-                NIRAMAYA-SETU
-              </p>
-
-              <p className="text-[10px] text-slate-500">
-                Doctor Workspace
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 sm:gap-4">
-            <LanguageSelector />
-
-            <div className="hidden text-right sm:block">
-              <p className="text-sm font-semibold text-slate-900">
-                Dr. Priya Singh
-              </p>
-
-              <p className="text-xs text-slate-500">
-                Cardiology • District Hospital Jaipur
-              </p>
-            </div>
-
-            <Link
-              href="/notifications"
-              className="relative rounded-lg p-2 text-slate-500 transition hover:bg-slate-100"
-              aria-label="Notifications"
-            >
-              <Bell size={20} />
-
-              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
-            </Link>
-          </div>
-        </div>
-      </header>
-
+    <main className="min-h-screen bg-transparent p-5 sm:p-6 lg:p-8">
       {/* Dashboard content */}
-      <section className="min-w-0 p-5 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-7xl space-y-6">
         {/* Page heading */}
         <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
           <div>
@@ -444,7 +398,7 @@ export default function DoctorDashboardPage() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </main>
   );
 }

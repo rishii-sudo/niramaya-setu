@@ -376,8 +376,12 @@ td {
 }
 
 /* =========================================================
-   PRINT
+   PRINT & SCREEN UTILITIES
    ========================================================= */
+
+.print-only {
+  display: none !important;
+}
 
 @media print {
   @page {
@@ -388,17 +392,18 @@ td {
   html,
   body {
     background: white !important;
-    font-size: 12pt;
+    font-size: 11pt;
     line-height: 1.4;
   }
 
   body {
-    color: #10233f;
+    color: #0f172a;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  /* Hide app chrome, sidebars, headers, mobile navigation, buttons, and prototype notices during print */
+  /* Exclude screen-only components and application chrome during print */
+  .screen-only,
   header,
   aside,
   nav,
@@ -408,6 +413,10 @@ td {
   [data-print-hidden="true"],
   body > div[aria-hidden="true"] {
     display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
   }
 
   .shadow,
@@ -424,7 +433,6 @@ td {
   div {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
-    background-color: transparent !important;
   }
 
   input,
