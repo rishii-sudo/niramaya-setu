@@ -71,6 +71,7 @@ export default function AppShell({
     pathname === "/" ||
     pathname === "/about" ||
     pathname === "/login" ||
+    pathname === "/get-started" ||
     pathname === "/doctors" ||
     pathname === "/appointments" ||
     pathname.startsWith("/patient") ||

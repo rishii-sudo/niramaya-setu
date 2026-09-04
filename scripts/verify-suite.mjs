@@ -36,6 +36,7 @@ async function runVerification() {
   const routesToTest = [
     "/",
     "/about",
+    "/get-started",
     "/dashboard",
     "/admin/analytics",
     "/admin/users",
@@ -241,6 +242,23 @@ async function runVerification() {
 
   const patientsRegisterFile = fs.readFileSync(path.resolve("app/patients/register/page.tsx"), "utf-8");
   assert(!patientsRegisterFile.includes("<header className=\"border-b"), "patients/register does NOT render duplicate header");
+
+  console.log("\n--- 18. Testing Public Entry Flow (/ -> /get-started) ---");
+  const homeFile = fs.readFileSync(path.resolve("app/page.tsx"), "utf-8");
+  assert(homeFile.includes("href=\"/get-started\""), "Home page contains prominent CTA link to /get-started");
+  assert(homeFile.includes("How NIRAMAYA-SETU Works"), "Home page explains How NIRAMAYA-SETU Works");
+  assert(homeFile.includes("ACCESS") && homeFile.includes("RECORD") && homeFile.includes("REFER") && homeFile.includes("FOLLOW"), "Home page illustrates the 4-step care continuum");
+  assert(homeFile.includes("LanguageSelector"), "Home page includes global LanguageSelector");
+  assert(homeFile.includes("Ayushman Bharat Digital Mission") && homeFile.includes("FHIR R4"), "Home page documents national ecosystem integrations");
+
+  const getStartedFile = fs.readFileSync(path.resolve("app/get-started/page.tsx"), "utf-8");
+  assert(getStartedFile.includes("What best describes you?"), "Get Started page contains role selection prompt 'What best describes you?'");
+  assert(getStartedFile.includes("Patient / Citizen") && getStartedFile.includes("ASHA / ANM Field Worker"), "Get Started includes Patient and ASHA roles");
+  assert(getStartedFile.includes("Doctor / Clinician") && getStartedFile.includes("Facility Staff / Hospital"), "Get Started includes Doctor and Facility roles");
+  assert(getStartedFile.includes("router.push"), "Get Started uses router.push without auto-authenticating session");
+
+  assert(appShellFile.includes('pathname === "/get-started"'), "AppShell treats /get-started as standalone public route");
+  assert(roleContextFile.includes('pathname === "/get-started"'), "RoleContext treats /get-started as public route");
 
   console.log(`\n==================================================`);
   console.log(`VERIFICATION SUMMARY: ${passed} PASSED, ${failed} FAILED`);

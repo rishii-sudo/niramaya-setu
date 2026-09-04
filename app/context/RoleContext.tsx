@@ -48,6 +48,7 @@ export function getRoleFromPathname(pathname: string): Role | null {
     pathname === "/" ||
     pathname === "/about" ||
     pathname === "/login" ||
+    pathname === "/get-started" ||
     pathname === "/doctors" ||
     pathname === "/facilities" ||
     pathname.startsWith("/facilities/") ||

@@ -213,7 +213,7 @@ export default function AboutPage() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
-              href="#role-selection"
+              href="/get-started"
               className="rounded-xl bg-teal-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-teal-900/40 transition hover:bg-teal-500"
             >
               Get Started with NIRAMAYA-SETU
