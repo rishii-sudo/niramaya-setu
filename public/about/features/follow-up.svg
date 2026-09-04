@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Background Badge -->
+  <rect width="48" height="48" rx="12" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="1.5"/>
+  <!-- Calendar Card -->
+  <rect x="10" y="12" width="28" height="26" rx="4" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+  <path d="M10 19h28" stroke="#0b8f86" stroke-width="2"/>
+  <line x1="16" y1="9" x2="16" y2="13" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="32" y1="9" x2="32" y2="13" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- 48h Alert Clock / Badge -->
+  <circle cx="28" cy="27" r="8" fill="#0b8f86"/>
+  <path d="M28 23v4l3 2" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Checkmark on prior days -->
+  <path d="M14 26l2 2 3-3" stroke="#10b981" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

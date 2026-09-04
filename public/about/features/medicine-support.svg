@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Background Badge -->
+  <rect width="48" height="48" rx="12" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="1.5"/>
+  <!-- Prescription Slip -->
+  <rect x="9" y="11" width="16" height="22" rx="3" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+  <!-- Rx Mark -->
+  <path d="M13 16h4a2 2 0 1 1 0 4h-4v-4zm0 4l3 4" stroke="#0b8f86" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Medicine Bottle / Pack -->
+  <rect x="23" y="17" width="16" height="20" rx="3" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+  <rect x="26" y="13" width="10" height="4" rx="1.5" fill="#0b8f86"/>
+  <!-- Pill Cross on Bottle -->
+  <circle cx="31" cy="27" r="5" fill="#f0fdfa" stroke="#0b8f86" stroke-width="1.5"/>
+  <path d="M31 24.5v5m-2.5-2.5h5" stroke="#0b8f86" stroke-width="1.8" stroke-linecap="round"/>
+</svg>

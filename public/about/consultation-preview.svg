@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 240" fill="none">
+  <!-- Container Card -->
+  <rect width="500" height="240" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  
+  <!-- Left Panel: Doctor Workspace Tele-Consult -->
+  <g transform="translate(30, 30)">
+    <rect width="180" height="140" rx="12" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+    <rect x="0" y="0" width="180" height="24" rx="12" fill="#0f172a"/>
+    <circle cx="14" cy="12" r="3" fill="#ef4444"/>
+    <circle cx="24" cy="12" r="3" fill="#f59e0b"/>
+    <circle cx="34" cy="12" r="3" fill="#10b981"/>
+    <text x="90" y="16" font-family="system-ui, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">DOCTOR WORKSPACE</text>
+    
+    <!-- Doctor Avatar & Video Frame -->
+    <rect x="20" y="38" width="56" height="56" rx="8" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="1.5"/>
+    <circle cx="48" cy="58" r="10" fill="#0b8f86"/>
+    <path d="M34 82c0-5 4-9 9-9h10c5 0 9 4 9 9" fill="#0b8f86" opacity="0.8"/>
+    
+    <!-- In-Call Notes Preview -->
+    <rect x="88" y="38" width="72" height="70" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="96" y="52" font-family="system-ui, sans-serif" font-size="8" font-weight="700" fill="#0f172a">Clinical Notes</text>
+    <line x1="96" y1="62" x2="148" y2="62" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="96" y1="72" x2="140" y2="72" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="96" y1="82" x2="144" y2="82" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="96" y="92" width="34" height="10" rx="3" fill="#0b8f86"/>
+    <text x="113" y="100" font-family="system-ui, sans-serif" font-size="6" font-weight="700" fill="#ffffff" text-anchor="middle">Prescribe</text>
+    
+    <!-- Audio/Video Controls -->
+    <circle cx="40" cy="118" r="8" fill="#f1f5f9"/>
+    <path d="M38 115v6m4-6v6" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="60" cy="118" r="8" fill="#f1f5f9"/>
+    <path d="M57 118h6" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="80" cy="118" r="8" fill="#fee2e2"/>
+    <rect x="76" y="117" width="8" height="2" rx="1" fill="#ef4444"/>
+  </g>
+
+  <!-- Center Bridge / Connection Session Beam -->
+  <g transform="translate(210, 85)">
+    <path d="M 5 25 C 25 10, 55 10, 75 25" stroke="#0b8f86" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 4"/>
+    <circle cx="40" cy="14" r="14" fill="#ffffff" stroke="#0b8f86" stroke-width="1.5"/>
+    <!-- Lock / Ephemeral Token Icon -->
+    <path d="M37 13v-2a3 3 0 0 1 6 0v2m-8 0h10v7H35v-7z" stroke="#0b8f86" stroke-width="1.2" fill="#f0fdfa"/>
+    <text x="40" y="38" font-family="system-ui, sans-serif" font-size="7" font-weight="700" fill="#0b8f86" text-anchor="middle">SESSION ID</text>
+  </g>
+
+  <!-- Right Panel: Patient Portal View -->
+  <g transform="translate(290, 30)">
+    <rect width="180" height="140" rx="12" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+    <rect x="0" y="0" width="180" height="24" rx="12" fill="#0f172a"/>
+    <circle cx="14" cy="12" r="3" fill="#ef4444"/>
+    <circle cx="24" cy="12" r="3" fill="#f59e0b"/>
+    <circle cx="34" cy="12" r="3" fill="#10b981"/>
+    <text x="90" y="16" font-family="system-ui, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">PATIENT PORTAL</text>
+    
+    <!-- Remote Doctor Stream View -->
+    <rect x="18" y="36" width="144" height="74" rx="8" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="1.5"/>
+    <circle cx="90" cy="65" r="12" fill="#0b8f86"/>
+    <path d="M72 92c0-7 6-12 18-12s18 5 18 12" fill="#0b8f86" opacity="0.8"/>
+    <rect x="24" y="42" width="46" height="14" rx="3" fill="#ffffff" opacity="0.9"/>
+    <text x="47" y="52" font-family="system-ui, sans-serif" font-size="7" font-weight="700" fill="#0f172a" text-anchor="middle">Dr. Specialist</text>
+
+    <!-- Patient Picture-in-Picture -->
+    <rect x="114" y="74" width="42" height="30" rx="4" fill="#0f172a" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="135" cy="85" r="4" fill="#0284c7"/>
+
+    <!-- Bottom Controls -->
+    <circle cx="70" cy="122" r="7" fill="#f1f5f9"/>
+    <circle cx="90" cy="122" r="7" fill="#f1f5f9"/>
+    <circle cx="110" cy="122" r="7" fill="#fee2e2"/>
+  </g>
+
+  <!-- Bottom Prototype Banner -->
+  <g transform="translate(100, 195)">
+    <rect width="300" height="28" rx="14" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>
+    <text x="150" y="18" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#92400e" text-anchor="middle">
+      Consultation Prototype • Production WebRTC Planned
+    </text>
+  </g>
+</svg>

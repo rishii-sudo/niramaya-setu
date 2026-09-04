@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Background Badge -->
+  <rect width="48" height="48" rx="12" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="1.5"/>
+  <!-- Primary Chat Bubble: Devanagari 'अ' -->
+  <path d="M10 24c0-6.6 5.4-12 12-12h2c6.6 0 12 5.4 12 12 0 6.6-5.4 12-12 12h-4l-6 4v-4.5c-2.5-2.2-4-5.7-4-9.5z" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+  <!-- Devanagari Letter 'अ' representation -->
+  <text x="21" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="800" fill="#0b8f86" text-anchor="middle">अ</text>
+  <!-- Secondary Language Badge: 'EN' -->
+  <rect x="25" y="10" width="15" height="11" rx="3" fill="#0b8f86"/>
+  <text x="32.5" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="7" font-weight="800" fill="#ffffff" text-anchor="middle">EN</text>
+  <!-- Tertiary Language Tag: 'म' -->
+  <circle cx="34" cy="30" r="5" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2"/>
+  <text x="34" y="33.5" font-family="system-ui, -apple-system, sans-serif" font-size="7" font-weight="700" fill="#0284c7" text-anchor="middle">म</text>
+</svg>

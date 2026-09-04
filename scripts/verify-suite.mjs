@@ -126,7 +126,7 @@ async function runVerification() {
   console.log("\n--- 8. Testing About Page & Voice Claims ---");
   const aboutFile = fs.readFileSync(path.resolve("app/about/page.tsx"), "utf-8");
   assert(aboutFile.includes("title: \"Voice & Text Assistance\""), "Voice assistance accurately titled 'Voice & Text Assistance'");
-  assert(aboutFile.includes("Prototype voice-guided assistance"), "Voice assistance described as prototype");
+  assert(aboutFile.includes("Prototype voice-guided assistance") || aboutFile.includes("Prototype voice and text guidance") || aboutFile.includes("Prototype Voice Assistance"), "Voice assistance described as prototype");
   assert(!aboutFile.includes("Voice and text AI assistant"), "No false production AI claims");
   assert(aboutFile.includes("LanguageSelector"), "LanguageSelector in About page header");
 
@@ -259,6 +259,87 @@ async function runVerification() {
 
   assert(appShellFile.includes('pathname === "/get-started"'), "AppShell treats /get-started as standalone public route");
   assert(roleContextFile.includes('pathname === "/get-started"'), "RoleContext treats /get-started as public route");
+
+  console.log("\n--- 19. Testing Final About Page (/about) ---");
+  const finalAboutFile = fs.readFileSync(path.resolve("app/about/page.tsx"), "utf-8");
+  assert(finalAboutFile.includes("One Patient Journey. Connected Across Every Level of Care."), "About page contains official headline");
+  assert(finalAboutFile.includes("Connected Rural Care • Closed-Loop Referral Platform"), "About page contains official tagline");
+  assert(finalAboutFile.includes("/brand/logo.svg"), "About page uses official logo /brand/logo.svg");
+  assert(finalAboutFile.includes("/about/hero-care-network.svg"), "About page renders hero-care-network.svg illustration");
+  assert(fs.existsSync(path.resolve("public/about/hero-care-network.svg")), "hero-care-network.svg exists on disk");
+  assert(finalAboutFile.includes("/about/continuity-flow.svg"), "About page renders continuity-flow.svg");
+  assert(fs.existsSync(path.resolve("public/about/continuity-flow.svg")), "continuity-flow.svg exists on disk");
+
+  // 17 Capabilities
+  const expectedCaps = [
+    "Patient Registration",
+    "Digital Patient Records",
+    "ASHA / ANM Field Support",
+    "Referral Management",
+    "Closed-Loop Referral Tracking",
+    "Follow-up Tracking",
+    "Nearby Hospital / Clinic Discovery",
+    "Doctor Discovery",
+    "Online Appointment Booking",
+    "Video Consultation Prototype",
+    "Audio Consultation Prototype",
+    "Clinical Summary / Documents",
+    "Medicine Discovery / Ordering Prototype",
+    "Multilingual Support",
+    "Voice & Text Assistance",
+    "Consent & Privacy",
+    "Offline-first Rural Workflow",
+  ];
+  let allCapsFound = true;
+  for (const cap of expectedCaps) {
+    if (!finalAboutFile.includes(cap)) {
+      allCapsFound = false;
+      console.error(`Missing capability in /about: ${cap}`);
+    }
+  }
+  assert(allCapsFound, "About page contains all 17 specified capability cards");
+
+  // 6 Stakeholders
+  const expectedStakeholders = [
+    "Patients & Families",
+    "ASHA / ANM Workers",
+    "Doctors & Clinicians",
+    "Hospitals & Clinics",
+    "Administrators & Health Officials",
+    "Healthcare Partners & Organizations",
+  ];
+  let allStakeholdersFound = true;
+  for (const sh of expectedStakeholders) {
+    if (!finalAboutFile.includes(sh)) {
+      allStakeholdersFound = false;
+      console.error(`Missing stakeholder in /about: ${sh}`);
+    }
+  }
+  assert(allStakeholdersFound, "About page covers all 6 distinct stakeholder groups");
+
+  // Unsupported claim absence
+  assert(!finalAboutFile.includes("40%+"), "About page removed unsupported '40%+' claim");
+  assert(!finalAboutFile.includes("91.4%"), "About page removed unsupported '91.4%' claim");
+  assert(!finalAboutFile.includes("14 Facilities"), "About page removed unsupported '14 Facilities' claim");
+  assert(!finalAboutFile.includes("100% Offline Sync"), "About page removed unsupported '100% Offline Sync' claim");
+
+  // Prototype notices & disclaimers
+  assert(finalAboutFile.includes("Production WebRTC integration planned"), "About page discloses WebRTC roadmap status");
+  assert(finalAboutFile.includes("Prescription required before fulfillment"), "About page discloses prescription requirement");
+  assert(finalAboutFile.includes("Prototype Voice Assistance"), "About page discloses voice assistant prototype status");
+
+  // Team & Data Integration
+  assert(finalAboutFile.includes("teamMembers") && finalAboutFile.includes("projectCreators"), "About page imports team data from teamData.ts");
+  assert(finalAboutFile.includes("Core architectural roles & contributor specifications") || finalAboutFile.includes("Core architectural roles &amp; contributor specifications"), "About page labels team specifications transparently");
+
+  // Single LanguageSelector
+  const langSelectorCount = (finalAboutFile.match(/<LanguageSelector/g) || []).length;
+  assert(langSelectorCount === 1, `About page renders exactly 1 LanguageSelector (found ${langSelectorCount})`);
+
+  // Links & Navigation
+  assert(finalAboutFile.includes("href=\"/login\"") && finalAboutFile.includes("href=\"/asha/login\""), "About page links to Patient and ASHA logins");
+  assert(finalAboutFile.includes("href=\"/doctor/login\"") && finalAboutFile.includes("href=\"/facility/login\""), "About page links to Doctor and Facility logins");
+  assert(finalAboutFile.includes("href=\"/get-started\""), "About page links to /get-started");
 
   console.log(`\n==================================================`);
   console.log(`VERIFICATION SUMMARY: ${passed} PASSED, ${failed} FAILED`);

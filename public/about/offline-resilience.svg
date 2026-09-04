@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 200" fill="none">
+  <!-- Container Card -->
+  <rect width="500" height="200" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- Step 1: Remote Hamlet / Offline Field Entry -->
+  <g transform="translate(30, 30)">
+    <rect width="115" height="120" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="37" y="16" width="40" height="40" rx="10" fill="#fee2e2"/>
+    <path d="M47 36a5 5 0 0 1 10-2 4 4 0 0 1 5 4h-15z" fill="#ffffff" stroke="#ef4444" stroke-width="1.5"/>
+    <line x1="45" y1="42" x2="67" y2="24" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+    <text x="57" y="76" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle">1. Field Entry</text>
+    <text x="57" y="94" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Zero Connectivity</text>
+    <text x="57" y="108" font-family="system-ui, sans-serif" font-size="8" font-weight="600" fill="#ef4444" text-anchor="middle">No Packet Loss</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <path d="M155 90h20m-5-5l5 5-5 5" stroke="#0b8f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Step 2: Browser Local Persistence -->
+  <g transform="translate(185, 30)">
+    <rect width="130" height="120" rx="12" fill="#ffffff" stroke="#0b8f86" stroke-width="2"/>
+    <rect x="45" y="16" width="40" height="40" rx="10" fill="#f0fdfa"/>
+    <!-- Storage Database / Disk Icon -->
+    <ellipse cx="65" cy="28" rx="12" ry="4" fill="#0b8f86"/>
+    <path d="M53 28v6c0 2.2 5.4 4 12 4s12-1.8 12-4v-6" fill="#0b8f86" opacity="0.7"/>
+    <path d="M53 34v6c0 2.2 5.4 4 12 4s12-1.8 12-4v-6" fill="#0b8f86" opacity="0.9"/>
+    <text x="65" y="76" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle">2. Local Storage</text>
+    <text x="65" y="94" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Browser Cache</text>
+    <text x="65" y="108" font-family="system-ui, sans-serif" font-size="8" font-weight="600" fill="#0b8f86" text-anchor="middle">Active Prototype</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <path d="M325 90h20m-5-5l5 5-5 5" stroke="#0b8f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Step 3: Background Cloud Sync -->
+  <g transform="translate(355, 30)">
+    <rect width="115" height="120" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="37" y="16" width="40" height="40" rx="10" fill="#e0f2fe"/>
+    <!-- Sync Cloud Loop -->
+    <path d="M47 38a5 5 0 0 1 10-2 4 4 0 0 1 5 4h-15z" fill="#0284c7" opacity="0.8"/>
+    <path d="M45 28a10 10 0 0 1 18 0" stroke="#0284c7" stroke-width="2" stroke-linecap="round"/>
+    <path d="M60 25l3 3-3 3" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="57" y="76" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle">3. Auto Sync</text>
+    <text x="57" y="94" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Network Reconnect</text>
+    <text x="57" y="108" font-family="system-ui, sans-serif" font-size="8" font-weight="600" fill="#0284c7" text-anchor="middle">Production Planned</text>
+  </g>
+
+  <!-- Bottom Banner -->
+  <g transform="translate(80, 165)">
+    <text x="170" y="15" font-family="system-ui, sans-serif" font-size="10" font-weight="500" fill="#64748b" text-anchor="middle">
+      Guaranteed field record capture across zero-connectivity hamlets
+    </text>
+  </g>
+</svg>

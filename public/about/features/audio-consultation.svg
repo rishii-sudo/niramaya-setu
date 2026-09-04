@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Background Badge -->
+  <rect width="48" height="48" rx="12" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="1.5"/>
+  <!-- Phone Handset -->
+  <path d="M14 13a4 4 0 0 1 4-4h2a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-1c-.5 0-1 .5-1 1 0 4 3 8 7 9 .5 0 1-.5 1-1v-1a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2a4 4 0 0 1-4 4c-11 0-19-8-19-19z" fill="#0b8f86" stroke="#0f172a" stroke-width="1.5"/>
+  <!-- Low-Bandwidth Audio Waveforms -->
+  <path d="M29 14a8 8 0 0 1 8 8" stroke="#0284c7" stroke-width="2" stroke-linecap="round"/>
+  <path d="M33 10a13 13 0 0 1 8 13" stroke="#0284c7" stroke-width="2" stroke-linecap="round"/>
+  <path d="M26 18a4 4 0 0 1 4 4" stroke="#0284c7" stroke-width="2" stroke-linecap="round"/>
+</svg>

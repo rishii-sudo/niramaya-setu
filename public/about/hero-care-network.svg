@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f0fdfa"/>
+    </linearGradient>
+    <linearGradient id="bridgeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0b8f86"/>
+      <stop offset="50%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="125%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="800" height="420" rx="24" fill="url(#bgGrad)" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- Network Grid Gridlines -->
+  <g opacity="0.35" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 6">
+    <line x1="80" y1="40" x2="80" y2="380"/>
+    <line x1="260" y1="40" x2="260" y2="380"/>
+    <line x1="440" y1="40" x2="440" y2="380"/>
+    <line x1="620" y1="40" x2="620" y2="380"/>
+    <line x1="40" y1="120" x2="760" y2="120"/>
+    <line x1="40" y1="220" x2="760" y2="220"/>
+    <line x1="40" y1="320" x2="760" y2="320"/>
+  </g>
+
+  <!-- Continuity Flow Curve / Bridge -->
+  <path d="M 170 210 C 270 120, 370 300, 480 210 C 530 160, 580 180, 630 210" 
+        stroke="url(#bridgeGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M 170 210 C 270 120, 370 300, 480 210 C 530 160, 580 180, 630 210" 
+        stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="6 8" fill="none"/>
+
+  <!-- Hub 1: Village Health Post & ASHA Field -->
+  <g transform="translate(60, 110)" filter="url(#cardShadow)">
+    <rect width="220" height="200" rx="20" fill="#ffffff" stroke="#ccfbf1" stroke-width="2"/>
+    <rect x="20" y="20" width="48" height="48" rx="14" fill="#0b8f86"/>
+    <!-- Icon: Community & Care -->
+    <path d="M44 38c0-4.4-3.6-8-8-8s-8 3.6-8 8" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="36" cy="30" r="4" fill="#ffffff"/>
+    <path d="M52 44c0-3.3-2.7-6-6-6" stroke="#a7f3d0" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="46" cy="34" r="3" fill="#a7f3d0"/>
+
+    <text x="20" y="96" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#0f172a">1. Village Level</text>
+    <text x="20" y="118" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#0b8f86">ASHA &amp; Sub-Center Care</text>
+    <text x="20" y="142" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Home visit screening</text>
+    <text x="20" y="160" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Vitals &amp; symptom capture</text>
+    <text x="20" y="178" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Offline browser persistence</text>
+
+    <rect x="156" y="20" width="44" height="22" rx="11" fill="#f0fdfa" stroke="#0b8f86" stroke-width="1"/>
+    <text x="178" y="35" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#0b8f86" text-anchor="middle">ENTRY</text>
+  </g>
+
+  <!-- Hub 2: Care Transit & Triage Gateway -->
+  <g transform="translate(320, 70)" filter="url(#cardShadow)">
+    <rect width="200" height="230" rx="20" fill="#ffffff" stroke="#e0e7ff" stroke-width="2"/>
+    <rect x="20" y="20" width="48" height="48" rx="14" fill="#4f46e5"/>
+    <!-- Icon: Emergency / Transfer Route -->
+    <path d="M34 44v-16m-8 8h16" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="34" cy="44" r="2" fill="#a5b4fc"/>
+    <path d="M48 40l-6-6m0 6l6-6" stroke="#a5b4fc" stroke-width="2" stroke-linecap="round"/>
+
+    <text x="20" y="96" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#0f172a">2. Referral Transit</text>
+    <text x="20" y="118" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#4f46e5">Closed-Loop Handshake</text>
+    <text x="20" y="142" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Tokenized QR verification</text>
+    <text x="20" y="160" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Facility capacity matching</text>
+    <text x="20" y="178" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Real-time status tracking</text>
+    <text x="20" y="196" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Zero lost-to-follow-up</text>
+
+    <rect x="126" y="20" width="54" height="22" rx="11" fill="#eef2ff" stroke="#4f46e5" stroke-width="1"/>
+    <text x="153" y="35" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#4f46e5" text-anchor="middle">ROUTING</text>
+  </g>
+
+  <!-- Hub 3: District Hospital & Specialist Center -->
+  <g transform="translate(550, 110)" filter="url(#cardShadow)">
+    <rect width="210" height="200" rx="20" fill="#ffffff" stroke="#e0f2fe" stroke-width="2"/>
+    <rect x="20" y="20" width="48" height="48" rx="14" fill="#0284c7"/>
+    <!-- Icon: Hospital Building -->
+    <path d="M30 46V28h24v18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M42 32v6m-3-3h6" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+    <rect x="36" y="42" width="6" height="4" fill="#ffffff"/>
+
+    <text x="20" y="96" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#0f172a">3. Specialized Care</text>
+    <text x="20" y="118" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#0284c7">District Center &amp; CHC</text>
+    <text x="20" y="142" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Longitudinal record intake</text>
+    <text x="20" y="160" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Specialist care &amp; treatment</text>
+    <text x="20" y="178" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Discharge &amp; ASHA tasking</text>
+
+    <rect x="136" y="20" width="54" height="22" rx="11" fill="#f0f9ff" stroke="#0284c7" stroke-width="1"/>
+    <text x="163" y="35" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#0284c7" text-anchor="middle">FACILITY</text>
+  </g>
+
+  <!-- Bottom Continuity Badge -->
+  <g transform="translate(260, 340)">
+    <rect width="280" height="44" rx="22" fill="#0f172a"/>
+    <circle cx="32" cy="22" r="6" fill="#10b981"/>
+    <text x="50" y="27" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#ffffff">One Continuum • Closed-Loop Protected</text>
+  </g>
+</svg>

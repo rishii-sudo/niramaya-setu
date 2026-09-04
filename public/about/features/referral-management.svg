@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Background Badge -->
+  <rect width="48" height="48" rx="12" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="1.5"/>
+  <!-- Origin Health Post -->
+  <circle cx="12" cy="24" r="4" fill="#0b8f86"/>
+  <!-- Destination Hospital -->
+  <rect x="30" y="16" width="12" height="16" rx="2" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+  <path d="M36 21v6m-3-3h6" stroke="#0b8f86" stroke-width="2" stroke-linecap="round"/>
+  <!-- Referral Pathway Bridge / Arrow -->
+  <path d="M16 24h10m-3-4l4 4-4 4" stroke="#0b8f86" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Digital QR Token on Path -->
+  <rect x="18" y="12" width="8" height="8" rx="2" fill="#0f172a"/>
+  <rect x="20" y="14" width="4" height="4" fill="#ffffff"/>
+</svg>
