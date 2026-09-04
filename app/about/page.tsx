@@ -363,11 +363,11 @@ export default function AboutPage() {
             </div>
 
             {/* Healthcare Network Visual Illustration */}
-            <div className="mt-12 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 p-2 sm:p-4 shadow-xl">
+            <div className="mt-12 w-full max-w-4xl mx-auto rounded-3xl border border-slate-800/80 bg-slate-950 p-2 sm:p-4 shadow-2xl">
               <img
                 src="/about/hero-care-network.svg"
                 alt="NIRAMAYA-SETU Connected Care Network: Village Level, Referral Transit, Specialized Care, and Patient Follow-up"
-                className="mx-auto w-full max-w-4xl rounded-xl"
+                className="w-full h-auto block rounded-2xl"
               />
             </div>
           </div>
