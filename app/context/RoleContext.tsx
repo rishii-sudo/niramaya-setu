@@ -1,0 +1,168 @@
+"use client";
+
+import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { usePathname } from "next/navigation";
+
+export type Role = "asha" | "doctor" | "facility" | "admin" | "patient" | "public";
+
+interface RoleContextType {
+  activeRole: Role;
+  setActiveRole: (role: Role) => void;
+  roleDisplayName: string;
+  roleSubtitle: string;
+  roleDashboardPath: string;
+  getDashboardForRole: (role: Role) => string;
+}
+
+const RoleContext = createContext<RoleContextType | undefined>(undefined);
+
+const ROLE_STORAGE_KEY = "niramaya-active-role";
+
+export function getRoleFromPathname(pathname: string): Role | null {
+  if (pathname === "/asha" || pathname.startsWith("/asha/")) {
+    return "asha";
+  }
+  if (pathname === "/doctor" || pathname.startsWith("/doctor/")) {
+    return "doctor";
+  }
+  if (pathname === "/facility" || pathname.startsWith("/facility/")) {
+    return "facility";
+  }
+  if (
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/") ||
+    pathname === "/dashboard"
+  ) {
+    return "admin";
+  }
+  if (pathname === "/patient" || pathname.startsWith("/patient/")) {
+    return "patient";
+  }
+  if (
+    pathname === "/" ||
+    pathname === "/about" ||
+    pathname === "/login" ||
+    pathname === "/doctors" ||
+    pathname === "/facilities" ||
+    pathname.startsWith("/facilities/") ||
+    pathname === "/appointments"
+  ) {
+    return null; // Public / shared routes - preserve existing role or default to public
+  }
+  return null;
+}
+
+export function RoleProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const [activeRole, setActiveRoleState] = useState<Role>("public");
+
+  useEffect(() => {
+    const pathRole = getRoleFromPathname(pathname);
+    if (pathRole) {
+      setActiveRoleState(pathRole);
+      if (typeof window !== "undefined") {
+        localStorage.setItem(ROLE_STORAGE_KEY, pathRole);
+      }
+    } else {
+      if (typeof window !== "undefined") {
+        const stored = localStorage.getItem(ROLE_STORAGE_KEY) as Role | null;
+        if (stored && ["asha", "doctor", "facility", "admin", "patient"].includes(stored)) {
+          setActiveRoleState(stored);
+        } else {
+          setActiveRoleState("public"); // Default to public, NEVER to admin!
+        }
+      }
+    }
+  }, [pathname]);
+
+  const setActiveRole = (role: Role) => {
+    setActiveRoleState(role);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(ROLE_STORAGE_KEY, role);
+    }
+  };
+
+  const getDashboardForRole = (role: Role): string => {
+    switch (role) {
+      case "asha":
+        return "/asha";
+      case "doctor":
+        return "/doctor";
+      case "facility":
+        return "/facility/dashboard";
+      case "admin":
+        return "/dashboard";
+      case "patient":
+        return "/patient";
+      default:
+        return "/";
+    }
+  };
+
+  const getRoleDetails = (role: Role) => {
+    switch (role) {
+      case "asha":
+        return {
+          displayName: "ASHA / ANM",
+          subtitle: "Field Care Worker",
+        };
+      case "doctor":
+        return {
+          displayName: "Doctor",
+          subtitle: "Clinical Workspace",
+        };
+      case "facility":
+        return {
+          displayName: "Facility Staff",
+          subtitle: "Facility Operations",
+        };
+      case "admin":
+        return {
+          displayName: "Administrator",
+          subtitle: "System Administration",
+        };
+      case "patient":
+        return {
+          displayName: "Patient",
+          subtitle: "Personal Health Portal",
+        };
+      default:
+        return {
+          displayName: "Guest User",
+          subtitle: "Care Continuity Platform",
+        };
+    }
+  };
+
+  const roleDetails = getRoleDetails(activeRole);
+
+  return (
+    <RoleContext.Provider
+      value={{
+        activeRole,
+        setActiveRole,
+        roleDisplayName: roleDetails.displayName,
+        roleSubtitle: roleDetails.subtitle,
+        roleDashboardPath: getDashboardForRole(activeRole),
+        getDashboardForRole,
+      }}
+    >
+      {children}
+    </RoleContext.Provider>
+  );
+}
+
+export function useRole() {
+  const context = useContext(RoleContext);
+  if (!context) {
+    return {
+      activeRole: "public" as Role,
+      setActiveRole: () => {},
+      roleDisplayName: "Guest User",
+      roleSubtitle: "Care Continuity Platform",
+      roleDashboardPath: "/",
+      getDashboardForRole: () => "/",
+    };
+  }
+  return context;
+}

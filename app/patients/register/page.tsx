@@ -9,12 +9,22 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
+import AadhaarAbhaModal from "../../components/AadhaarAbhaModal";
 
 export default function RegisterPatientPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [verifiedAadhaar, setVerifiedAadhaar] = useState("");
+  const [verifiedAbha, setVerifiedAbha] = useState("");
+  const [modalType, setModalType] = useState<"aadhaar" | "abha" | null>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!verifiedAadhaar) {
+      setModalType("aadhaar");
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
     const fullName = String(formData.get("fullName") || "Registered Patient");
     const mobile = String(formData.get("mobile") || "98XXXXXX00");
@@ -294,25 +304,53 @@ export default function RegisterPatientPage() {
             </div>
 
             <div className="mt-6 grid gap-5 md:grid-cols-2">
-              <Field
-                label="Aadhaar number"
-                name="aadhaar"
-                inputMode="numeric"
-                placeholder="Enter 12-digit Aadhaar number"
-                maxLength={12}
-              />
+              <div>
+                <label className="mb-2 flex items-center justify-between text-sm font-medium text-slate-700">
+                  <span>Aadhaar Identity</span>
+                  {verifiedAadhaar ? (
+                    <span className="text-[10px] font-bold text-emerald-600">✓ VERIFIED (MASKED)</span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setModalType("aadhaar")}
+                      className="text-xs font-bold text-teal-700 hover:text-teal-800"
+                    >
+                      + Verify Aadhaar
+                    </button>
+                  )}
+                </label>
+                <input
+                  name="aadhaar"
+                  readOnly={Boolean(verifiedAadhaar)}
+                  value={verifiedAadhaar}
+                  placeholder={verifiedAadhaar ? "" : "Click '+ Verify Aadhaar' for safe OTP verification"}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-mono text-slate-800 outline-none"
+                />
+              </div>
 
-              <Field
-                label="ABHA number"
-                name="abha"
-                placeholder="Enter ABHA number"
-              />
-
-              <Field
-                label="ABHA address"
-                name="abhaAddress"
-                placeholder="example@abdm"
-              />
+              <div>
+                <label className="mb-2 flex items-center justify-between text-sm font-medium text-slate-700">
+                  <span>ABHA ID / Address</span>
+                  {verifiedAbha ? (
+                    <span className="text-[10px] font-bold text-emerald-600">✓ VERIFIED</span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setModalType("abha")}
+                      className="text-xs font-bold text-teal-700 hover:text-teal-800"
+                    >
+                      + Verify ABHA
+                    </button>
+                  )}
+                </label>
+                <input
+                  name="abha"
+                  readOnly={Boolean(verifiedAbha)}
+                  value={verifiedAbha}
+                  placeholder={verifiedAbha ? "" : "Click '+ Verify ABHA' to link health ID"}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-mono text-slate-800 outline-none"
+                />
+              </div>
 
               <div>
                 <label
@@ -326,11 +364,15 @@ export default function RegisterPatientPage() {
                   id="sevaId"
                   name="sevaId"
                   disabled
-                  placeholder="Assigned by system"
+                  placeholder="Auto-assigned (e.g. NS-10284)"
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500 outline-none"
                 />
               </div>
             </div>
+
+            <p className="mt-4 text-[11px] text-slate-500">
+              Prototype verification — backend UIDAI/ABDM integration required.
+            </p>
           </section>
 
           {/* Address */}
@@ -488,6 +530,20 @@ export default function RegisterPatientPage() {
             </button>
           </div>
         </form>
+
+        {modalType && (
+          <AadhaarAbhaModal
+            type={modalType}
+            onSuccess={(masked) => {
+              if (modalType === "aadhaar") {
+                setVerifiedAadhaar(masked);
+              } else {
+                setVerifiedAbha(masked);
+              }
+            }}
+            onClose={() => setModalType(null)}
+          />
+        )}
       </section>
     </main>
   );

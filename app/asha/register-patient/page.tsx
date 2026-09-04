@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AadhaarAbhaModal from "../../components/AadhaarAbhaModal";
 
 type Patient = {
   id: string;
@@ -29,6 +30,9 @@ export default function RegisterPatientPage() {
     condition: "",
   });
 
+  const [verifiedAadhaar, setVerifiedAadhaar] = useState("");
+  const [verifiedAbha, setVerifiedAbha] = useState("");
+  const [modalType, setModalType] = useState<"aadhaar" | "abha" | null>(null);
   const [saved, setSaved] = useState(false);
 
   function updateField(field: keyof typeof form, value: string) {
@@ -40,6 +44,11 @@ export default function RegisterPatientPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (!verifiedAadhaar) {
+      setModalType("aadhaar");
+      return;
+    }
 
     const existingPatients: Patient[] = JSON.parse(
       localStorage.getItem("niramaya_patients") || "[]"
@@ -207,6 +216,59 @@ export default function RegisterPatientPage() {
                 placeholder="e.g. Diabetes"
               />
 
+              <div className="md:col-span-2 grid gap-4 sm:grid-cols-2 rounded-xl bg-slate-50 p-4 border border-slate-200">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-semibold text-slate-700">Aadhaar Identity</label>
+                    {verifiedAadhaar ? (
+                      <span className="text-[10px] font-bold text-emerald-700">✓ VERIFIED (MASKED)</span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setModalType("aadhaar")}
+                        className="text-xs font-bold text-teal-700 hover:text-teal-800"
+                      >
+                        + Verify Aadhaar
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    readOnly={Boolean(verifiedAadhaar)}
+                    value={verifiedAadhaar}
+                    placeholder={verifiedAadhaar ? "" : "Click '+ Verify Aadhaar'"}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-mono text-slate-800 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-semibold text-slate-700">ABHA Health ID</label>
+                    {verifiedAbha ? (
+                      <span className="text-[10px] font-bold text-emerald-700">✓ VERIFIED</span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setModalType("abha")}
+                        className="text-xs font-bold text-teal-700 hover:text-teal-800"
+                      >
+                        + Verify ABHA
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    readOnly={Boolean(verifiedAbha)}
+                    value={verifiedAbha}
+                    placeholder={verifiedAbha ? "" : "Click '+ Verify ABHA'"}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-mono text-slate-800 outline-none"
+                  />
+                </div>
+                <div className="sm:col-span-2 pt-1 text-center">
+                  <p className="text-[10px] text-slate-400">
+                    Prototype verification — backend UIDAI/ABDM integration required.
+                  </p>
+                </div>
+              </div>
+
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-semibold text-slate-700">
                   Address
@@ -265,6 +327,20 @@ export default function RegisterPatientPage() {
           </div>
 
         </form>
+
+        {modalType && (
+          <AadhaarAbhaModal
+            type={modalType}
+            onSuccess={(masked) => {
+              if (modalType === "aadhaar") {
+                setVerifiedAadhaar(masked);
+              } else {
+                setVerifiedAbha(masked);
+              }
+            }}
+            onClose={() => setModalType(null)}
+          />
+        )}
       </div>
     </main>
   );

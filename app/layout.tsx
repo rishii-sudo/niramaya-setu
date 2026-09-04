@@ -3,11 +3,14 @@ import "./globals.css";
 
 import MedicalBackground from "./components/MedicalBackground";
 import AppShell from "./components/AppShell";
+import { RoleProvider } from "./context/RoleContext";
+import { LanguageProvider } from "./context/LanguageContext";
+import VoiceAssistant from "./components/VoiceAssistant";
 
 export const metadata: Metadata = {
-  title: "NIRAMAYA-SETU",
+  title: "NIRAMAYA-SETU — Rural Healthcare Care Continuity Platform",
   description:
-    "Care Continuity Platform for connected healthcare and closed-loop referrals.",
+    "Closed-loop referral and care continuity platform connecting ASHA workers, patients, clinicians, and health facilities.",
 };
 
 export default function RootLayout({
@@ -17,10 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <MedicalBackground />
-
-        <AppShell>{children}</AppShell>
+      <body className="antialiased font-sans">
+        <LanguageProvider>
+          <RoleProvider>
+            <MedicalBackground />
+            <AppShell>{children}</AppShell>
+            <VoiceAssistant />
+          </RoleProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

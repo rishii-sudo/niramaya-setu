@@ -1,229 +1,97 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  Bell,
+  RefreshCw,
+  LogOut,
+  Globe,
+  Stethoscope,
+  Building2,
+  Calendar,
+  ClipboardCheck,
+  Hospital,
+  BedDouble,
+  ShieldCheck,
+  Settings,
+} from "lucide-react";
+import { useRole, Role } from "../context/RoleContext";
+import { useLanguage } from "../context/LanguageContext";
+import { logoutUser } from "../utils/auth";
 
 type NavItem = {
   label: string;
   href: string;
-  icon: string;
+  icon: React.ReactNode;
 };
 
-const operationsNav: NavItem[] = [
-  {
-    label: "Home",
-    href: "/",
-    icon: "⌂",
-  },
-  {
-    label: "Patients",
-    href: "/patients",
-    icon: "◉",
-  },
-  {
-    label: "Referrals",
-    href: "/referrals",
-    icon: "↗",
-  },
-  {
-    label: "Notifications",
-    href: "/notifications",
-    icon: "!",
-  },
-];
-
-const facilityNav: NavItem[] = [
-  {
-    label: "Dashboard",
-    href: "/facility/dashboard",
-    icon: "⌂",
-  },
-  {
-    label: "Referrals",
-    href: "/facility/incoming-referrals",
-    icon: "↗",
-  },
-  {
-    label: "Admissions",
-    href: "/facility/admissions",
-    icon: "▣",
-  },
-  {
-    label: "Capacity",
-    href: "/facility/capacity",
-    icon: "▤",
-  },
+const ashaNav: NavItem[] = [
+  { label: "Dashboard", href: "/asha", icon: <LayoutDashboard size={16} /> },
+  { label: "Visits", href: "/asha/visits", icon: <ClipboardCheck size={16} /> },
+  { label: "Follow-ups", href: "/asha/follow-ups", icon: <Calendar size={16} /> },
+  { label: "Sync", href: "/sync", icon: <RefreshCw size={16} /> },
 ];
 
 const doctorNav: NavItem[] = [
-  {
-    label: "Dashboard",
-    href: "/doctor",
-    icon: "⌂",
-  },
-  {
-    label: "Referrals",
-    href: "/doctor/referrals",
-    icon: "↗",
-  },
-  {
-    label: "Patients",
-    href: "/patients",
-    icon: "◉",
-  },
-  {
-    label: "Notifications",
-    href: "/notifications",
-    icon: "!",
-  },
+  { label: "Dashboard", href: "/doctor", icon: <LayoutDashboard size={16} /> },
+  { label: "Appointments", href: "/doctor/appointments", icon: <Calendar size={16} /> },
+  { label: "Patients", href: "/patients", icon: <Users size={16} /> },
+  { label: "Referrals", href: "/doctor/referrals", icon: <FileText size={16} /> },
 ];
 
-const ashaNav: NavItem[] = [
-  {
-    label: "Dashboard",
-    href: "/asha",
-    icon: "⌂",
-  },
-  {
-    label: "Visits",
-    href: "/asha/visits",
-    icon: "◉",
-  },
-  {
-    label: "Follow-ups",
-    href: "/asha/follow-ups",
-    icon: "✓",
-  },
-  {
-    label: "Sync",
-    href: "/sync",
-    icon: "↻",
-  },
+const facilityNav: NavItem[] = [
+  { label: "Dashboard", href: "/facility/dashboard", icon: <LayoutDashboard size={16} /> },
+  { label: "Referrals", href: "/facility/incoming-referrals", icon: <FileText size={16} /> },
+  { label: "Admissions", href: "/facility/admissions", icon: <Hospital size={16} /> },
+  { label: "Capacity", href: "/facility/capacity", icon: <BedDouble size={16} /> },
 ];
 
-function getRole(
-  pathname: string
-): "facility" | "doctor" | "asha" | "operations" {
-  if (pathname.startsWith("/facility")) {
-    return "facility";
-  }
-
-  if (pathname.startsWith("/doctor")) {
-    return "doctor";
-  }
-
-  if (pathname.startsWith("/asha")) {
-    return "asha";
-  }
-
-  return "operations";
-}
-
-function getNavItems(pathname: string) {
-  const role = getRole(pathname);
-
-  if (role === "facility") {
-    return facilityNav;
-  }
-
-  if (role === "doctor") {
-    return doctorNav;
-  }
-
-  if (role === "asha") {
-    return ashaNav;
-  }
-
-  return operationsNav;
-}
-
-function isItemActive(pathname: string, href: string) {
-  if (href === "/") {
-    return pathname === "/";
-  }
-
-  if (href === "/patients") {
-    return (
-      pathname === "/patients" ||
-      pathname.startsWith("/patients/")
-    );
-  }
-
-  if (href === "/referrals") {
-    return (
-      pathname === "/referrals" ||
-      pathname.startsWith("/referrals/")
-    );
-  }
-
-  if (href === "/facility/dashboard") {
-    return pathname === "/facility/dashboard";
-  }
-
-  if (href === "/facility/incoming-referrals") {
-    return (
-      pathname === "/facility/incoming-referrals" ||
-      pathname.startsWith("/facility/incoming-referrals/")
-    );
-  }
-
-  if (href === "/doctor") {
-    return pathname === "/doctor";
-  }
-
-  if (href === "/doctor/referrals") {
-    return (
-      pathname === "/doctor/referrals" ||
-      pathname.startsWith("/doctor/referrals/")
-    );
-  }
-
-  if (href === "/asha") {
-    return pathname === "/asha";
-  }
-
-  if (href === "/asha/visits") {
-    return (
-      pathname === "/asha/visits" ||
-      pathname.startsWith("/asha/visits/")
-    );
-  }
-
-  if (href === "/asha/follow-ups") {
-    return (
-      pathname === "/asha/follow-ups" ||
-      pathname.startsWith("/asha/follow-ups/")
-    );
-  }
-
-  return pathname === href;
-}
+const adminNav: NavItem[] = [
+  { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={16} /> },
+  { label: "Facilities", href: "/facilities", icon: <Building2 size={16} /> },
+  { label: "Users", href: "/admin/users", icon: <Users size={16} /> },
+  { label: "Alerts", href: "/notifications", icon: <Bell size={16} /> },
+];
 
 export default function MobileNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const { activeRole, roleDisplayName, roleDashboardPath } = useRole();
+  const { language, setLanguage, availableLanguages } = useLanguage();
 
-  const role = getRole(pathname);
-  const navItems = getNavItems(pathname);
+  const handleLogout = () => {
+    if (confirm("Sign out of current workspace?")) {
+      const target = logoutUser(activeRole);
+      router.push(target);
+    }
+  };
 
-  const roleName =
-    role === "facility"
-      ? "Facility"
-      : role === "doctor"
-        ? "Doctor"
-        : role === "asha"
-          ? "ASHA"
-          : "Operations";
+  const getNavItems = (): NavItem[] => {
+    switch (activeRole) {
+      case "asha":
+        return ashaNav;
+      case "doctor":
+        return doctorNav;
+      case "facility":
+        return facilityNav;
+      case "admin":
+      default:
+        return adminNav;
+    }
+  };
 
-  const roleBadgeClass =
-    role === "facility"
-      ? "bg-blue-50 text-blue-700 border-blue-200"
-      : role === "doctor"
-        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-        : role === "asha"
-          ? "bg-violet-50 text-violet-700 border-violet-200"
-          : "bg-slate-50 text-slate-700 border-slate-200";
+  const navItems = getNavItems();
+
+  const isItemActive = (href: string) => {
+    if (href === roleDashboardPath) return pathname === href;
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
     <>
@@ -231,211 +99,107 @@ export default function MobileNav() {
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur md:hidden">
         <div className="flex h-16 items-center justify-between px-4">
           <Link
-            href={
-              role === "facility"
-                ? "/facility/dashboard"
-                : role === "doctor"
-                  ? "/doctor"
-                  : role === "asha"
-                    ? "/asha"
-                    : "/"
-            }
+            href={roleDashboardPath}
             className="flex items-center gap-2"
             onClick={() => setOpen(false)}
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-sm font-bold text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-sm font-bold text-white">
               NS
             </div>
 
             <div>
-              <p className="text-sm font-bold text-slate-900">
-                NIRAMAYA-SETU
-              </p>
-
-              <span
-                className={`inline-flex rounded-full border px-2 py-0.5 text-[9px] font-semibold ${roleBadgeClass}`}
-              >
-                {roleName}
+              <p className="text-sm font-bold text-slate-900">NIRAMAYA-SETU</p>
+              <span className="inline-flex rounded-full bg-teal-50 px-2 py-0.2 text-[9px] font-bold text-teal-800 border border-teal-200">
+                {roleDisplayName}
               </span>
             </div>
           </Link>
 
-          <button
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-lg text-slate-700 shadow-sm"
-            aria-label="Toggle navigation"
-            aria-expanded={open}
-          >
-            {open ? "×" : "☰"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setOpen((value) => !value)}
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-lg font-bold text-slate-700 shadow-sm"
+              aria-label="Toggle navigation"
+              aria-expanded={open}
+            >
+              {open ? "✕" : "☰"}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile menu dropdown */}
         {open && (
-          <div className="border-t border-slate-200 bg-white px-4 pb-4">
+          <div className="border-t border-slate-200 bg-white px-4 pb-5 space-y-4">
             <nav className="grid grid-cols-2 gap-2 pt-3">
               {navItems.map((item) => {
-                const active = isItemActive(
-                  pathname,
-                  item.href
-                );
+                const active = isItemActive(item.href);
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    className={`flex items-center gap-3 rounded-xl border px-3 py-3 transition ${
+                    className={`flex items-center gap-2.5 rounded-xl border px-3 py-3 transition ${
                       active
-                        ? "border-slate-900 bg-slate-900 text-white"
+                        ? "border-teal-700 bg-teal-50 text-teal-900 font-bold"
                         : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                     }`}
                   >
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-black/5 text-sm">
-                      {item.icon}
-                    </span>
-
-                    <span className="text-xs font-semibold">
-                      {item.label}
-                    </span>
+                    <span className="text-teal-700">{item.icon}</span>
+                    <span className="text-xs">{item.label}</span>
                   </Link>
                 );
               })}
             </nav>
 
-            {/* Role shortcuts */}
-            <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
-                Quick Access
-              </p>
+            {/* Language & Actions */}
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 space-y-3">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
+                <span className="flex items-center gap-1.5">
+                  <Globe size={14} className="text-teal-700" />
+                  Language
+                </span>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value as any)}
+                  className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs outline-none"
+                >
+                  {availableLanguages.map((l) => (
+                    <option key={l.code} value={l.code}>
+                      {l.nativeLabel}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              <div className="mt-2 grid grid-cols-2 gap-2">
-                {role === "facility" && (
-                  <>
-                    <Link
-                      href="/facility/specialists"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Specialists
-                    </Link>
+              <div className="pt-2 border-t border-slate-200 flex justify-between items-center">
+                <Link
+                  href="/notifications"
+                  onClick={() => setOpen(false)}
+                  className="text-xs font-semibold text-slate-700 hover:text-teal-700 flex items-center gap-1.5"
+                >
+                  <Bell size={14} /> Alerts
+                </Link>
 
-                    <Link
-                      href="/facility/diagnostics"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Diagnostics
-                    </Link>
-
-                    <Link
-                      href="/facility/medicines"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Medicines
-                    </Link>
-
-                    <Link
-                      href="/facility/discharge"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Discharge
-                    </Link>
-
-                    <Link
-                      href="/facility/audit"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Audit Trail
-                    </Link>
-
-                    <Link
-                      href="/consent"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Consent
-                    </Link>
-                  </>
-                )}
-
-                {role === "doctor" && (
-                  <>
-                    <Link
-                      href="/patients"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Patients
-                    </Link>
-
-                    <Link
-                      href="/notifications"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Alerts
-                    </Link>
-                  </>
-                )}
-
-                {role === "asha" && (
-                  <>
-                    <Link
-                      href="/asha/follow-ups"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Follow-ups
-                    </Link>
-
-                    <Link
-                      href="/sync"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Sync Center
-                    </Link>
-                  </>
-                )}
-
-                {role === "operations" && (
-                  <>
-                    <Link
-                      href="/facilities"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Facilities
-                    </Link>
-
-                    <Link
-                      href="/sync"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl bg-white px-3 py-2.5 text-center text-xs font-semibold text-slate-700 shadow-sm"
-                    >
-                      Sync
-                    </Link>
-                  </>
-                )}
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="text-xs font-bold text-red-600 hover:text-red-800 flex items-center gap-1"
+                >
+                  <LogOut size={14} /> Sign Out
+                </button>
               </div>
             </div>
           </div>
         )}
       </header>
 
-      {/* Bottom navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 px-2 py-2 backdrop-blur md:hidden">
+      {/* Bottom navigation bar */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 px-2 py-2 backdrop-blur md:hidden shadow-lg">
         <div className="mx-auto grid max-w-md grid-cols-4 gap-1">
           {navItems.map((item) => {
-            const active = isItemActive(
-              pathname,
-              item.href
-            );
+            const active = isItemActive(item.href);
 
             return (
               <Link
@@ -443,14 +207,11 @@ export default function MobileNav() {
                 href={item.href}
                 className={`flex flex-col items-center justify-center rounded-xl px-2 py-2 transition ${
                   active
-                    ? "bg-slate-900 text-white"
+                    ? "bg-teal-700 text-white"
                     : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
                 }`}
               >
-                <span className="text-base leading-none">
-                  {item.icon}
-                </span>
-
+                <span className="text-base">{item.icon}</span>
                 <span className="mt-1 max-w-full truncate text-[10px] font-semibold">
                   {item.label}
                 </span>

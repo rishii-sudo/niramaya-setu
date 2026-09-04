@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import MobileNav from "./MobileNav";
+import { useRole } from "../context/RoleContext";
 
 export default function AppShell({
   children,
@@ -10,11 +11,22 @@ export default function AppShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { activeRole } = useRole();
 
-  const isStandaloneRoute =
+  const isStaffRole =
+    activeRole === "asha" ||
+    activeRole === "doctor" ||
+    activeRole === "facility" ||
+    activeRole === "admin";
+
+  const isAlwaysStandalone =
     pathname === "/" ||
+    pathname === "/about" ||
     pathname === "/login" ||
+    pathname === "/doctors" ||
+    pathname === "/appointments" ||
     pathname.startsWith("/patient") ||
+    pathname.startsWith("/consultations") ||
     pathname.startsWith("/doctor/login") ||
     pathname.startsWith("/doctor/verify") ||
     pathname.startsWith("/asha/login") ||
@@ -24,7 +36,12 @@ export default function AppShell({
     pathname.startsWith("/admin/login") ||
     pathname.startsWith("/admin/verify");
 
-  if (isStandaloneRoute) {
+  // Shared routes like /facilities are standalone for public/patients, but keep sidebar for staff
+  const isSharedStandalone =
+    (pathname === "/facilities" || pathname.startsWith("/facilities/")) &&
+    !isStaffRole;
+
+  if (isAlwaysStandalone || isSharedStandalone) {
     return (
       <div className="relative z-10 min-h-screen">
         {children}

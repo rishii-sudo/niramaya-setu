@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRole } from "../context/RoleContext";
+import { ArrowLeft } from "lucide-react";
 
 type ConsentStatus = "Active" | "Pending" | "Declined" | "Expired";
 
@@ -49,6 +51,7 @@ const consentHistory: ConsentHistoryItem[] = [
 ];
 
 export default function ConsentPage() {
+  const { roleDashboardPath, roleDisplayName } = useRole();
   const [patientSearch, setPatientSearch] = useState("Ramesh Kumar");
   const [selectedPatient, setSelectedPatient] = useState("Ramesh Kumar");
 
@@ -172,10 +175,11 @@ export default function ConsentPage() {
           <div>
             <div className="mb-2 flex items-center gap-2 text-sm text-slate-500">
               <Link
-                href="/dashboard"
-                className="transition hover:text-teal-700"
+                href={roleDashboardPath}
+                className="flex items-center gap-1 font-semibold text-teal-800 transition hover:text-teal-900"
               >
-                Dashboard
+                <ArrowLeft size={14} />
+                {roleDisplayName} Dashboard
               </Link>
 
               <span>/</span>

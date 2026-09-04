@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Activity,
   Bell,
@@ -9,6 +9,7 @@ import {
   BedDouble,
   Building2,
   CalendarCheck,
+  Calendar,
   ClipboardCheck,
   FileCheck2,
   FileClock,
@@ -16,6 +17,7 @@ import {
   FlaskConical,
   Hospital,
   LayoutDashboard,
+  LogOut,
   Pill,
   RefreshCw,
   Settings,
@@ -25,8 +27,9 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
-
-type Role = "asha" | "doctor" | "facility" | "admin" | "operations";
+import { useRole, Role } from "../context/RoleContext";
+import { useLanguage } from "../context/LanguageContext";
+import { logoutUser } from "../utils/auth";
 
 type NavItem = {
   label: string;
@@ -40,43 +43,14 @@ type NavSection = {
   items: NavItem[];
 };
 
-function getRole(pathname: string): Role {
-  if (pathname === "/asha" || pathname.startsWith("/asha/")) {
-    return "asha";
-  }
-
-  if (pathname === "/doctor" || pathname.startsWith("/doctor/")) {
-    return "doctor";
-  }
-
-  if (
-    pathname === "/facility" ||
-    pathname.startsWith("/facility/")
-  ) {
-    return "facility";
-  }
-
-  if (
-    pathname === "/admin" ||
-    pathname.startsWith("/admin/") ||
-    pathname === "/dashboard"
-  ) {
-    return "admin";
-  }
-
-  return "operations";
-}
-
 function getRoleConfig(role: Role) {
   switch (role) {
     /* =========================================================
        ASHA / ANM
     ========================================================= */
-
     case "asha":
       return {
         subtitle: "ASHA / ANM Field Work",
-
         sections: [
           {
             title: "Field Work",
@@ -103,7 +77,6 @@ function getRoleConfig(role: Role) {
               },
             ],
           },
-
           {
             title: "Referral",
             items: [
@@ -125,7 +98,6 @@ function getRoleConfig(role: Role) {
               },
             ],
           },
-
           {
             title: "Offline",
             items: [
@@ -141,9 +113,8 @@ function getRoleConfig(role: Role) {
               },
             ],
           },
-
           {
-            title: "Security",
+            title: "Security & Alerts",
             items: [
               {
                 label: "Consent",
@@ -164,11 +135,9 @@ function getRoleConfig(role: Role) {
     /* =========================================================
        DOCTOR
     ========================================================= */
-
     case "doctor":
       return {
         subtitle: "Clinical Workspace",
-
         sections: [
           {
             title: "Main",
@@ -177,6 +146,12 @@ function getRoleConfig(role: Role) {
                 label: "Dashboard",
                 href: "/doctor",
                 icon: <LayoutDashboard size={18} />,
+              },
+              {
+                label: "Appointments",
+                href: "/doctor/appointments",
+                icon: <Calendar size={18} />,
+                badge: "3",
               },
               {
                 label: "Patients",
@@ -190,7 +165,6 @@ function getRoleConfig(role: Role) {
               },
             ],
           },
-
           {
             title: "Clinical",
             items: [
@@ -211,9 +185,8 @@ function getRoleConfig(role: Role) {
               },
             ],
           },
-
           {
-            title: "Security",
+            title: "Security & Alerts",
             items: [
               {
                 label: "Consent",
@@ -234,11 +207,9 @@ function getRoleConfig(role: Role) {
     /* =========================================================
        FACILITY
     ========================================================= */
-
     case "facility":
       return {
         subtitle: "Facility Operations",
-
         sections: [
           {
             title: "Facility",
@@ -250,7 +221,7 @@ function getRoleConfig(role: Role) {
               },
               {
                 label: "Incoming Referrals",
-                href: "/referrals",
+                href: "/facility/incoming-referrals",
                 icon: <FileText size={18} />,
               },
               {
@@ -265,7 +236,6 @@ function getRoleConfig(role: Role) {
               },
             ],
           },
-
           {
             title: "Capacity",
             items: [
@@ -291,7 +261,6 @@ function getRoleConfig(role: Role) {
               },
             ],
           },
-
           {
             title: "Clinical",
             items: [
@@ -313,7 +282,6 @@ function getRoleConfig(role: Role) {
               },
             ],
           },
-
           {
             title: "Security",
             items: [
@@ -335,11 +303,10 @@ function getRoleConfig(role: Role) {
     /* =========================================================
        ADMIN
     ========================================================= */
-
     case "admin":
+    default:
       return {
         subtitle: "Administration",
-
         sections: [
           {
             title: "Overview",
@@ -356,7 +323,6 @@ function getRoleConfig(role: Role) {
               },
             ],
           },
-
           {
             title: "Operations",
             items: [
@@ -383,9 +349,8 @@ function getRoleConfig(role: Role) {
               },
             ],
           },
-
           {
-            title: "Security",
+            title: "Security & Management",
             items: [
               {
                 label: "Users & Roles",
@@ -411,125 +376,61 @@ function getRoleConfig(role: Role) {
           },
         ],
       };
-
-    /* =========================================================
-       OPERATIONS
-    ========================================================= */
-
-    default:
-      return {
-        subtitle: "Care Coordination",
-
-        sections: [
-          {
-            title: "Main",
-            items: [
-              {
-                label: "Dashboard",
-                href: "/dashboard",
-                icon: <LayoutDashboard size={18} />,
-              },
-              {
-                label: "Patients",
-                href: "/patients",
-                icon: <Users size={18} />,
-              },
-              {
-                label: "Referrals",
-                href: "/referrals",
-                icon: <FileText size={18} />,
-              },
-              {
-                label: "Facilities",
-                href: "/facilities",
-                icon: <Building2 size={18} />,
-              },
-            ],
-          },
-
-          {
-            title: "Care",
-            items: [
-              {
-                label: "Notifications",
-                href: "/notifications",
-                icon: <Bell size={18} />,
-                badge: "4",
-              },
-              {
-                label: "Consent",
-                href: "/consent",
-                icon: <ShieldCheck size={18} />,
-              },
-              {
-                label: "Sync Center",
-                href: "/sync",
-                icon: <RefreshCw size={18} />,
-              },
-            ],
-          },
-        ],
-      };
   }
 }
-
-/* =========================================================
-   ACTIVE ROUTE
-========================================================= */
 
 function isActivePath(pathname: string, href: string) {
   if (href === "/asha") {
     return pathname === "/asha";
   }
-
   if (href === "/doctor") {
     return pathname === "/doctor";
   }
-
   if (href === "/facility/dashboard") {
     return pathname === "/facility/dashboard";
   }
-
   if (href === "/dashboard") {
     return pathname === "/dashboard";
   }
-
-  return (
-    pathname === href ||
-    pathname.startsWith(`${href}/`)
-  );
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const role = getRole(pathname);
-  const config = getRoleConfig(role);
+  const router = useRouter();
+  const { activeRole, roleDisplayName, roleSubtitle, roleDashboardPath } = useRole();
+  const { t } = useLanguage();
 
-  const homePath =
-    role === "asha"
-      ? "/asha"
-      : role === "doctor"
-        ? "/doctor"
-        : role === "facility"
-          ? "/facility/dashboard"
-          : role === "admin"
-            ? "/dashboard"
-            : "/dashboard";
+  const config = getRoleConfig(activeRole);
+
+  const handleLogout = () => {
+    if (confirm("Sign out of current workspace?")) {
+      const target = logoutUser(activeRole);
+      router.push(target);
+    }
+  };
+
+  const getAvatarLetter = () => {
+    switch (activeRole) {
+      case "asha":
+        return "A";
+      case "doctor":
+        return "D";
+      case "facility":
+        return "F";
+      case "admin":
+        return "HQ";
+      default:
+        return "NS";
+    }
+  };
 
   return (
-    <aside className="hidden h-screen w-60 shrink-0 border-r border-slate-200 bg-white lg:flex lg:flex-col">
+    <aside className="hidden h-screen w-64 shrink-0 border-r border-slate-200 bg-white lg:flex lg:flex-col sticky top-0">
       {/* BRAND */}
-
       <div className="flex h-20 shrink-0 items-center border-b border-slate-100 px-5">
-        <Link
-          href={homePath}
-          className="flex items-center gap-3"
-        >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-700 text-white shadow-sm">
+        <Link href={roleDashboardPath} className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-700 text-white shadow-sm font-bold text-sm">
             <Activity size={20} />
           </div>
 
@@ -537,8 +438,7 @@ export default function Sidebar() {
             <p className="text-sm font-bold tracking-tight text-slate-900">
               NIRAMAYA-SETU
             </p>
-
-            <p className="mt-0.5 text-[10px] text-slate-500">
+            <p className="mt-0.5 text-[10px] font-semibold text-teal-800">
               {config.subtitle}
             </p>
           </div>
@@ -546,7 +446,6 @@ export default function Sidebar() {
       </div>
 
       {/* NAVIGATION */}
-
       <div className="flex-1 overflow-y-auto px-3 py-5">
         <div className="space-y-6">
           {config.sections.map((section) => (
@@ -557,19 +456,16 @@ export default function Sidebar() {
 
               <nav className="space-y-1">
                 {section.items.map((item) => {
-                  const active = isActivePath(
-                    pathname,
-                    item.href,
-                  );
+                  const active = isActivePath(pathname, item.href);
 
                   return (
                     <Link
                       key={`${section.title}-${item.label}`}
                       href={item.href}
                       className={[
-                        "group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm transition",
+                        "group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs transition",
                         active
-                          ? "bg-teal-50 font-semibold text-teal-800"
+                          ? "bg-teal-50 font-bold text-teal-900 shadow-sm"
                           : "font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900",
                       ].join(" ")}
                     >
@@ -584,9 +480,7 @@ export default function Sidebar() {
                           {item.icon}
                         </span>
 
-                        <span className="truncate">
-                          {item.label}
-                        </span>
+                        <span className="truncate">{item.label}</span>
                       </span>
 
                       {item.badge && (
@@ -603,44 +497,34 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* USER */}
+      {/* USER & LOGOUT */}
+      <div className="shrink-0 border-t border-slate-200 bg-slate-50/50 p-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-xs font-bold text-teal-800">
+              {getAvatarLetter()}
+            </div>
 
-      <div className="shrink-0 border-t border-slate-200 bg-white p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-100 text-sm font-semibold text-teal-700">
-            A
-          </div>
-
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-slate-900">
-              {role === "asha"
-                ? "ASHA / ANM"
-                : role === "doctor"
-                  ? "Doctor"
-                  : role === "facility"
-                    ? "Facility Staff"
-                    : role === "admin"
-                      ? "Administrator"
-                      : "Operations"}
-            </p>
-
-            <p className="truncate text-[11px] text-slate-500">
-              {role === "asha"
-                ? "Field Care Worker"
-                : role === "doctor"
-                  ? "Clinical Workspace"
-                  : role === "facility"
-                    ? "Facility Operations"
-                    : role === "admin"
-                      ? "System Administration"
-                      : "Care Coordination"}
-            </p>
-
-            <div className="mt-1 flex items-center gap-1.5 text-[10px] text-emerald-600">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              Session Active
+            <div className="min-w-0">
+              <p className="truncate text-xs font-bold text-slate-900">
+                {roleDisplayName}
+              </p>
+              <div className="flex items-center gap-1.5 text-[10px] text-emerald-600 font-medium">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                Session Active
+              </div>
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="rounded-xl border border-slate-200 bg-white p-2 text-slate-500 hover:bg-red-50 hover:border-red-200 hover:text-red-700 transition shadow-sm"
+            title="Sign Out"
+            aria-label="Sign Out"
+          >
+            <LogOut size={16} />
+          </button>
         </div>
       </div>
     </aside>
