@@ -12,6 +12,7 @@ export default function AppShell({
   const pathname = usePathname();
 
   const isStandaloneRoute =
+    pathname === "/" ||
     pathname === "/login" ||
     pathname.startsWith("/patient") ||
     pathname.startsWith("/doctor/login") ||
