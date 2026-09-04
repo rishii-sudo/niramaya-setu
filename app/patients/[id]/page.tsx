@@ -2,10 +2,11 @@
 
 import { use, useState } from "react";
 import Link from "next/link";
+import { getPatient } from "@/app/data/patientData";
 
 type Status = "Normal" | "Abnormal" | "Pending" | "Active";
 
-const patient = {
+const defaultPatient = {
   id: "NS-10284",
   name: "Ramesh Kumar",
   age: 47,
@@ -188,6 +189,27 @@ export default function DoctorPatientPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const found = getPatient(id);
+  const patient = found
+    ? {
+        id: found.patientId,
+        name: found.name,
+        age: found.age,
+        gender: found.gender,
+        bloodGroup: found.bloodGroup,
+        mobile: found.mobile,
+        aadhaar: found.aadhaar,
+        abha: found.abhaId,
+        allergies: found.allergies.map((a) => a.name),
+        chronicConditions: found.chronicConditions.map((c) => c.name),
+        emergencyContact: `${found.emergencyContact.name} • ${found.emergencyContact.mobile}`,
+        referralId: found.referralId,
+        referringFacility: found.referralFrom,
+        receivingFacility: found.referralTo,
+        referralReason: found.referralReason,
+        referralStatus: found.referralStatus,
+      }
+    : defaultPatient;
 
   const [activeTab, setActiveTab] = useState("Overview");
 
@@ -293,7 +315,7 @@ export default function DoctorPatientPage({
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-4">
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-teal-100 text-xl font-bold text-teal-700">
-                RK
+                {patient.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
               </div>
 
               <div>
@@ -597,7 +619,7 @@ export default function DoctorPatientPage({
             >
               <div className="grid gap-4 md:grid-cols-2">
                 {diagnostics.map((item) => (
-                  <DiagnosticCard key={item.name} item={item} />
+                  <DiagnosticCard key={item.name} item={item} patientId={patient.id} />
                 ))}
               </div>
             </SectionCard>
@@ -1020,25 +1042,22 @@ function InvestigationTable() {
 
 function DiagnosticCard({
   item,
+  patientId = "NS-10284",
 }: {
-  item: {
-    name: string;
-    date: string;
-    result: string;
-    status: Status;
-  };
+  item: (typeof diagnostics)[number];
+  patientId?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-teal-100 hover:shadow-md">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="text-sm font-bold text-slate-900">{item.name}</h3>
-          <p className="mt-1 text-xs text-slate-500">{item.date}</p>
+          <h3 className="font-semibold text-slate-900">{item.name}</h3>
+          <p className="mt-1 text-xs text-slate-400">{item.date}</p>
         </div>
 
         <span
-          className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${statusClasses(
-            item.status,
+          className={`rounded-full border px-2.5 py-1 text-xs font-bold ${statusClasses(
+            item.status
           )}`}
         >
           {item.status}
@@ -1049,9 +1068,12 @@ function DiagnosticCard({
         {item.result}
       </p>
 
-      <button className="mt-4 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-xs font-bold text-teal-700">
+      <Link
+        href={`/patients/${patientId}/records`}
+        className="mt-4 inline-flex rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-xs font-bold text-teal-700 transition hover:bg-teal-100"
+      >
         View Report
-      </button>
+      </Link>
     </div>
   );
 }

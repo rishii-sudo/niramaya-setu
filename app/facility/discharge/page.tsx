@@ -149,6 +149,31 @@ function priorityClass(
   return "border-slate-200 bg-slate-50 text-slate-600";
 }
 
+const DISCHARGE_STAGES_KEY = "niramaya-discharge-stages";
+
+function loadDischargeStages(): Record<string, DischargeStage> {
+  if (typeof window === "undefined") {
+    return {};
+  }
+
+  try {
+    const raw = localStorage.getItem(DISCHARGE_STAGES_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveDischargeStages(stages: Record<string, DischargeStage>) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    localStorage.setItem(DISCHARGE_STAGES_KEY, JSON.stringify(stages));
+  } catch {}
+}
+
 function getSharedReferralStatus(
   patient: DischargePatient,
   referralStates: Record<string, string>
@@ -173,7 +198,7 @@ function getStageFromState(
    * Shared referral state is always the source of truth
    * for terminal statuses.
    */
-  if (sharedStatus === "Closed") {
+  if (sharedStatus === "Closed" || localStages[patient.referralId] === "Closed") {
     return "Closed";
   }
 
@@ -213,20 +238,22 @@ export default function FacilityDischargePage() {
   const [toast, setToast] = useState("");
 
   /*
-   * Read the shared referral state after mount.
+   * Read the shared referral state and local discharge stages.
    */
   useEffect(() => {
     const syncState = () => {
       const states = getAllReferralStates();
       setReferralStates(states);
+      setLocalStages(loadDischargeStages());
     };
 
     syncState();
 
     /*
-     * Keep the page in sync when the user returns to the tab.
+     * Keep the page in sync when the user returns to the tab or storage updates.
      */
     window.addEventListener("focus", syncState);
+    window.addEventListener("storage", syncState);
 
     document.addEventListener(
       "visibilitychange",
@@ -236,6 +263,11 @@ export default function FacilityDischargePage() {
     return () => {
       window.removeEventListener(
         "focus",
+        syncState
+      );
+
+      window.removeEventListener(
+        "storage",
         syncState
       );
 
@@ -324,6 +356,17 @@ export default function FacilityDischargePage() {
     }, 2500);
   }
 
+  function updateLocalStage(referralId: string, stage: DischargeStage) {
+    setLocalStages((current) => {
+      const updated = {
+        ...current,
+        [referralId]: stage,
+      };
+      saveDischargeStages(updated);
+      return updated;
+    });
+  }
+
   /*
    * Progress discharge workflow or close referral.
    */
@@ -347,26 +390,31 @@ export default function FacilityDischargePage() {
      */
     if (patient.stage === "Ready to Close") {
       setReferralStatus(
-        patient.patientId,
+        patient.referralId,
         "Closed"
       );
+
+      if (patient.patientId) {
+        setReferralStatus(
+          patient.patientId,
+          "Closed"
+        );
+      }
 
       /*
        * Update shared state immediately.
        */
       setReferralStates((current) => ({
         ...current,
+        [patient.referralId]: "Closed",
         [patient.patientId]: "Closed",
       }));
 
       /*
        * IMPORTANT:
-       * Local stage must also become Closed.
+       * Local stage must also become Closed and persist.
        */
-      setLocalStages((current) => ({
-        ...current,
-        [patient.referralId]: "Closed",
-      }));
+      updateLocalStage(patient.referralId, "Closed");
 
       showToast(
         `${patient.patientName} referral closed successfully.`
@@ -389,10 +437,31 @@ export default function FacilityDischargePage() {
       nextStage = "Ready for Review";
     }
 
-    setLocalStages((current) => ({
-      ...current,
-      [patient.referralId]: nextStage,
-    }));
+    /*
+     * When reaching Ready to Close, sync shared referral state to Discharged
+     * so it is not a local-only change.
+     */
+    if (nextStage === "Ready to Close") {
+      setReferralStatus(
+        patient.referralId,
+        "Discharged"
+      );
+
+      if (patient.patientId) {
+        setReferralStatus(
+          patient.patientId,
+          "Discharged"
+        );
+      }
+
+      setReferralStates((current) => ({
+        ...current,
+        [patient.referralId]: "Discharged",
+        [patient.patientId]: "Discharged",
+      }));
+    }
+
+    updateLocalStage(patient.referralId, nextStage);
 
     showToast(
       `${patient.patientName} moved to "${nextStage}".`

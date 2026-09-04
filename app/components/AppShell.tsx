@@ -43,7 +43,7 @@ export default function AppShell({
         <Sidebar />
 
         {/* Page content */}
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 pb-16 md:pb-0">
           {children}
         </div>
       </div>

@@ -15,6 +15,92 @@ export default function RegisterPatientPage() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const fullName = String(formData.get("fullName") || "Registered Patient");
+    const mobile = String(formData.get("mobile") || "98XXXXXX00");
+    const gender = String(formData.get("gender") || "Other");
+    const district = String(formData.get("district") || formData.get("address") || "Jaipur");
+    const newId = `NS-${Math.floor(10000 + Math.random() * 90000)}`;
+
+    const rawAge = formData.get("age");
+    const rawDob = formData.get("dob");
+
+    let age = 0;
+    if (rawAge !== null && rawAge !== "") {
+      const parsed = Number(rawAge);
+      if (!Number.isNaN(parsed) && parsed >= 0 && parsed <= 130) {
+        age = Math.floor(parsed);
+      }
+    } else if (rawDob && typeof rawDob === "string") {
+      const birthDate = new Date(rawDob);
+      if (!Number.isNaN(birthDate.getTime())) {
+        const today = new Date();
+        let calculated = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (
+          monthDiff < 0 ||
+          (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
+          calculated--;
+        }
+        if (calculated >= 0 && calculated <= 130) {
+          age = calculated;
+        }
+      }
+    }
+
+    const newPatient = {
+      id: newId,
+      name: fullName,
+      age,
+      gender,
+      mobile,
+      phone: mobile,
+      village: district,
+      status: "Active Referral",
+      lastVisit: "Today",
+    };
+
+    try {
+      const existing = JSON.parse(
+        localStorage.getItem("niramaya_patients") || "[]"
+      );
+      localStorage.setItem(
+        "niramaya_patients",
+        JSON.stringify([newPatient, ...existing])
+      );
+
+      const ashaExisting = JSON.parse(
+        localStorage.getItem("niramaya_asha_patients") || "[]"
+      );
+      const initials =
+        fullName
+          .split(" ")
+          .filter(Boolean)
+          .map((part) => part[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase() || "PT";
+      const ashaPatient = {
+        id: newId,
+        name: fullName,
+        initials,
+        age,
+        gender,
+        phone: mobile,
+        village: district,
+        condition: "General Medicine",
+        status: "Active",
+        lastVisit: "Today",
+      };
+      localStorage.setItem(
+        "niramaya_asha_patients",
+        JSON.stringify([ashaPatient, ...ashaExisting])
+      );
+    } catch {
+      // ignore
+    }
+
     setSubmitted(true);
   };
 

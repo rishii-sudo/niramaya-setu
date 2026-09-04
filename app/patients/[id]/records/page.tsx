@@ -2,6 +2,7 @@
 
 import { use, useMemo, useState } from "react";
 import Link from "next/link";
+import { getPatient } from "@/app/data/patientData";
 
 type RecordStatus = "Normal" | "Abnormal" | "Pending" | "Completed";
 
@@ -26,7 +27,7 @@ type PatientRecord = {
   details: { label: string; value: string }[];
 };
 
-const patient = {
+const defaultPatient = {
   id: "NS-10284",
   name: "Ramesh Kumar",
   age: 47,
@@ -307,6 +308,37 @@ export default function PatientRecordsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+
+  const foundPatient = getPatient(id);
+  const patient = useMemo(() => {
+    if (!foundPatient) return { ...defaultPatient, id };
+    const ec = foundPatient.emergencyContact;
+    const ecStr = ec
+      ? `${ec.name} (${ec.relation}) • ${ec.mobile}`
+      : defaultPatient.emergencyContact;
+    return {
+      id: foundPatient.patientId || id,
+      name: foundPatient.name,
+      age: foundPatient.age,
+      gender: foundPatient.gender,
+      bloodGroup: foundPatient.bloodGroup,
+      mobile: foundPatient.mobile,
+      aadhaar: foundPatient.aadhaar,
+      abha:
+        (foundPatient as any).abha ||
+        foundPatient.abhaId ||
+        defaultPatient.abha,
+      allergies:
+        foundPatient.allergies?.map((a: any) =>
+          typeof a === "string" ? a : a.name,
+        ) || [],
+      chronicConditions:
+        foundPatient.chronicConditions?.map((c: any) =>
+          typeof c === "string" ? c : c.name,
+        ) || [],
+      emergencyContact: ecStr,
+    };
+  }, [foundPatient, id]);
 
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");

@@ -723,8 +723,10 @@ export default function FacilityIntakePage({
 function findPatientByReferralId(
   referralId: string,
 ): PatientRecord | undefined {
-  const normalized =
-    referralId.replace(/^#/, "");
+  let normalized = referralId.replace(/^#/, "");
+  if (normalized === "REF-24017") normalized = "NS-28491";
+  if (normalized === "REF-24012") normalized = "NS-28478";
+  if (normalized === "REF-24005") normalized = "NS-28461";
 
   const ids = [
     "NS-10284",
@@ -734,19 +736,17 @@ function findPatientByReferralId(
   ];
 
   for (const patientId of ids) {
-    const found =
-      getPatient(patientId);
+    const found = getPatient(patientId);
 
     if (
       found &&
-      found.referralId ===
-        normalized
+      (found.referralId === normalized || found.patientId === normalized)
     ) {
       return found;
     }
   }
 
-  return undefined;
+  return getPatient(normalized) || undefined;
 }
 
 function extractDepartment(

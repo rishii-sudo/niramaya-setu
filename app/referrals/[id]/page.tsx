@@ -9,6 +9,7 @@ import {
   FileText,
   Hospital,
   MapPin,
+  QrCode,
   ShieldCheck,
   UserRound,
 } from "lucide-react";
@@ -128,6 +129,10 @@ const referrals: Record<string, ReferralRecord> = {
     noShow: false,
   },
 };
+
+referrals["REF-24017"] = { ...referrals["NS-28491"], id: "REF-24017" };
+referrals["REF-24005"] = { ...referrals["NS-28461"], id: "REF-24005" };
+referrals["REF-24012"] = { ...referrals["NS-28478"], id: "REF-24012" };
 
 const statusOrder: ReferralStatus[] = [
   "Created",
@@ -417,7 +422,7 @@ export default function ReferralDetailPage({
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span
               className={`rounded-full px-3 py-1.5 text-xs font-semibold ${statusBadgeClass(
                 referral.status
@@ -433,6 +438,14 @@ export default function ReferralDetailPage({
             >
               {referral.priority}
             </span>
+
+            <Link
+              href={`/referrals/${referral.id}/qr`}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-800 transition hover:bg-teal-100"
+            >
+              <QrCode size={14} />
+              View QR Slip
+            </Link>
           </div>
         </div>
 

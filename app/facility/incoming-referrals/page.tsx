@@ -605,15 +605,23 @@ function ReferralCard({
           </Link>
 
           {canReceive && (
-            <span className="rounded-xl bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-700">
-              Awaiting Receipt
-            </span>
+            <Link
+              href={`/facility/incoming-referrals/${patient.referralId}`}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-700 transition hover:bg-amber-100"
+            >
+              Intake / Receive
+              <ArrowRight size={14} />
+            </Link>
           )}
 
           {canStartTreatment && (
-            <span className="rounded-xl bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700">
-              Ready for Treatment
-            </span>
+            <Link
+              href={`/facility/incoming-referrals/${patient.referralId}`}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+            >
+              Start Treatment
+              <ArrowRight size={14} />
+            </Link>
           )}
         </div>
       </div>

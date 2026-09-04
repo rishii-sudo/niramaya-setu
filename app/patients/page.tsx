@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Filter,
@@ -83,15 +83,51 @@ const filterOptions: {
 ];
 
 export default function PatientsPage() {
+  const [patientList, setPatientList] = useState<Patient[]>(patients);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] =
     useState<StatusType | "all">("all");
   const [showFilters, setShowFilters] = useState(false);
 
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("niramaya_patients");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const formatted: Patient[] = parsed.map((p: any) => ({
+            id: p.id || `NS-${Math.floor(10000 + Math.random() * 90000)}`,
+            name: p.name || "Unknown Patient",
+            age: Number(p.age) || 40,
+            gender: p.gender || "Other",
+            village: p.village || p.address || "Jaipur",
+            status:
+              p.status === "Active"
+                ? "Active Referral"
+                : p.status || "Active Referral",
+            statusType:
+              p.status === "Closed"
+                ? "closed"
+                : p.status === "Follow-up Due"
+                  ? "warning"
+                  : "active",
+            lastVisit: p.lastVisit || "Today",
+            mobile: p.phone || p.mobile || "98XXXXXX00",
+          }));
+          const existingIds = new Set(patients.map((p) => p.id));
+          const newUnique = formatted.filter((p) => !existingIds.has(p.id));
+          setPatientList([...newUnique, ...patients]);
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
   const filteredPatients = useMemo(() => {
     const query = search.trim().toLowerCase();
 
-    return patients.filter((patient) => {
+    return patientList.filter((patient) => {
       const matchesSearch =
         query === "" ||
         patient.name.toLowerCase().includes(query) ||

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   FileText,
@@ -9,6 +9,7 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
+import { getAllReferralStates } from "@/app/data/referralState";
 
 type Priority = "Routine" | "Urgent" | "Emergency";
 
@@ -65,32 +66,18 @@ const referrals: Referral[] = [
     reason: "General medicine consultation",
   },
   {
-    id: "NS-28467",
-    patientId: "NS-10268",
-    patientName: "Arjun Meena",
-    age: 34,
+    id: "NS-28461",
+    patientId: "NS-10271",
+    patientName: "Mohan Lal",
+    age: 61,
     gender: "Male",
-    from: "PHC Amer",
+    from: "PHC Bagru",
     to: "District Hospital Jaipur",
     department: "General Medicine",
     priority: "Routine",
-    status: "Received",
-    created: "26 Aug 2026",
-    reason: "Persistent fever and weakness",
-  },
-  {
-    id: "NS-28454",
-    patientId: "NS-10255",
-    patientName: "Sita Devi",
-    age: 63,
-    gender: "Female",
-    from: "CHC Chomu",
-    to: "District Hospital Jaipur",
-    department: "Orthopedics",
-    priority: "Emergency",
-    status: "Under Treatment",
-    created: "26 Aug 2026",
-    reason: "Acute joint pain",
+    status: "Closed",
+    created: "25 Aug 2026",
+    reason: "Routine specialist review",
   },
   {
     id: "NS-28432",
@@ -105,20 +92,6 @@ const referrals: Referral[] = [
     status: "Discharged",
     created: "22 Aug 2026",
     reason: "Orthopedic consultation",
-  },
-  {
-    id: "NS-28461",
-    patientId: "NS-10271",
-    patientName: "Mohan Lal",
-    age: 61,
-    gender: "Male",
-    from: "PHC Bagru",
-    to: "District Hospital Jaipur",
-    department: "General Medicine",
-    priority: "Routine",
-    status: "Closed",
-    created: "25 Aug 2026",
-    reason: "Routine specialist review",
   },
 ];
 
@@ -148,17 +121,33 @@ const departmentOptions = [
 
 export default function DoctorReferralsPage() {
   const [search, setSearch] = useState("");
-  const [status, setStatus] =
-    useState<"All" | ReferralStatus>("All");
-  const [priority, setPriority] =
-    useState<"All" | Priority>("All");
+  const [status, setStatus] = useState<"All" | ReferralStatus>("All");
+  const [priority, setPriority] = useState<"All" | Priority>("All");
   const [department, setDepartment] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
+  const [referralStates, setReferralStates] = useState<Record<string, ReferralStatus>>({});
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setReferralStates(getAllReferralStates());
+    setIsHydrated(true);
+
+    const onStorage = () => setReferralStates(getAllReferralStates());
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const liveReferrals = useMemo(() => {
+    return referrals.map((r) => ({
+      ...r,
+      status: isHydrated && referralStates[r.id] ? referralStates[r.id] : r.status,
+    }));
+  }, [referralStates, isHydrated]);
 
   const filteredReferrals = useMemo(() => {
     const query = search.trim().toLowerCase();
 
-    return referrals.filter((referral) => {
+    return liveReferrals.filter((referral) => {
       const matchesSearch =
         query === "" ||
         referral.id.toLowerCase().includes(query) ||
@@ -185,7 +174,7 @@ export default function DoctorReferralsPage() {
         matchesDepartment
       );
     });
-  }, [search, status, priority, department]);
+  }, [liveReferrals, search, status, priority, department]);
 
   const clearFilters = () => {
     setSearch("");
@@ -343,7 +332,7 @@ export default function DoctorReferralsPage() {
               </div>
 
               <div className="mt-5 grid gap-4 md:grid-cols-3">
-                <SelectField
+                <FilterField
                   label="Status"
                   value={status}
                   options={statusOptions}
@@ -352,7 +341,7 @@ export default function DoctorReferralsPage() {
                   }
                 />
 
-                <SelectField
+                <FilterField
                   label="Priority"
                   value={priority}
                   options={priorityOptions}
@@ -361,7 +350,7 @@ export default function DoctorReferralsPage() {
                   }
                 />
 
-                <SelectField
+                <FilterField
                   label="Department"
                   value={department}
                   options={departmentOptions}
@@ -375,21 +364,19 @@ export default function DoctorReferralsPage() {
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <SummaryCard
               label="Total"
-              value={referrals.length.toString()}
+              value={liveReferrals.length.toString()}
             />
 
             <SummaryCard
               label="Received"
-              value={referrals
-                .filter(
-                  (item) => item.status === "Received",
-                )
+              value={liveReferrals
+                .filter((item) => item.status === "Received")
                 .length.toString()}
             />
 
             <SummaryCard
               label="Urgent"
-              value={referrals
+              value={liveReferrals
                 .filter(
                   (item) =>
                     item.priority === "Urgent" ||
@@ -400,11 +387,8 @@ export default function DoctorReferralsPage() {
 
             <SummaryCard
               label="Under Treatment"
-              value={referrals
-                .filter(
-                  (item) =>
-                    item.status === "Under Treatment",
-                )
+              value={liveReferrals
+                .filter((item) => item.status === "Under Treatment")
                 .length.toString()}
             />
           </div>
@@ -417,7 +401,7 @@ export default function DoctorReferralsPage() {
                 <span className="font-semibold text-slate-800">
                   {filteredReferrals.length}
                 </span>{" "}
-                of {referrals.length} referrals
+                of {liveReferrals.length} referrals
               </p>
             </div>
 
@@ -641,7 +625,7 @@ function SummaryCard({
   );
 }
 
-function SelectField({
+function FilterField({
   label,
   value,
   options,
@@ -676,6 +660,8 @@ function SelectField({
     </div>
   );
 }
+
+const SelectField = FilterField;
 
 function PriorityBadge({
   priority,

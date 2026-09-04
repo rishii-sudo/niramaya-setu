@@ -45,6 +45,15 @@ export default function RegisterPatientPage() {
       localStorage.getItem("niramaya_patients") || "[]"
     );
 
+    const initials =
+      form.name
+        .split(" ")
+        .filter(Boolean)
+        .map((part) => part[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase() || "PT";
+
     const newPatient: Patient = {
       id: `NS-${Math.floor(10000 + Math.random() * 90000)}`,
       name: form.name,
@@ -66,6 +75,25 @@ export default function RegisterPatientPage() {
       "niramaya_patients",
       JSON.stringify([newPatient, ...existingPatients])
     );
+
+    try {
+      const ashaPatients = JSON.parse(
+        localStorage.getItem("niramaya_asha_patients") || "[]"
+      );
+      const ashaNew = {
+        ...newPatient,
+        initials,
+      };
+      localStorage.setItem(
+        "niramaya_asha_patients",
+        JSON.stringify([
+          ashaNew,
+          ...(Array.isArray(ashaPatients) ? ashaPatients : []),
+        ])
+      );
+    } catch {
+      // ignore
+    }
 
     setSaved(true);
 

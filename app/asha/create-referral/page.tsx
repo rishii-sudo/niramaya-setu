@@ -34,7 +34,7 @@ export default function CreateReferralPage() {
     setSaved(true);
 
     setTimeout(() => {
-      router.push("/asha/referrals");
+      router.push("/referrals");
     }, 900);
   };
 

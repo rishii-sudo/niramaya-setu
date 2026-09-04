@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useMemo, useState } from "react";
 import Link from "next/link";
 
 type ReferralData = {
@@ -24,8 +24,8 @@ const referrals: Record<string, ReferralData> = {
     department: "Cardiology",
     priority: "Urgent",
     status: "In-Transit",
-    createdAt: "02 Sep 2026, 09:20 AM",
-    validUntil: "04 Sep 2026, 09:20 AM",
+    createdAt: "04 Sep 2026, 09:20 AM",
+    validUntil: "06 Sep 2026, 09:20 AM",
   },
   "REF-24012": {
     id: "REF-24012",
@@ -35,8 +35,8 @@ const referrals: Record<string, ReferralData> = {
     department: "Medicine",
     priority: "Routine",
     status: "Created",
-    createdAt: "02 Sep 2026, 01:10 PM",
-    validUntil: "04 Sep 2026, 01:10 PM",
+    createdAt: "04 Sep 2026, 01:10 PM",
+    validUntil: "06 Sep 2026, 01:10 PM",
   },
   "REF-24005": {
     id: "REF-24005",
@@ -46,8 +46,52 @@ const referrals: Record<string, ReferralData> = {
     department: "General Medicine",
     priority: "Routine",
     status: "Received",
-    createdAt: "01 Sep 2026, 10:30 AM",
-    validUntil: "03 Sep 2026, 10:30 AM",
+    createdAt: "03 Sep 2026, 10:30 AM",
+    validUntil: "05 Sep 2026, 10:30 AM",
+  },
+  "NS-28491": {
+    id: "NS-28491",
+    patientId: "NS-10284",
+    patientName: "Ramesh Kumar",
+    destination: "District Hospital Jaipur",
+    department: "Cardiology",
+    priority: "Routine",
+    status: "In Transit",
+    createdAt: "04 Sep 2026, 09:20 AM",
+    validUntil: "06 Sep 2026, 09:20 AM",
+  },
+  "NS-28478": {
+    id: "NS-28478",
+    patientId: "NS-10279",
+    patientName: "Sunita Devi",
+    destination: "District Hospital Jaipur",
+    department: "General Medicine",
+    priority: "Urgent",
+    status: "Received",
+    createdAt: "03 Sep 2026, 01:10 PM",
+    validUntil: "05 Sep 2026, 01:10 PM",
+  },
+  "NS-28461": {
+    id: "NS-28461",
+    patientId: "NS-10271",
+    patientName: "Mohan Lal",
+    destination: "District Hospital Jaipur",
+    department: "General Medicine",
+    priority: "Routine",
+    status: "Closed",
+    createdAt: "03 Sep 2026, 10:30 AM",
+    validUntil: "05 Sep 2026, 10:30 AM",
+  },
+  "NS-28432": {
+    id: "NS-28432",
+    patientId: "NS-10263",
+    patientName: "Kamla Devi",
+    destination: "District Hospital Jaipur",
+    department: "Orthopedics",
+    priority: "Urgent",
+    status: "Discharged",
+    createdAt: "03 Sep 2026, 11:15 AM",
+    validUntil: "05 Sep 2026, 11:15 AM",
   },
 };
 
@@ -66,12 +110,16 @@ export default function ReferralQRPage({
     department: "General",
     priority: "Routine" as const,
     status: "Created",
-    createdAt: "03 Sep 2026, 10:00 AM",
-    validUntil: "05 Sep 2026, 10:00 AM",
+    createdAt: "04 Sep 2026, 10:00 AM",
+    validUntil: "06 Sep 2026, 10:00 AM",
   };
 
+  const [currentValidUntil, setCurrentValidUntil] = useState(
+    referral.validUntil
+  );
+
   const [generatedAt, setGeneratedAt] = useState(
-    "03 Sep 2026, 12:00 AM"
+    "04 Sep 2026, 09:20 AM"
   );
 
   const [copied, setCopied] = useState(false);
@@ -79,6 +127,15 @@ export default function ReferralQRPage({
   const [verified, setVerified] = useState(false);
 
   const [showToken, setShowToken] = useState(false);
+
+  const isExpired = useMemo(() => {
+    try {
+      const expiry = new Date(currentValidUntil);
+      return !Number.isNaN(expiry.getTime()) && expiry.getTime() < Date.now();
+    } catch {
+      return false;
+    }
+  }, [currentValidUntil]);
 
   const token = `NST-${referral.id.replace("REF-", "")}-X7Q9`;
 
@@ -110,8 +167,9 @@ export default function ReferralQRPage({
 
   const handleRegenerate = () => {
     const now = new Date();
+    const expiry = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
-    const formatted = now.toLocaleString("en-IN", {
+    const formattedGen = now.toLocaleString("en-IN", {
       day: "2-digit",
       month: "short",
       year: "numeric",
@@ -119,7 +177,16 @@ export default function ReferralQRPage({
       minute: "2-digit",
     });
 
-    setGeneratedAt(formatted);
+    const formattedExp = expiry.toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    setGeneratedAt(formattedGen);
+    setCurrentValidUntil(formattedExp);
     setCopied(false);
     setVerified(false);
   };
@@ -216,10 +283,17 @@ export default function ReferralQRPage({
               </div>
             </div>
 
-            <div className="flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Token Active
-            </div>
+            {isExpired ? (
+              <div className="flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
+                <span className="h-2 w-2 rounded-full bg-amber-500" />
+                Token Expired
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                Token Active
+              </div>
+            )}
           </div>
         </section>
 
@@ -285,18 +359,32 @@ export default function ReferralQRPage({
                 />
               </div>
 
-              <div className="rounded-xl border border-amber-100 bg-amber-50/70 p-4">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-amber-700">
-                  Token Expiry
-                </p>
+              <div
+                className={`rounded-xl border p-4 ${
+                  isExpired
+                    ? "border-amber-200 bg-amber-50/90"
+                    : "border-amber-100 bg-amber-50/70"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-amber-700">
+                    Token Expiry
+                  </p>
+                  {isExpired && (
+                    <span className="rounded-md bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+                      Expired
+                    </span>
+                  )}
+                </div>
 
                 <p className="mt-1 text-sm font-semibold text-amber-950">
-                  {referral.validUntil}
+                  {currentValidUntil}
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-amber-800">
-                  A temporary verification token should not be reused after
-                  its validity window.
+                  {isExpired
+                    ? "This verification token has expired. Click 'Regenerate' to renew the QR token."
+                    : "A temporary verification token should not be reused after its validity window."}
                 </p>
               </div>
 
@@ -471,9 +559,12 @@ export default function ReferralQRPage({
                   <button
                     type="button"
                     onClick={handleVerify}
-                    className="mt-4 w-full rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-teal-800"
+                    disabled={isExpired}
+                    className="mt-4 w-full rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Verify Referral
+                    {isExpired
+                      ? "Token Expired (Regenerate to Verify)"
+                      : "Verify Referral"}
                   </button>
                 )}
               </div>

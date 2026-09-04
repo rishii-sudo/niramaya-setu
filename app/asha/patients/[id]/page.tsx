@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { getPatient } from "@/app/data/patientData";
 
 type Patient = {
   id: string;
@@ -49,6 +50,17 @@ const defaultPatients: Patient[] = [
     condition: "General Medicine",
     status: "Active",
     lastVisit: "01 Sep 2026",
+  },
+  {
+    id: "NS-10271",
+    name: "Mohan Lal",
+    age: 61,
+    gender: "Male",
+    phone: "+91 98765 98765",
+    location: "Bagru",
+    condition: "General Medicine",
+    status: "Closed",
+    lastVisit: "25 Aug 2026",
   },
 ];
 
@@ -157,6 +169,24 @@ export default function PatientDetailsPage() {
         }
       } catch {
         // localStorage unavailable
+      }
+    }
+
+    if (!foundPatient) {
+      const canonical = getPatient(patientId);
+      if (canonical) {
+        foundPatient = {
+          id: canonical.patientId,
+          name: canonical.name,
+          age: canonical.age,
+          gender: canonical.gender,
+          phone: canonical.mobile,
+          location: canonical.village || "Jaipur",
+          condition: canonical.referralReason || "General Medicine",
+          status: canonical.referralStatus,
+          lastVisit: "01 Sep 2026",
+          address: canonical.village,
+        };
       }
     }
 

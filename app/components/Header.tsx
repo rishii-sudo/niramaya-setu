@@ -1,6 +1,7 @@
 
 "use client";
 
+import Link from "next/link";
 import { Bell, Activity } from "lucide-react";
 
 export default function Header() {
@@ -36,13 +37,13 @@ export default function Header() {
           </div>
 
           {/* Notification */}
-          <button
-            type="button"
+          <Link
+            href="/notifications"
             className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
             aria-label="Notifications"
           >
             <Bell size={19} />
-          </button>
+          </Link>
 
           {/* Profile */}
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-100 text-sm font-semibold text-teal-700">

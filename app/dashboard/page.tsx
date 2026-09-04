@@ -155,12 +155,13 @@ export default function DashboardPage() {
               Online
             </div>
 
-            <button
-              type="button"
+            <Link
+              href="/notifications"
               className="rounded-xl p-2.5 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
+              aria-label="Notifications"
             >
               <Bell size={20} />
-            </button>
+            </Link>
 
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-100 text-sm font-semibold text-teal-800">
               A

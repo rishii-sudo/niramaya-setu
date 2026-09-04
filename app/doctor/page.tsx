@@ -62,27 +62,27 @@ const referrals: Referral[] = [
     time: "25 min ago",
   },
   {
-    id: "NS-28467",
-    patientId: "NS-10268",
-    patient: "Arjun Meena",
-    age: 34,
+    id: "NS-28461",
+    patientId: "NS-10271",
+    patient: "Mohan Lal",
+    age: 61,
     gender: "Male",
-    from: "PHC Amer",
+    from: "PHC Bagru",
     department: "General Medicine",
     priority: "Routine",
-    status: "Received",
+    status: "Closed",
     time: "42 min ago",
   },
   {
-    id: "NS-28454",
-    patientId: "NS-10255",
-    patient: "Sita Devi",
-    age: 63,
+    id: "NS-28432",
+    patientId: "NS-10263",
+    patient: "Kamla Devi",
+    age: 58,
     gender: "Female",
-    from: "CHC Chomu",
+    from: "PHC Sanganer",
     department: "Orthopedics",
-    priority: "Emergency",
-    status: "Under Treatment",
+    priority: "Urgent",
+    status: "Discharged",
     time: "1 hr ago",
   },
 ];
@@ -95,7 +95,7 @@ const activity: ActivityItem[] = [
   },
   {
     title: "Patient treatment updated",
-    description: "Sita Devi • Orthopedics",
+    description: "Kamla Devi • Orthopedics",
     time: "10:12 AM",
   },
   {
@@ -317,18 +317,18 @@ export default function DoctorDashboardPage() {
 
               <ActionCard
                 title="Update treatment status"
-                patient="Sita Devi"
-                meta="Orthopedics • Under Treatment"
+                patient="Kamla Devi"
+                meta="Orthopedics • Discharged"
                 tone="blue"
-                href="/doctor/patients/NS-10255"
+                href="/doctor/patients/NS-10263"
               />
 
               <ActionCard
                 title="Complete discharge note"
                 patient="Mohan Lal"
-                meta="General Medicine"
+                meta="General Medicine • Closed"
                 tone="teal"
-                href="/facility/discharge"
+                href="/doctor/patients/NS-10271"
               />
             </div>
           </section>

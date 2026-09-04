@@ -214,6 +214,7 @@ export default function ASHAFollowUpsPage() {
   const activeCases = useMemo(() => {
     return cases.filter((item) => {
       const sharedStatus =
+        referralStates[item.referralId] ??
         referralStates[item.patientId];
 
       return sharedStatus !== "Closed";
@@ -287,6 +288,7 @@ export default function ASHAFollowUpsPage() {
 
     window.setTimeout(() => {
       let nextReferralStatus =
+        referralStates[selectedCase.referralId] ??
         referralStates[selectedCase.patientId];
 
       /*
@@ -295,7 +297,7 @@ export default function ASHAFollowUpsPage() {
        */
       if (outcome === "Reached Facility") {
         setReferralStatus(
-          selectedCase.patientId,
+          selectedCase.referralId,
           "Received",
         );
 

@@ -43,13 +43,13 @@ const initialNotifications: NotificationItem[] = [
     type: "Referral",
     title: "Urgent referral in transit",
     message:
-      "REF-24017 for Ramesh Kumar is currently marked In-Transit.",
+      "NS-28491 for Ramesh Kumar is currently marked In Transit.",
     time: "28 min ago",
     date: "03 Sep 2026",
     read: false,
     urgent: true,
     actionLabel: "View Referral",
-    actionHref: "/referrals/REF-24017",
+    actionHref: "/referrals/NS-28491",
   },
   {
     id: "NTF-1003",
@@ -68,7 +68,7 @@ const initialNotifications: NotificationItem[] = [
     type: "Sync",
     title: "Sync failed",
     message:
-      "REF-24005 update could not be synchronized. Retry is available.",
+      "NS-28461 update could not be synchronized. Retry is available.",
     time: "2 hours ago",
     date: "03 Sep 2026",
     read: false,
@@ -80,12 +80,12 @@ const initialNotifications: NotificationItem[] = [
     type: "Referral",
     title: "Referral received",
     message:
-      "District Hospital has received REF-24005 for Mohan Lal.",
+      "District Hospital has received NS-28461 for Mohan Lal.",
     time: "Yesterday",
     date: "02 Sep 2026",
     read: true,
     actionLabel: "View Referral",
-    actionHref: "/referrals/REF-24005",
+    actionHref: "/referrals/NS-28461",
   },
   {
     id: "NTF-1006",

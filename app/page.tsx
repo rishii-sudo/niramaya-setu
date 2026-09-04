@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   HeartPulse,
   ShieldCheck,
   UserRound,
   Stethoscope,
   UsersRound,
+  Building2,
   ArrowRight,
   LockKeyhole,
 } from "lucide-react";
@@ -30,10 +32,36 @@ const roles = [
     description: "Review patients and manage referrals",
     icon: Stethoscope,
   },
+  {
+    id: "facility",
+    title: "Facility Staff",
+    description: "Facility operations, admissions and specialist care",
+    icon: Building2,
+  },
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [selectedRole, setSelectedRole] = useState("asha");
+
+  const handleContinue = () => {
+    switch (selectedRole) {
+      case "patient":
+        router.push("/login");
+        break;
+      case "asha":
+        router.push("/asha/login");
+        break;
+      case "doctor":
+        router.push("/doctor/login");
+        break;
+      case "facility":
+        router.push("/facility/login");
+        break;
+      default:
+        router.push("/login");
+    }
+  };
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
@@ -175,7 +203,11 @@ export default function Home() {
               </div>
 
               {/* Continue */}
-              <button className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-teal-800">
+              <button
+                type="button"
+                onClick={handleContinue}
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-teal-800"
+              >
                 Continue as{" "}
                 {roles.find((role) => role.id === selectedRole)?.title}
                 <ArrowRight size={17} />
