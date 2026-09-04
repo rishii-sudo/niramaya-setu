@@ -231,19 +231,23 @@ export default function ReferralsPage() {
 
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* ================================================================== */}
-      {/* Header                                                             */}
-      {/* ================================================================== */}
+      <section className="p-6 lg:p-8">
+        {/* ================================================================= */}
+        {/* Heading & Actions                                                 */}
+        {/* ================================================================= */}
 
-      <header className="border-b border-slate-200 bg-white">
-        <div className="flex min-h-16 items-center justify-between gap-4 px-6 py-3">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-lg font-bold text-slate-900">
-              Referrals
+            <p className="text-sm font-medium text-teal-700">
+              REFERRAL MANAGEMENT
+            </p>
+
+            <h1 className="mt-1 text-3xl font-bold text-slate-900">
+              Care Referrals
             </h1>
 
-            <p className="text-xs text-slate-500">
-              NIRAMAYA-SETU / ASHA & ANM
+            <p className="mt-2 text-sm text-slate-500">
+              Track referred patients across facilities and care stages.
             </p>
           </div>
 
@@ -251,7 +255,7 @@ export default function ReferralsPage() {
             <button
               type="button"
               onClick={loadReferralStates}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 shadow-sm"
               title="Refresh referral statuses"
             >
               <RefreshCw size={16} />
@@ -263,33 +267,12 @@ export default function ReferralsPage() {
 
             <Link
               href="/referrals/create"
-              className="flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
+              className="flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800 shadow-sm"
             >
               <Plus size={17} />
               Create Referral
             </Link>
           </div>
-        </div>
-      </header>
-
-      <section className="p-6 lg:p-8">
-        {/* ================================================================= */}
-        {/* Heading                                                           */}
-        {/* ================================================================= */}
-
-        <div>
-          <p className="text-sm font-medium text-teal-700">
-            REFERRAL MANAGEMENT
-          </p>
-
-          <h2 className="mt-1 text-3xl font-bold text-slate-900">
-            Care Referrals
-          </h2>
-
-          <p className="mt-2 text-sm text-slate-500">
-            Track referred patients across
-            facilities and care stages.
-          </p>
         </div>
 
         {/* ================================================================= */}

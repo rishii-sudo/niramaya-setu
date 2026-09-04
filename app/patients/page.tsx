@@ -150,29 +150,6 @@ export default function PatientsPage() {
 
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* Top Header */}
-      <header className="border-b border-slate-200 bg-white">
-        <div className="flex h-16 items-center justify-between px-6">
-          <div>
-            <h1 className="text-lg font-bold text-slate-900">
-              Patients
-            </h1>
-
-            <p className="text-xs text-slate-500">
-              NIRAMAYA-SETU / ASHA & ANM
-            </p>
-          </div>
-
-          <button
-            type="button"
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
-            aria-label="More options"
-          >
-            <MoreHorizontal size={20} />
-          </button>
-        </div>
-      </header>
-
       {/* Main Content */}
       <section className="p-6 lg:p-8">
         {/* Heading */}

@@ -353,7 +353,7 @@ export default function ASHAFollowUpsPage() {
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
         {/* HEADER */}
-        <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="mb-2 flex items-center gap-2 text-sm text-slate-500">
               <Link
@@ -405,7 +405,7 @@ export default function ASHAFollowUpsPage() {
               </p>
             </div>
           </div>
-        </header>
+        </div>
 
         {/* WORKFLOW */}
         <section className="mb-6 rounded-2xl border border-amber-100 bg-white p-4 shadow-sm">

@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, Activity, Globe, LogOut } from "lucide-react";
+import { Bell, Activity, LogOut } from "lucide-react";
 import { useRole } from "../context/RoleContext";
-import { useLanguage } from "../context/LanguageContext";
 import { logoutUser } from "../utils/auth";
+import LanguageSelector from "./LanguageSelector";
 
 export default function Header() {
   const router = useRouter();
   const { activeRole, roleDisplayName, roleSubtitle, roleDashboardPath } = useRole();
-  const { language, setLanguage, availableLanguages } = useLanguage();
 
   const handleLogout = () => {
     if (confirm("Sign out of current session?")) {
@@ -35,7 +34,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <header className="hidden md:block sticky top-0 z-30 h-16 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand & Active Context */}
         <Link href={roleDashboardPath} className="flex items-center gap-3">
@@ -43,34 +42,21 @@ export default function Header() {
             <Activity size={19} />
           </div>
 
-          <div className="leading-tight">
-            <p className="text-sm font-bold text-slate-900">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-bold text-slate-900">
               NIRAMAYA-SETU
-            </p>
-            <p className="text-[10px] font-semibold text-teal-800">
+            </span>
+            <span className="text-slate-300">|</span>
+            <span className="rounded-md bg-teal-50 px-2 py-0.5 text-xs font-semibold text-teal-800 border border-teal-200">
               {roleSubtitle}
-            </p>
+            </span>
           </div>
         </Link>
 
         {/* Right side controls */}
         <div className="flex items-center gap-2.5 sm:gap-4">
           {/* Language Selector */}
-          <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-semibold">
-            <Globe size={13} className="text-teal-700" />
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as any)}
-              className="bg-transparent text-slate-700 outline-none cursor-pointer text-xs font-medium"
-              aria-label="Select Language"
-            >
-              {availableLanguages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.nativeLabel}
-                </option>
-              ))}
-            </select>
-          </div>
+          <LanguageSelector />
 
           {/* Online Indicator */}
           <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1">
@@ -91,7 +77,10 @@ export default function Header() {
           </Link>
 
           {/* Profile Avatar */}
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-100 text-xs font-bold text-teal-800">
+          <div
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-100 text-xs font-bold text-teal-800"
+            title={roleDisplayName}
+          >
             {getAvatarLetter()}
           </div>
 

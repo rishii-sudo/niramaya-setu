@@ -202,6 +202,46 @@ async function runVerification() {
   assert(documentsFile.includes("logoutUser(\"patient\")"), "patient documents calls logoutUser on sign out");
   assert(documentsFile.includes("href=\"/appointments\"") && documentsFile.includes("href=\"/patient/medicines\""), "patient documents nav includes Appointments and Medicines");
 
+  console.log("\n--- 17. Testing Single Header & Single LanguageSelector Shell ---");
+  const headerFile = fs.readFileSync(path.resolve("app/components/Header.tsx"), "utf-8");
+  assert(headerFile.includes("hidden md:block"), "Header.tsx includes hidden md:block for responsive visibility");
+  assert(headerFile.includes("<LanguageSelector"), "Header.tsx renders LanguageSelector component");
+  assert(!headerFile.includes("aria-label=\"Select Language\""), "Header.tsx removed duplicate inlined select");
+
+  const shellSidebarFile = fs.readFileSync(path.resolve("app/components/Sidebar.tsx"), "utf-8");
+  assert(!shellSidebarFile.includes("<LanguageSelector"), "Sidebar.tsx does NOT render LanguageSelector");
+  assert(shellSidebarFile.includes("md:flex md:flex-col") && shellSidebarFile.includes("hidden"), "Sidebar.tsx uses hidden md:flex md:flex-col aligned with MobileNav");
+
+  assert(roleContextFile.includes('subtitle: "ASHA / ANM"'), "RoleContext defines 'ASHA / ANM' subtitle");
+  assert(roleContextFile.includes('subtitle: "Doctor Workspace"'), "RoleContext defines 'Doctor Workspace' subtitle");
+  assert(roleContextFile.includes('subtitle: "Facility Operations"'), "RoleContext defines 'Facility Operations' subtitle");
+  assert(roleContextFile.includes('subtitle: "System Administration"'), "RoleContext defines 'System Administration' subtitle");
+
+  assert(shellSidebarFile.includes('subtitle: "ASHA / ANM"'), "Sidebar config defines 'ASHA / ANM' subtitle");
+  assert(shellSidebarFile.includes('subtitle: "Doctor Workspace"'), "Sidebar config defines 'Doctor Workspace' subtitle");
+  assert(shellSidebarFile.includes('subtitle: "Facility Operations"'), "Sidebar config defines 'Facility Operations' subtitle");
+  assert(shellSidebarFile.includes('subtitle: "System Administration"'), "Sidebar config defines 'System Administration' subtitle");
+
+  const referralsCreateFile = fs.readFileSync(path.resolve("app/referrals/create/page.tsx"), "utf-8");
+  assert(!referralsCreateFile.includes("<LanguageSelector"), "referrals/create does NOT render LanguageSelector");
+  assert(!referralsCreateFile.includes("<header className=\"border-b"), "referrals/create does NOT render duplicate header");
+
+  const referralsIdFile = fs.readFileSync(path.resolve("app/referrals/[id]/page.tsx"), "utf-8");
+  assert(!referralsIdFile.includes("<LanguageSelector"), "referrals/[id] does NOT render LanguageSelector");
+  assert(!referralsIdFile.includes("<header className=\"border-b"), "referrals/[id] does NOT render duplicate header");
+
+  const facilityDashFile = fs.readFileSync(path.resolve("app/facility/dashboard/page.tsx"), "utf-8");
+  assert(!facilityDashFile.includes("<header className=\"border-b"), "facility/dashboard does NOT render duplicate header");
+
+  const facilityIncomingFile = fs.readFileSync(path.resolve("app/facility/incoming-referrals/page.tsx"), "utf-8");
+  assert(!facilityIncomingFile.includes("<header className=\"border-b"), "facility/incoming-referrals does NOT render duplicate header");
+
+  const patientsFile = fs.readFileSync(path.resolve("app/patients/page.tsx"), "utf-8");
+  assert(!patientsFile.includes("<header className=\"border-b"), "patients does NOT render duplicate header");
+
+  const patientsRegisterFile = fs.readFileSync(path.resolve("app/patients/register/page.tsx"), "utf-8");
+  assert(!patientsRegisterFile.includes("<header className=\"border-b"), "patients/register does NOT render duplicate header");
+
   console.log(`\n==================================================`);
   console.log(`VERIFICATION SUMMARY: ${passed} PASSED, ${failed} FAILED`);
   console.log(`==================================================\n`);

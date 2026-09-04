@@ -19,6 +19,7 @@ import {
   Phone,
 } from "lucide-react";
 import LanguageSelector from "../components/LanguageSelector";
+import { useRole } from "../context/RoleContext";
 
 type Facility = {
   id: string;
@@ -174,6 +175,8 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 }
 
 export default function FacilitiesPage() {
+  const { activeRole } = useRole();
+  const isStaff = ["asha", "doctor", "facility", "admin"].includes(activeRole);
   const [facilities, setFacilities] = useState<Facility[]>(initialFacilities);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("All");
@@ -244,49 +247,51 @@ export default function FacilitiesPage() {
 
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white sticky top-0 z-30">
-        <div className="flex h-16 items-center justify-between px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white font-bold text-xs">
-              NS
-            </div>
-            <div>
-              <h1 className="text-base font-bold text-slate-900">
-                Nearby Healthcare Discovery
-              </h1>
-              <p className="text-[10px] text-slate-500">
-                NIRAMAYA-SETU / Rural Health Facilities
-              </p>
-            </div>
-          </Link>
+      {/* Header (Standalone public view only; authenticated staff use AppShell header) */}
+      {!isStaff && (
+        <header className="border-b border-slate-200 bg-white sticky top-0 z-30">
+          <div className="flex h-16 items-center justify-between px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white font-bold text-xs">
+                NS
+              </div>
+              <div>
+                <h1 className="text-base font-bold text-slate-900">
+                  Nearby Healthcare Discovery
+                </h1>
+                <p className="text-[10px] text-slate-500">
+                  NIRAMAYA-SETU / Rural Health Facilities
+                </p>
+              </div>
+            </Link>
 
-          <div className="flex items-center gap-3">
-            <LanguageSelector />
-            <button
-              type="button"
-              onClick={requestGeolocation}
-              disabled={geoStatus === "requesting"}
-              className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition shadow-sm ${
-                geoStatus === "active"
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+            <div className="flex items-center gap-3">
+              <LanguageSelector />
+              <button
+                type="button"
+                onClick={requestGeolocation}
+                disabled={geoStatus === "requesting"}
+                className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition shadow-sm ${
+                  geoStatus === "active"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                    : geoStatus === "denied"
+                    ? "border-amber-200 bg-amber-50 text-amber-800"
+                    : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <Navigation size={14} className={geoStatus === "active" ? "text-emerald-600" : "text-slate-500"} />
+                {geoStatus === "active"
+                  ? "GPS Location Active"
+                  : geoStatus === "requesting"
+                  ? "Locating..."
                   : geoStatus === "denied"
-                  ? "border-amber-200 bg-amber-50 text-amber-800"
-                  : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-              }`}
-            >
-              <Navigation size={14} className={geoStatus === "requesting" ? "animate-spin" : "text-teal-700"} />
-              {geoStatus === "active"
-                ? "GPS Location Active"
-                : geoStatus === "requesting"
-                ? "Locating..."
-                : geoStatus === "denied"
-                ? "GPS Denied (Using Jaipur Hub)"
-                : "Use My Location"}
-            </button>
+                  ? "GPS Denied (Using Jaipur Hub)"
+                  : "Use My Location"}
+              </button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
 
       <section className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
         {/* Geolocation Status Alert if Denied/Unsupported */}
@@ -303,16 +308,42 @@ export default function FacilitiesPage() {
         )}
 
         {/* Page heading */}
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-teal-700">
-            FACILITY FINDER
-          </p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            Find Nearby Hospitals & Health Centers
-          </h2>
-          <p className="mt-1 max-w-2xl text-xs text-slate-500">
-            Locate nearest primary health centers (PHC), community health centers (CHC), and district hospitals with live bed counts, diagnostics, and specialist availability.
-          </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-teal-700">
+              FACILITY FINDER
+            </p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              Find Nearby Hospitals & Health Centers
+            </h2>
+            <p className="mt-1 max-w-2xl text-xs text-slate-500">
+              Locate nearest primary health centers (PHC), community health centers (CHC), and district hospitals with live bed counts, diagnostics, and specialist availability.
+            </p>
+          </div>
+
+          {isStaff && (
+            <button
+              type="button"
+              onClick={requestGeolocation}
+              disabled={geoStatus === "requesting"}
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition shadow-sm ${
+                geoStatus === "active"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                  : geoStatus === "denied"
+                  ? "border-amber-200 bg-amber-50 text-amber-800"
+                  : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+              }`}
+            >
+              <Navigation size={14} className={geoStatus === "active" ? "text-emerald-600" : "text-slate-500"} />
+              {geoStatus === "active"
+                ? "GPS Location Active"
+                : geoStatus === "requesting"
+                ? "Locating..."
+                : geoStatus === "denied"
+                ? "GPS Denied (Using Jaipur Hub)"
+                : "Use My Location"}
+            </button>
+          )}
         </div>
 
         {/* Search & Type */}

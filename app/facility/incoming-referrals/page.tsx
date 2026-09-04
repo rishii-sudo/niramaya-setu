@@ -245,42 +245,6 @@ export default function IncomingReferralsPage() {
 
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* ================================================================== */}
-      {/* Header                                                             */}
-      {/* ================================================================== */}
-
-      <header className="border-b border-slate-200 bg-white">
-        <div className="flex min-h-16 items-center justify-between gap-4 px-6 py-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-              <Building2 size={19} />
-            </div>
-
-            <div>
-              <h1 className="text-lg font-bold text-slate-900">
-                Incoming Referrals
-              </h1>
-
-              <p className="text-xs text-slate-500">
-                District Hospital Jaipur • Receiving Facility
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={loadReferralStates}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
-          >
-            <RefreshCw size={16} />
-
-            <span className="hidden sm:inline">
-              Refresh
-            </span>
-          </button>
-        </div>
-      </header>
-
       <section className="p-6 lg:p-8">
         {/* ================================================================= */}
         {/* Heading                                                           */}
@@ -292,29 +256,38 @@ export default function IncomingReferralsPage() {
               FACILITY OPERATIONS
             </p>
 
-            <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
               Referral Intake Queue
-            </h2>
+            </h1>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-              Review patients referred to the receiving hospital,
-              check priority and continue the closed-loop care
-              journey.
+              District Hospital Jaipur • Review patients referred to the receiving hospital, check priority and continue the closed-loop care journey.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <span
-              className={`h-2 w-2 rounded-full ${
-                isHydrated
-                  ? "bg-emerald-500"
-                  : "bg-amber-400"
-              }`}
-            />
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={loadReferralStates}
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 shadow-sm"
+            >
+              <RefreshCw size={14} />
+              <span>Refresh</span>
+            </button>
 
-            {isHydrated
-              ? "Shared status loaded"
-              : "Loading referral state..."}
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  isHydrated
+                    ? "bg-emerald-500"
+                    : "bg-amber-400"
+                }`}
+              />
+
+              {isHydrated
+                ? "Shared status loaded"
+                : "Loading referral state..."}
+            </div>
           </div>
         </div>
 

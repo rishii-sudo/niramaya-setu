@@ -117,25 +117,6 @@ export default function RegisterPatientPage() {
   if (submitted) {
     return (
       <main className="min-h-screen bg-slate-50">
-        <header className="border-b border-slate-200 bg-white">
-          <div className="mx-auto flex h-16 max-w-6xl items-center px-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-700 text-white">
-                <HeartPulse size={20} />
-              </div>
-
-              <div>
-                <p className="text-sm font-bold text-slate-900">
-                  NIRAMAYA-SETU
-                </p>
-                <p className="text-[10px] text-slate-500">
-                  Care Continuity Platform
-                </p>
-              </div>
-            </div>
-          </div>
-        </header>
-
         <section className="flex min-h-[calc(100vh-64px)] items-center justify-center px-6 py-12">
           <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-50 text-teal-700">
@@ -186,25 +167,23 @@ export default function RegisterPatientPage() {
 
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+      <section className="mx-auto max-w-4xl px-6 py-8 lg:py-10">
+        {/* Back Link & Security Badge */}
+        <div className="mb-6 flex items-center justify-between">
           <Link
             href="/patients"
-            className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900"
+            className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition"
           >
             <ArrowLeft size={18} />
             Back to Patients
           </Link>
 
-          <div className="flex items-center gap-2 text-sm text-slate-500">
-            <ShieldCheck size={17} className="text-teal-700" />
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+            <ShieldCheck size={16} className="text-teal-700" />
             Secure registration
           </div>
         </div>
-      </header>
 
-      <section className="mx-auto max-w-4xl px-6 py-8 lg:py-10">
         {/* Heading */}
         <div>
           <p className="text-sm font-medium text-teal-700">

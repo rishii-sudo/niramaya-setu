@@ -81,12 +81,12 @@ export function getRoleDetails(role: Role) {
     case "asha":
       return {
         displayName: "ASHA / ANM",
-        subtitle: "Field Care Worker",
+        subtitle: "ASHA / ANM",
       };
     case "doctor":
       return {
         displayName: "Doctor",
-        subtitle: "Clinical Workspace",
+        subtitle: "Doctor Workspace",
       };
     case "facility":
       return {

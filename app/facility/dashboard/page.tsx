@@ -176,26 +176,24 @@ export default function FacilityDashboardPage() {
 
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* ================================================================== */}
-      {/* Header                                                             */}
-      {/* ================================================================== */}
+      <section className="p-6 lg:p-8">
+        {/* ================================================================= */}
+        {/* Page heading                                                      */}
+        {/* ================================================================= */}
 
-      <header className="border-b border-slate-200 bg-white">
-        <div className="flex min-h-16 items-center justify-between gap-4 px-6 py-3">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="flex items-center gap-2">
-              <Building2
-                size={18}
-                className="text-teal-700"
-              />
-
-              <h1 className="text-lg font-bold text-slate-900">
-                Facility Dashboard
-              </h1>
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-teal-700">
+              <Building2 size={15} />
+              District Hospital Jaipur • Facility Operations
             </div>
 
-            <p className="text-xs text-slate-500">
-              District Hospital Jaipur • Facility Operations
+            <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
+              Hospital Operations
+            </h1>
+
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+              Monitor incoming referrals, patient intake, capacity, diagnostics and the closed-loop care journey.
             </p>
           </div>
 
@@ -207,7 +205,7 @@ export default function FacilityDashboardPage() {
             <button
               type="button"
               onClick={refreshReferralState}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 shadow-sm"
             >
               <RefreshCw size={16} />
 
@@ -216,28 +214,6 @@ export default function FacilityDashboardPage() {
               </span>
             </button>
           </div>
-        </div>
-      </header>
-
-      <section className="p-6 lg:p-8">
-        {/* ================================================================= */}
-        {/* Page heading                                                      */}
-        {/* ================================================================= */}
-
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">
-            RECEIVING FACILITY
-          </p>
-
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
-            Hospital Operations
-          </h2>
-
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-            Monitor incoming referrals, patient intake,
-            capacity, diagnostics and the closed-loop care
-            journey.
-          </p>
         </div>
 
         {/* ================================================================= */}

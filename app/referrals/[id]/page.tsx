@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 
 import { getAllReferralStates } from "@/app/data/referralState";
-import LanguageSelector from "@/app/components/LanguageSelector";
 
 type ReferralPageProps = {
   params: Promise<{
@@ -385,9 +384,9 @@ export default function ReferralDetailPage({
 
   return (
     <main className="min-h-screen bg-transparent">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white/90 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        {/* Back Link & Security Badge */}
+        <div className="mb-6 flex items-center justify-between">
           <Link
             href="/referrals"
             className="flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
@@ -396,20 +395,15 @@ export default function ReferralDetailPage({
             Back to Referrals
           </Link>
 
-          <div className="flex items-center gap-4">
-            <LanguageSelector />
-            <div className="hidden sm:flex items-center gap-2 text-sm text-slate-500">
-              <ShieldCheck
-                size={17}
-                className="text-teal-700"
-              />
-              Consent-based referral access
-            </div>
+          <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-slate-500">
+            <ShieldCheck
+              size={16}
+              className="text-teal-700"
+            />
+            Consent-based referral access
           </div>
         </div>
-      </header>
 
-      <section className="mx-auto max-w-7xl px-6 py-8">
         {/* Heading */}
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>

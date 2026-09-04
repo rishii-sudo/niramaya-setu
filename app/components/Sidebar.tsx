@@ -30,7 +30,6 @@ import {
 import { useRole, Role } from "../context/RoleContext";
 import { useLanguage } from "../context/LanguageContext";
 import { logoutUser } from "../utils/auth";
-import LanguageSelector from "./LanguageSelector";
 
 type NavItem = {
   label: string;
@@ -51,7 +50,7 @@ function getRoleConfig(role: Role) {
     ========================================================= */
     case "asha":
       return {
-        subtitle: "ASHA / ANM Field Work",
+        subtitle: "ASHA / ANM",
         sections: [
           {
             title: "Field Work",
@@ -138,7 +137,7 @@ function getRoleConfig(role: Role) {
     ========================================================= */
     case "doctor":
       return {
-        subtitle: "Clinical Workspace",
+        subtitle: "Doctor Workspace",
         sections: [
           {
             title: "Main",
@@ -307,7 +306,7 @@ function getRoleConfig(role: Role) {
     case "admin":
     default:
       return {
-        subtitle: "Administration",
+        subtitle: "System Administration",
         sections: [
           {
             title: "Overview",
@@ -427,7 +426,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="hidden h-screen w-64 shrink-0 border-r border-slate-200 bg-white lg:flex lg:flex-col sticky top-0">
+    <aside className="hidden h-screen w-64 shrink-0 border-r border-slate-200 bg-white md:flex md:flex-col sticky top-0">
       {/* BRAND */}
       <div className="flex h-20 shrink-0 items-center border-b border-slate-100 px-5">
         <Link href={roleDashboardPath} className="flex items-center gap-3">
@@ -500,10 +499,6 @@ export default function Sidebar() {
 
       {/* USER & LOGOUT */}
       <div className="shrink-0 border-t border-slate-200 bg-slate-50/50 p-4">
-        {/* Global Language Selector */}
-        <div className="mb-3">
-          <LanguageSelector className="w-full justify-between" />
-        </div>
 
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">

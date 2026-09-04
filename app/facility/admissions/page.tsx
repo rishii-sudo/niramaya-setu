@@ -293,12 +293,9 @@ export default function FacilityAdmissionsPage() {
 
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* ================================================================== */}
-      {/* Header                                                             */}
-      {/* ================================================================== */}
-
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
+        {/* Back Link & Facility Badge */}
+        <div className="mb-6 flex items-center justify-between">
           <Link
             href="/facility/dashboard"
             className="flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
@@ -315,9 +312,7 @@ export default function FacilityAdmissionsPage() {
             District Hospital Jaipur
           </div>
         </div>
-      </header>
 
-      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
         {/* ================================================================= */}
         {/* Page Heading                                                      */}
         {/* ================================================================= */}

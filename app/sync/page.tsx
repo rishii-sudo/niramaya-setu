@@ -309,7 +309,7 @@ export default function SyncCenterPage() {
     <main className="min-h-screen bg-[#f3fafa] text-slate-900">
       <div className="mx-auto max-w-[1180px] px-5 py-5 lg:px-0">
         {/* HEADER */}
-        <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <div className="mb-2 text-xs text-slate-500">
               Dashboard&nbsp;&nbsp;/&nbsp;&nbsp;
@@ -375,7 +375,7 @@ export default function SyncCenterPage() {
               </span>
             </button>
           </div>
-        </header>
+        </div>
 
         {/* CONNECTIVITY */}
         <section className="mt-5 rounded-2xl border border-emerald-100 bg-white px-5 py-4 shadow-sm">
