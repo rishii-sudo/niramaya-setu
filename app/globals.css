@@ -380,24 +380,33 @@ td {
    ========================================================= */
 
 @media print {
+  @page {
+    size: A4;
+    margin: 12mm 15mm;
+  }
+
   html,
   body {
     background: white !important;
+    font-size: 12pt;
+    line-height: 1.4;
   }
 
   body {
     color: #10233f;
-
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  body > div[aria-hidden="true"] {
-    display: none !important;
-  }
-
+  /* Hide app chrome, sidebars, headers, mobile navigation, buttons, and prototype notices during print */
+  header,
+  aside,
+  nav,
+  button,
   .no-print,
-  .print-hidden {
+  .print-hidden,
+  [data-print-hidden="true"],
+  body > div[aria-hidden="true"] {
     display: none !important;
   }
 
@@ -405,7 +414,8 @@ td {
   .shadow-sm,
   .shadow-md,
   .shadow-lg,
-  .shadow-xl {
+  .shadow-xl,
+  .shadow-2xl {
     box-shadow: none !important;
   }
 
@@ -414,6 +424,7 @@ td {
   div {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+    background-color: transparent !important;
   }
 
   input,

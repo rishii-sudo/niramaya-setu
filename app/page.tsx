@@ -56,7 +56,7 @@ const roles = [
     title: "Health Administrator / Partner",
     description: "Monitor district-level referral analytics, security audit trails, and system policies",
     icon: Activity,
-    path: "/dashboard",
+    path: "/admin/login",
   },
 ];
 

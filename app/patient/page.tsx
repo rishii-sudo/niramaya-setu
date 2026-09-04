@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { logoutUser } from "../utils/auth";
+import LanguageSelector from "../components/LanguageSelector";
 
 const patient = {
   name: "Ramesh Kumar",
@@ -192,12 +194,25 @@ export default function PatientPage() {
                 label="Documents"
               />
 
-              <Link
-                href="/login"
-                className="ml-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50"
+              <PatientNavItem
+                href="/appointments"
+                label="Appointments"
+              />
+
+              <PatientNavItem
+                href="/patient/medicines"
+                label="Medicines"
+              />
+
+              <LanguageSelector className="ml-1" />
+
+              <button
+                type="button"
+                onClick={() => logoutUser("patient")}
+                className="ml-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-red-600"
               >
                 Sign out
-              </Link>
+              </button>
             </nav>
           </div>
         </header>
@@ -567,31 +582,10 @@ export default function PatientPage() {
 
         </section>
 
-        {/* =================================================
-            PROTOTYPE NOTICE
-           ================================================= */}
-        <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50/70 px-4 py-3">
-          <div className="flex items-start gap-3">
-            <svg
-              className="mt-0.5 h-4 w-4 shrink-0 text-blue-600"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 10v6" />
-              <path d="M12 7h.01" />
-            </svg>
-
-            <p className="text-xs leading-5 text-blue-800">
-              Patient portal prototype: health measurements, referral state
-              and activity currently use demonstration data. Production
-              access should enforce backend authentication, authorization
-              and consent checks.
-            </p>
-          </div>
-        </div>
+        {/* Subtle note */}
+        <p className="mt-6 text-[11px] text-slate-400">
+          Demo data • Production access enforces backend authentication, authorization and ABDM consent checks.
+        </p>
 
       </div>
     </main>

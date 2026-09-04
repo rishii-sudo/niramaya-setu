@@ -10,6 +10,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { getAllReferralStates } from "@/app/data/referralState";
+import LanguageSelector from "@/app/components/LanguageSelector";
 
 type Priority = "Routine" | "Urgent" | "Emergency";
 
@@ -41,7 +42,7 @@ const referrals: Referral[] = [
     id: "NS-28491",
     patientId: "NS-10284",
     patientName: "Ramesh Kumar",
-    age: 52,
+    age: 54,
     gender: "Male",
     from: "PHC Bassi",
     to: "District Hospital Jaipur",
@@ -55,7 +56,7 @@ const referrals: Referral[] = [
     id: "NS-28478",
     patientId: "NS-10279",
     patientName: "Sunita Devi",
-    age: 46,
+    age: 47,
     gender: "Female",
     from: "PHC Chomu",
     to: "District Hospital Jaipur",
@@ -69,7 +70,7 @@ const referrals: Referral[] = [
     id: "NS-28461",
     patientId: "NS-10271",
     patientName: "Mohan Lal",
-    age: 61,
+    age: 58,
     gender: "Male",
     from: "PHC Bagru",
     to: "District Hospital Jaipur",
@@ -83,7 +84,7 @@ const referrals: Referral[] = [
     id: "NS-28432",
     patientId: "NS-10263",
     patientName: "Kamla Devi",
-    age: 58,
+    age: 61,
     gender: "Female",
     from: "PHC Sanganer",
     to: "District Hospital Jaipur",
@@ -198,12 +199,15 @@ export default function DoctorReferralsPage() {
             </p>
           </div>
 
-          <Link
-            href="/doctor"
-            className="text-sm font-medium text-slate-600 hover:text-slate-900"
-          >
-            Back to Dashboard
-          </Link>
+          <div className="flex items-center gap-3">
+            <LanguageSelector />
+            <Link
+              href="/doctor"
+              className="text-sm font-semibold text-teal-800 hover:text-teal-900"
+            >
+              Back to Dashboard
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -223,14 +227,17 @@ export default function DoctorReferralsPage() {
             />
 
             <NavItem
+              href="/patients"
               label="Patients"
             />
 
             <NavItem
+              href="/doctor"
               label="Treatment"
             />
 
             <NavItem
+              href="/doctor/appointments"
               label="Appointments"
             />
           </nav>

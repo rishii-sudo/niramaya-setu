@@ -89,6 +89,16 @@ export default function FacilityVerifyPage() {
       DEMO_TOKEN,
     );
 
+    localStorage.setItem(
+      "niramaya-facility-auth",
+      "demo-authenticated",
+    );
+
+    localStorage.setItem(
+      "niramaya-active-role",
+      "facility",
+    );
+
     setVerified(true);
 
     window.setTimeout(() => {

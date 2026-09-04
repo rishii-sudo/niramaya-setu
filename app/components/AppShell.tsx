@@ -1,9 +1,52 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import MobileNav from "./MobileNav";
-import { useRole } from "../context/RoleContext";
+import Header from "./Header";
+import AccessGate from "./AccessGate";
+import { useRole, Role } from "../context/RoleContext";
+import { isRoleAuthenticated } from "../utils/auth";
+
+function getProtectedRoleForPath(pathname: string): Role | null {
+  if (
+    pathname === "/dashboard" ||
+    (pathname.startsWith("/admin") &&
+      !pathname.startsWith("/admin/login") &&
+      !pathname.startsWith("/admin/verify"))
+  ) {
+    return "admin";
+  }
+  if (
+    pathname === "/doctor" ||
+    (pathname.startsWith("/doctor") &&
+      !pathname.startsWith("/doctor/login") &&
+      !pathname.startsWith("/doctor/verify"))
+  ) {
+    return "doctor";
+  }
+  if (
+    pathname === "/asha" ||
+    (pathname.startsWith("/asha") &&
+      !pathname.startsWith("/asha/login") &&
+      !pathname.startsWith("/asha/verify"))
+  ) {
+    return "asha";
+  }
+  if (
+    pathname === "/facility" ||
+    (pathname.startsWith("/facility") &&
+      !pathname.startsWith("/facility/login") &&
+      !pathname.startsWith("/facility/verify"))
+  ) {
+    return "facility";
+  }
+  if (pathname === "/patient" || pathname.startsWith("/patient/")) {
+    return "patient";
+  }
+  return null;
+}
 
 export default function AppShell({
   children,
@@ -12,6 +55,11 @@ export default function AppShell({
 }) {
   const pathname = usePathname();
   const { activeRole } = useRole();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isStaffRole =
     activeRole === "asha" ||
@@ -41,6 +89,17 @@ export default function AppShell({
     (pathname === "/facilities" || pathname.startsWith("/facilities/")) &&
     !isStaffRole;
 
+  // Render basic placeholder while mounting to avoid SSR hydration mismatch
+  if (!mounted) {
+    return <div className="relative z-10 min-h-screen">{children}</div>;
+  }
+
+  // PROTECTED ROUTE AUTHENTICATION GATE
+  const protectedRole = getProtectedRoleForPath(pathname);
+  if (protectedRole && !isRoleAuthenticated(protectedRole)) {
+    return <AccessGate requiredRole={protectedRole} pathname={pathname} />;
+  }
+
   if (isAlwaysStandalone || isSharedStandalone) {
     return (
       <div className="relative z-10 min-h-screen">
@@ -61,8 +120,11 @@ export default function AppShell({
         <Sidebar />
 
         {/* Page content */}
-        <div className="min-w-0 flex-1 pb-16 md:pb-0">
-          {children}
+        <div className="min-w-0 flex-1 flex flex-col pb-16 md:pb-0">
+          <Header />
+          <div className="min-w-0 flex-1">
+            {children}
+          </div>
         </div>
       </div>
     </div>

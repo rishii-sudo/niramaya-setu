@@ -16,6 +16,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { doctorsList, Doctor } from "../data/doctorData";
+import LanguageSelector from "../components/LanguageSelector";
 
 const specialties = ["All", "Cardiology", "Maternal & Child Health", "General Medicine", "Pediatrics"];
 
@@ -39,7 +40,7 @@ export default function DoctorsPage() {
       {/* Top Header */}
       <header className="border-b border-slate-200 bg-white sticky top-0 z-30">
         <div className="flex h-16 items-center justify-between px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white font-bold text-xs">
               NS
             </div>
@@ -47,9 +48,10 @@ export default function DoctorsPage() {
               <h1 className="text-sm font-bold text-slate-900">Doctor Directory</h1>
               <p className="text-[10px] text-slate-500">Find Specialists & Book Consultations</p>
             </div>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-3">
+            <LanguageSelector />
             <Link
               href="/appointments"
               className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm"

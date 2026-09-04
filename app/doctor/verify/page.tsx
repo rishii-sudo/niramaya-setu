@@ -70,6 +70,16 @@ export default function DoctorVerifyPage() {
         referralId.trim().toUpperCase()
       );
 
+      localStorage.setItem(
+        "niramaya-doctor-auth",
+        "demo-authenticated"
+      );
+
+      localStorage.setItem(
+        "niramaya-active-role",
+        "doctor"
+      );
+
       router.push("/doctor");
       return;
     }
@@ -433,6 +443,16 @@ export default function DoctorVerifyPage() {
                         localStorage.setItem(
                           "niramaya-doctor-referral",
                           DEMO_REFERRAL
+                        );
+
+                        localStorage.setItem(
+                          "niramaya-doctor-auth",
+                          "demo-authenticated"
+                        );
+
+                        localStorage.setItem(
+                          "niramaya-active-role",
+                          "doctor"
                         );
 
                         router.push("/doctor");

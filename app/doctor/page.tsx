@@ -14,6 +14,9 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
+import { getDynamicGreeting } from "../utils/timeUtils";
+import { useLanguage } from "../context/LanguageContext";
+import LanguageSelector from "../components/LanguageSelector";
 
 type Priority = "Routine" | "Urgent" | "Emergency";
 
@@ -41,7 +44,7 @@ const referrals: Referral[] = [
     id: "NS-28491",
     patientId: "NS-10284",
     patient: "Ramesh Kumar",
-    age: 52,
+    age: 54,
     gender: "Male",
     from: "PHC Bassi",
     department: "Cardiology",
@@ -53,7 +56,7 @@ const referrals: Referral[] = [
     id: "NS-28478",
     patientId: "NS-10279",
     patient: "Sunita Devi",
-    age: 46,
+    age: 47,
     gender: "Female",
     from: "PHC Chomu",
     department: "General Medicine",
@@ -65,7 +68,7 @@ const referrals: Referral[] = [
     id: "NS-28461",
     patientId: "NS-10271",
     patient: "Mohan Lal",
-    age: 61,
+    age: 58,
     gender: "Male",
     from: "PHC Bagru",
     department: "General Medicine",
@@ -77,7 +80,7 @@ const referrals: Referral[] = [
     id: "NS-28432",
     patientId: "NS-10263",
     patient: "Kamla Devi",
-    age: 58,
+    age: 61,
     gender: "Female",
     from: "PHC Sanganer",
     department: "Orthopedics",
@@ -106,6 +109,8 @@ const activity: ActivityItem[] = [
 ];
 
 export default function DoctorDashboardPage() {
+  const { language } = useLanguage();
+
   return (
     <main className="min-h-screen bg-transparent">
       {/* Doctor header */}
@@ -127,7 +132,9 @@ export default function DoctorDashboardPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-5">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <LanguageSelector />
+
             <div className="hidden text-right sm:block">
               <p className="text-sm font-semibold text-slate-900">
                 Dr. Priya Singh
@@ -138,16 +145,15 @@ export default function DoctorDashboardPage() {
               </p>
             </div>
 
-            <button
-              type="button"
+            <Link
+              href="/notifications"
               className="relative rounded-lg p-2 text-slate-500 transition hover:bg-slate-100"
               aria-label="Notifications"
-              onClick={() => {}}
             >
               <Bell size={20} />
 
               <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
-            </button>
+            </Link>
           </div>
         </div>
       </header>
@@ -162,7 +168,7 @@ export default function DoctorDashboardPage() {
             </p>
 
             <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Good morning, Dr. Priya
+              {getDynamicGreeting(language)}, Dr. Priya
             </h1>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">

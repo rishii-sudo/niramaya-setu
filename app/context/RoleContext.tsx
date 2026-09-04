@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { isRoleAuthenticated } from "../utils/auth";
 
 export type Role = "asha" | "doctor" | "facility" | "admin" | "patient" | "public";
 
@@ -20,12 +21,16 @@ const ROLE_STORAGE_KEY = "niramaya-active-role";
 
 export function getRoleFromPathname(pathname: string): Role | null {
   if (pathname === "/asha" || pathname.startsWith("/asha/")) {
+    // Exclude login and verify
+    if (pathname === "/asha/login" || pathname === "/asha/verify") return null;
     return "asha";
   }
   if (pathname === "/doctor" || pathname.startsWith("/doctor/")) {
+    if (pathname === "/doctor/login" || pathname === "/doctor/verify") return null;
     return "doctor";
   }
   if (pathname === "/facility" || pathname.startsWith("/facility/")) {
+    if (pathname === "/facility/login" || pathname === "/facility/verify") return null;
     return "facility";
   }
   if (
@@ -33,6 +38,7 @@ export function getRoleFromPathname(pathname: string): Role | null {
     pathname.startsWith("/admin/") ||
     pathname === "/dashboard"
   ) {
+    if (pathname === "/admin/login" || pathname === "/admin/verify") return null;
     return "admin";
   }
   if (pathname === "/patient" || pathname.startsWith("/patient/")) {
@@ -45,7 +51,8 @@ export function getRoleFromPathname(pathname: string): Role | null {
     pathname === "/doctors" ||
     pathname === "/facilities" ||
     pathname.startsWith("/facilities/") ||
-    pathname === "/appointments"
+    pathname === "/appointments" ||
+    pathname.startsWith("/consultations")
   ) {
     return null; // Public / shared routes - preserve existing role or default to public
   }
@@ -59,15 +66,25 @@ export function RoleProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const pathRole = getRoleFromPathname(pathname);
     if (pathRole) {
-      setActiveRoleState(pathRole);
-      if (typeof window !== "undefined") {
-        localStorage.setItem(ROLE_STORAGE_KEY, pathRole);
+      // URL prefix alone must NOT establish an authenticated role without valid session!
+      if (isRoleAuthenticated(pathRole)) {
+        setActiveRoleState(pathRole);
+        if (typeof window !== "undefined") {
+          localStorage.setItem(ROLE_STORAGE_KEY, pathRole);
+        }
+      } else {
+        // Fresh browser or unauthenticated navigation
+        setActiveRoleState("public");
       }
     } else {
       if (typeof window !== "undefined") {
         const stored = localStorage.getItem(ROLE_STORAGE_KEY) as Role | null;
         if (stored && ["asha", "doctor", "facility", "admin", "patient"].includes(stored)) {
-          setActiveRoleState(stored);
+          if (isRoleAuthenticated(stored)) {
+            setActiveRoleState(stored);
+          } else {
+            setActiveRoleState("public");
+          }
         } else {
           setActiveRoleState("public"); // Default to public, NEVER to admin!
         }

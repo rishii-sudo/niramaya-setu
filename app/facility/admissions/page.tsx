@@ -670,7 +670,7 @@ function AdmissionCard({
           </Link>
 
           <Link
-            href={`/doctor/patients/${patient.patientId}`}
+            href={`/patients/${patient.patientId}`}
             className="inline-flex items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-4 py-2.5 text-sm font-semibold text-teal-700 transition hover:bg-teal-100"
           >
             Patient
@@ -692,10 +692,10 @@ function AdmissionCard({
           {status ===
             "Under Treatment" && (
             <Link
-              href={`/doctor/patients/${patient.patientId}/treatment`}
+              href={`/patients/${patient.patientId}`}
               className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
             >
-              Open Treatment
+              View Clinical Status
               <ArrowRight size={15} />
             </Link>
           )}

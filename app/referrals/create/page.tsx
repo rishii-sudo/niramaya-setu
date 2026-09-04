@@ -4,13 +4,17 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
+  ArrowRight,
   Check,
+  CheckCircle2,
   FileText,
   HeartPulse,
   Hospital,
+  QrCode,
   ShieldCheck,
   Stethoscope,
 } from "lucide-react";
+import LanguageSelector from "../../components/LanguageSelector";
 
 type Patient = {
   id: string;
@@ -24,28 +28,28 @@ const patients: Patient[] = [
   {
     id: "NS-10284",
     name: "Ramesh Kumar",
-    age: 52,
+    age: 54,
     gender: "Male",
     village: "Bassi",
   },
   {
     id: "NS-10279",
     name: "Sunita Devi",
-    age: 46,
+    age: 47,
     gender: "Female",
     village: "Chomu",
   },
   {
     id: "NS-10271",
     name: "Mohan Lal",
-    age: 61,
+    age: 58,
     gender: "Male",
     village: "Bagru",
   },
   {
     id: "NS-10263",
     name: "Kamla Devi",
-    age: 58,
+    age: 61,
     gender: "Female",
     village: "Sanganer",
   },
@@ -239,12 +243,15 @@ export default function CreateReferralPage() {
             Back to Patients
           </Link>
 
-          <div className="flex items-center gap-2 text-sm text-slate-500">
-            <ShieldCheck
-              size={17}
-              className="text-teal-700"
-            />
-            Secure referral workflow
+          <div className="flex items-center gap-3">
+            <LanguageSelector />
+            <div className="hidden sm:flex items-center gap-2 text-sm text-slate-500">
+              <ShieldCheck
+                size={17}
+                className="text-teal-700"
+              />
+              Secure referral workflow
+            </div>
           </div>
         </div>
       </header>

@@ -598,7 +598,7 @@ function ReferralCard({
           </Link>
 
           <Link
-            href={`/doctor/patients/${patient.patientId}`}
+            href={`/patients/${patient.patientId}`}
             className="inline-flex items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-4 py-2.5 text-sm font-semibold text-teal-700 transition hover:bg-teal-100"
           >
             Open Patient

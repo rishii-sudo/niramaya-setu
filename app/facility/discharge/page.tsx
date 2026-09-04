@@ -507,7 +507,7 @@ export default function FacilityDischargePage() {
               </Link>
 
               <Link
-                href="/doctor"
+                href="/facility/incoming-referrals"
                 className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
               >
                 Treatment Queue
@@ -842,28 +842,10 @@ export default function FacilityDischargePage() {
           </div>
         </section>
 
-        {/* Prototype notice */}
-        <section className="rounded-2xl border border-blue-200 bg-blue-50 p-4">
-          <div className="flex gap-3">
-            <div className="mt-0.5 rounded-lg bg-blue-100 px-2.5 py-2 text-blue-700">
-              ⓘ
-            </div>
-
-            <div>
-              <p className="font-semibold text-blue-900">
-                Discharge workflow is prototype data
-              </p>
-
-              <p className="mt-1 text-sm leading-6 text-blue-800">
-                The screen demonstrates the intended discharge and
-                referral-closure workflow. Production implementation
-                should enforce doctor authorization, document
-                validation, consent rules, audit logging and
-                server-side status transitions.
-              </p>
-            </div>
-          </div>
-        </section>
+        {/* Subtle note */}
+        <p className="mt-4 text-[11px] text-slate-400">
+          Demo workflow • Production implementation enforces doctor authorization, document validation, consent rules and audit logging.
+        </p>
       </div>
 
       {/* Review Modal */}

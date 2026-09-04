@@ -320,13 +320,10 @@ export default function AdminUsersPage() {
           </div>
         </div>
 
-        {/* Prototype Disclaimer */}
-        <div className="rounded-xl border border-blue-100 bg-blue-50/70 p-4 text-xs text-blue-800">
-          <p className="font-semibold">Prototype User Management System</p>
-          <p className="mt-0.5 text-[11px] text-blue-700">
-            Role definitions, user credentials, and session policies are managed via frontend prototype state. Production integration requires ABDM-compliant OAuth 2.0 / OpenID Connect identity provider.
-          </p>
-        </div>
+        {/* Subtle note */}
+        <p className="text-[11px] text-slate-400">
+          Demo directory • Production integration uses ABDM-compliant OAuth 2.0 / OpenID Connect identity provider.
+        </p>
 
         {/* Add User Modal */}
         {showAddModal && (

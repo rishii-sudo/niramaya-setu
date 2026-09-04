@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import LanguageSelector from "../../components/LanguageSelector";
 import { useState } from "react";
 
 type DocumentType =
@@ -163,6 +164,8 @@ export default function PatientDocumentsPage() {
                 label="Documents"
                 active
               />
+
+              <LanguageSelector className="ml-1" />
 
               <Link
                 href="/login"

@@ -99,6 +99,16 @@ export default function AshaVerifyPage() {
       "ASHA / ANM"
     );
 
+    localStorage.setItem(
+      "niramaya-asha-auth",
+      "demo-authenticated"
+    );
+
+    localStorage.setItem(
+      "niramaya-active-role",
+      "asha"
+    );
+
     router.push("/asha");
   };
 

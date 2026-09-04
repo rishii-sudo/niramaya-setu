@@ -30,7 +30,7 @@ type PatientRecord = {
 const defaultPatient = {
   id: "NS-10284",
   name: "Ramesh Kumar",
-  age: 47,
+  age: 54,
   gender: "Male",
   bloodGroup: "B+",
   mobile: "+91 98••••••42",
@@ -660,13 +660,9 @@ export default function PatientRecordsPage({
             </aside>
           </div>
 
-          {/* Prototype footer */}
-          <div className="mt-8 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-xs leading-5 text-amber-900">
-            <strong>Prototype Notice:</strong> The clinical information on
-            this page is mock data for the NIRAMAYA-SETU demonstration.
-            Real-world deployment requires validated clinical workflows,
-            secure backend storage, access control, consent management and
-            hospital/ABDM integrations.
+          {/* Demo note */}
+          <div className="no-print mt-6 text-[11px] text-slate-400">
+            Demo clinical records • Production deployment requires ABDM / FHIR R4 clinical compliance.
           </div>
         </div>
       </div>

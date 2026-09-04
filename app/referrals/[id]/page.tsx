@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { getAllReferralStates } from "@/app/data/referralState";
+import LanguageSelector from "@/app/components/LanguageSelector";
 
 type ReferralPageProps = {
   params: Promise<{
@@ -61,7 +62,7 @@ const referrals: Record<string, ReferralRecord> = {
     id: "NS-28491",
     patientId: "NS-10284",
     patientName: "Ramesh Kumar",
-    age: 52,
+    age: 54,
     gender: "Male",
     from: "PHC Bassi",
     to: "District Hospital Jaipur",
@@ -79,7 +80,7 @@ const referrals: Record<string, ReferralRecord> = {
     id: "NS-28478",
     patientId: "NS-10279",
     patientName: "Sunita Devi",
-    age: 46,
+    age: 47,
     gender: "Female",
     from: "PHC Chomu",
     to: "District Hospital Jaipur",
@@ -97,7 +98,7 @@ const referrals: Record<string, ReferralRecord> = {
     id: "NS-28461",
     patientId: "NS-10271",
     patientName: "Mohan Lal",
-    age: 61,
+    age: 58,
     gender: "Male",
     from: "PHC Bagru",
     to: "District Hospital Jaipur",
@@ -115,7 +116,7 @@ const referrals: Record<string, ReferralRecord> = {
     id: "NS-28432",
     patientId: "NS-10263",
     patientName: "Kamla Devi",
-    age: 58,
+    age: 61,
     gender: "Female",
     from: "PHC Sanganer",
     to: "District Hospital Jaipur",
@@ -395,12 +396,15 @@ export default function ReferralDetailPage({
             Back to Referrals
           </Link>
 
-          <div className="flex items-center gap-2 text-sm text-slate-500">
-            <ShieldCheck
-              size={17}
-              className="text-teal-700"
-            />
-            Consent-based referral access
+          <div className="flex items-center gap-4">
+            <LanguageSelector />
+            <div className="hidden sm:flex items-center gap-2 text-sm text-slate-500">
+              <ShieldCheck
+                size={17}
+                className="text-teal-700"
+              />
+              Consent-based referral access
+            </div>
           </div>
         </div>
       </header>

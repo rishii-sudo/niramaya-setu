@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   Activity,
@@ -10,6 +12,8 @@ import {
   RefreshCw,
   Users,
 } from "lucide-react";
+import { getDynamicGreeting } from "../utils/timeUtils";
+import { useLanguage } from "../context/LanguageContext";
 
 const careJourney = [
   {
@@ -65,19 +69,21 @@ const activities = [
   },
 ];
 
-export default function AshaDashboard() {
+export default function AshaDashboardPage() {
+  const { language } = useLanguage();
+
   return (
     <main className="min-h-screen bg-transparent">
-      <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
+      <div className="space-y-6">
         {/* HEADER */}
-        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.28em] text-teal-700">
               ASHA / ANM DASHBOARD
             </p>
 
             <h1 className="text-3xl font-bold tracking-tight text-slate-950">
-              Good morning
+              {getDynamicGreeting(language)}
             </h1>
 
             <p className="mt-1 text-sm text-slate-500">
@@ -322,24 +328,10 @@ export default function AshaDashboard() {
           </div>
         </section>
 
-        {/* PROTOTYPE NOTICE */}
-        <div className="mt-5 flex gap-3 rounded-2xl border border-blue-200 bg-blue-50/70 px-4 py-4">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-            <Activity size={17} />
-          </div>
-
-          <div>
-            <p className="text-xs font-bold text-blue-800">
-              Dashboard workflow is prototype data
-            </p>
-            <p className="mt-1 text-[11px] leading-5 text-blue-700">
-              Patient counts, referral states and activity shown here are
-              frontend demo data. Production implementation should connect
-              these values to authenticated backend APIs, authorization rules
-              and audit logging.
-            </p>
-          </div>
-        </div>
+        {/* Subtle Prototype Note */}
+        <p className="pt-2 text-center text-[11px] text-slate-400">
+          ASHA / ANM Field Care Console • Demo dataset connected to prototype state
+        </p>
       </div>
     </main>
   );

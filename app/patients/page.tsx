@@ -28,7 +28,7 @@ const patients: Patient[] = [
   {
     id: "NS-10284",
     name: "Ramesh Kumar",
-    age: 52,
+    age: 54,
     gender: "Male",
     village: "Bassi",
     status: "Active Referral",
@@ -39,7 +39,7 @@ const patients: Patient[] = [
   {
     id: "NS-10279",
     name: "Sunita Devi",
-    age: 46,
+    age: 47,
     gender: "Female",
     village: "Chomu",
     status: "Follow-up Due",
@@ -50,7 +50,7 @@ const patients: Patient[] = [
   {
     id: "NS-10271",
     name: "Mohan Lal",
-    age: 61,
+    age: 58,
     gender: "Male",
     village: "Bagru",
     status: "Stable",
@@ -61,7 +61,7 @@ const patients: Patient[] = [
   {
     id: "NS-10263",
     name: "Kamla Devi",
-    age: 58,
+    age: 61,
     gender: "Female",
     village: "Sanganer",
     status: "Referral Closed",

@@ -734,28 +734,10 @@ export default function DiagnosticsPage() {
           </div>
         </section>
 
-        {/* Security / prototype notice */}
-        <section className="rounded-2xl border border-blue-200 bg-blue-50 p-4">
-          <div className="flex gap-3">
-            <div className="mt-0.5 rounded-lg bg-blue-100 px-2.5 py-2 text-blue-700">
-              ⓘ
-            </div>
-
-            <div>
-              <p className="font-semibold text-blue-900">
-                Diagnostic workflow is currently demo data
-              </p>
-
-              <p className="mt-1 text-sm leading-6 text-blue-800">
-                This prototype screen demonstrates how the facility
-                can track test availability, queues and reports. Real
-                LIS/RIS/PACS integrations, machine results and signed
-                clinical reports will be connected in the backend
-                implementation.
-              </p>
-            </div>
-          </div>
-        </section>
+        {/* Subtle note */}
+        <p className="mt-4 text-[11px] text-slate-400">
+          Demo data • LIS/RIS/PACS integrations, machine results and signed clinical reports planned for backend implementation.
+        </p>
       </div>
 
       {/* Test detail modal */}

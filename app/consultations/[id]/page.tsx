@@ -15,10 +15,9 @@ import {
   User,
   Stethoscope,
   FileText,
-  MessageSquare,
-  Volume2,
   AlertTriangle,
-  Sparkles,
+  ArrowLeft,
+  Volume2,
 } from "lucide-react";
 import {
   getStoredAppointments,
@@ -26,6 +25,8 @@ import {
   generateTempPatientId,
   generateTempDoctorId,
 } from "../../data/doctorData";
+import LanguageSelector from "../../components/LanguageSelector";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function ConsultationRoomPage({
   params,
@@ -35,33 +36,40 @@ export default function ConsultationRoomPage({
   const resolvedParams = use(params);
   const router = useRouter();
   const sessionId = resolvedParams.id;
+  const { t } = useLanguage();
 
   const [appointment, setAppointment] = useState<Appointment | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [activeMode, setActiveMode] = useState<"Video" | "Audio">("Video");
   const [secondsElapsed, setSecondsElapsed] = useState(0);
-  const [notes, setNotes] = useState(
-    "Patient reports mild morning chest discomfort. BP stabilized at 128/82 mmHg. Advised to continue Tab Amlodipine 5mg and maintain low sodium intake."
-  );
+  const [notes, setNotes] = useState("");
   const [showNotes, setShowNotes] = useState(true);
 
   useEffect(() => {
     const all = getStoredAppointments();
-    const match = all.find((a) => a.consultationSessionId === sessionId || a.id === sessionId);
+    const match = all.find(
+      (a) => a.consultationSessionId === sessionId || a.id === sessionId
+    );
     if (match) {
       setAppointment(match);
       if (match.mode === "Audio") setActiveMode("Audio");
+      setNotes(
+        `Consultation reason: ${match.reason || "Specialist clinical consultation"}\nInitial assessment:`
+      );
     }
+    setIsLoaded(true);
   }, [sessionId]);
 
   // Consultation timer
   useEffect(() => {
+    if (!appointment) return;
     const timer = setInterval(() => {
       setSecondsElapsed((prev) => prev + 1);
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [appointment]);
 
   const formatTime = (totalSeconds: number) => {
     const mins = Math.floor(totalSeconds / 60);
@@ -75,9 +83,77 @@ export default function ConsultationRoomPage({
     }
   };
 
-  const patientName = appointment?.patientName || "Ramesh Kumar";
-  const doctorName = appointment?.doctorName || "Dr. Rajesh Sharma";
-  const doctorSpecialty = appointment?.doctorSpecialty || "Cardiology";
+  // If page is loaded and no appointment matches this session ID
+  if (isLoaded && !appointment) {
+    return (
+      <main className="min-h-screen bg-slate-950 text-white flex flex-col justify-between">
+        <header className="border-b border-slate-800/80 bg-slate-900/90 px-4 py-3 backdrop-blur">
+          <div className="mx-auto flex max-w-7xl items-center justify-between">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-600 text-white font-bold text-xs">
+                NS
+              </div>
+              <div>
+                <h1 className="text-xs font-bold tracking-tight text-white sm:text-sm">
+                  NIRAMAYA-SETU
+                </h1>
+                <p className="text-[10px] text-slate-400">Tele-Health Consultation Portal</p>
+              </div>
+            </Link>
+
+            <div className="flex items-center gap-3">
+              <LanguageSelector />
+              <Link
+                href="/appointments"
+                className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition"
+              >
+                <ArrowLeft size={13} />
+                Appointments
+              </Link>
+            </div>
+          </div>
+        </header>
+
+        <section className="mx-auto max-w-lg p-6 my-auto text-center">
+          <div className="rounded-3xl border border-rose-900/40 bg-slate-900/90 p-8 shadow-2xl backdrop-blur">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20 mb-4">
+              <AlertTriangle size={32} />
+            </div>
+            <h2 className="text-lg font-bold text-white">Invalid or Expired Consultation</h2>
+            <p className="mt-2 text-xs text-slate-300 leading-relaxed">
+              The consultation session identifier <code className="font-mono text-rose-300 bg-slate-950 px-2 py-0.5 rounded border border-rose-900/50">{sessionId}</code> does not correspond to an active appointment or has expired.
+            </p>
+            <p className="mt-2 text-[11px] text-slate-400">
+              To protect patient privacy, no clinical records or tele-consultation data are exposed for invalid sessions.
+            </p>
+
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/appointments"
+                className="rounded-xl bg-teal-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-teal-700 transition"
+              >
+                View Active Appointments
+              </Link>
+              <Link
+                href="/"
+                className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition"
+              >
+                Return to Home
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <footer className="border-t border-slate-800 bg-slate-900/80 py-3 text-center text-[10px] text-slate-500">
+          NIRAMAYA-SETU Privacy Guard • Real session authorization and token validation handled on backend
+        </footer>
+      </main>
+    );
+  }
+
+  const patientName = appointment?.patientName || "Patient";
+  const doctorName = appointment?.doctorName || "Doctor";
+  const doctorSpecialty = appointment?.doctorSpecialty || "Specialist";
   const tempPatientId = appointment?.temporaryPatientId || generateTempPatientId();
   const tempDoctorId = appointment?.temporaryDoctorId || generateTempDoctorId();
 
@@ -87,9 +163,9 @@ export default function ConsultationRoomPage({
       <header className="border-b border-slate-800/80 bg-slate-900/90 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-600 text-white font-bold text-xs">
+            <Link href="/" className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-600 text-white font-bold text-xs">
               NS
-            </div>
+            </Link>
             <div>
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -107,6 +183,8 @@ export default function ConsultationRoomPage({
           </div>
 
           <div className="flex items-center gap-3">
+            <LanguageSelector />
+
             {/* Timer */}
             <div className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-mono font-bold text-slate-200">
               <Clock size={13} className="text-teal-400" />

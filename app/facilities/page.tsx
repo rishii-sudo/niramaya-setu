@@ -18,6 +18,7 @@ import {
   AlertCircle,
   Phone,
 } from "lucide-react";
+import LanguageSelector from "../components/LanguageSelector";
 
 type Facility = {
   id: string;
@@ -245,17 +246,23 @@ export default function FacilitiesPage() {
     <main className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="border-b border-slate-200 bg-white sticky top-0 z-30">
-        <div className="flex h-16 items-center justify-between px-5 sm:px-6 lg:px-8">
-          <div>
-            <h1 className="text-base font-bold text-slate-900">
-              Nearby Healthcare Discovery
-            </h1>
-            <p className="text-[10px] text-slate-500">
-              NIRAMAYA-SETU / Rural Health Facilities
-            </p>
-          </div>
+        <div className="flex h-16 items-center justify-between px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white font-bold text-xs">
+              NS
+            </div>
+            <div>
+              <h1 className="text-base font-bold text-slate-900">
+                Nearby Healthcare Discovery
+              </h1>
+              <p className="text-[10px] text-slate-500">
+                NIRAMAYA-SETU / Rural Health Facilities
+              </p>
+            </div>
+          </Link>
 
           <div className="flex items-center gap-3">
+            <LanguageSelector />
             <button
               type="button"
               onClick={requestGeolocation}

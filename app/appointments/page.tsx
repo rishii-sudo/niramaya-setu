@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   Phone,
   Filter,
+  UserCheck,
 } from "lucide-react";
 import {
   doctorsList,
@@ -34,6 +35,14 @@ import {
   isFutureDay,
   CURRENT_TEST_DATE_STR,
 } from "../data/doctorData";
+import LanguageSelector from "../components/LanguageSelector";
+
+const CANONICAL_DEMO_PATIENTS = [
+  { name: "Ramesh Kumar", id: "NS-10284", age: 54, mobile: "9876543210" },
+  { name: "Sunita Devi", id: "NS-10279", age: 47, mobile: "9876543211" },
+  { name: "Mohan Lal", id: "NS-10271", age: 58, mobile: "9876543212" },
+  { name: "Kamla Devi", id: "NS-10263", age: 61, mobile: "9876543213" },
+];
 
 function AppointmentsPageContent() {
   const searchParams = useSearchParams();
@@ -52,6 +61,8 @@ function AppointmentsPageContent() {
   const [patientName, setPatientName] = useState("");
   const [patientMobile, setPatientMobile] = useState("");
   const [activePatientId, setActivePatientId] = useState("");
+  const [hasPatientSession, setHasPatientSession] = useState(false);
+  const [formError, setFormError] = useState("");
   const [reason, setReason] = useState("Routine specialist consultation and clinical follow-up");
   const [bookingSuccess, setBookingSuccess] = useState(false);
 
@@ -63,22 +74,36 @@ function AppointmentsPageContent() {
     const storedAuth = localStorage.getItem("niramaya-patient-auth");
     const registeredPatients = JSON.parse(localStorage.getItem("niramaya_patients") || "[]");
 
-    if (storedMobile) {
-      const match = registeredPatients.find((p: { mobile?: string; phone?: string }) => p.mobile === storedMobile || p.phone === storedMobile);
-      if (match) {
-        setPatientName(match.name || "Demo Patient");
-        setPatientMobile(storedMobile);
-        setActivePatientId(match.id || `NS-${Math.floor(10000 + Math.random() * 90000)}`);
+    if (storedAuth || storedMobile) {
+      if (storedMobile) {
+        const match = registeredPatients.find(
+          (p: { mobile?: string; phone?: string; name?: string; id?: string }) =>
+            p.mobile === storedMobile || p.phone === storedMobile
+        );
+        if (match) {
+          setPatientName(match.name || "Demo Patient");
+          setPatientMobile(storedMobile);
+          setActivePatientId(match.id || "NS-10284");
+          setHasPatientSession(true);
+        } else {
+          setPatientName("Verified Patient");
+          setPatientMobile(storedMobile);
+          setActivePatientId("NS-10284");
+          setHasPatientSession(true);
+        }
       } else {
+        // Auth flag present without mobile
         setPatientName("Verified Patient");
-        setPatientMobile(storedMobile);
-        setActivePatientId(`NS-${Math.floor(10000 + Math.random() * 90000)}`);
+        setPatientMobile("9876543210");
+        setActivePatientId("NS-10284");
+        setHasPatientSession(true);
       }
     } else {
-      // Prototype fallback when booking without prior login
-      setPatientName("Patient Applicant");
-      setPatientMobile("98XXXXXX21");
-      setActivePatientId(`NS-${Math.floor(10000 + Math.random() * 90000)}`);
+      // No active patient session - require explicit demo selection or manual input
+      setHasPatientSession(false);
+      setPatientName("");
+      setPatientMobile("");
+      setActivePatientId("");
     }
 
     if (searchParams.get("doctorId")) {
@@ -88,11 +113,27 @@ function AppointmentsPageContent() {
 
   const selectedDoctor = doctorsList.find((d) => d.id === selectedDoctorId) || doctorsList[0];
 
+  const handleSelectDemoPatient = (p: typeof CANONICAL_DEMO_PATIENTS[0]) => {
+    setPatientName(p.name);
+    setPatientMobile(p.mobile);
+    setActivePatientId(p.id);
+    setFormError("");
+  };
+
   const handleBookAppointment = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!patientName.trim()) {
+      setFormError("Please select a verified patient profile or enter patient name.");
+      return;
+    }
+    if (!patientMobile.trim()) {
+      setFormError("Please provide a valid registered mobile number.");
+      return;
+    }
+
     const assignedPatientId = activePatientId || `NS-${Math.floor(10000 + Math.random() * 90000)}`;
-    const finalPatientName = patientName.trim() || "Applicant Patient";
+    const finalPatientName = patientName.trim();
 
     const newAppointment: Appointment = {
       id: `APT-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -117,6 +158,7 @@ function AppointmentsPageContent() {
     saveAppointment(newAppointment);
     setAppointments(getStoredAppointments());
     setBookingSuccess(true);
+    setFormError("");
 
     setTimeout(() => {
       setBookingSuccess(false);
@@ -132,7 +174,6 @@ function AppointmentsPageContent() {
   const filteredAppointments = appointments.filter((apt) => {
     if (activeTab === "All") return true;
     if (activeTab === "Confirmed") {
-      // Upcoming tab: must be Confirmed and on or after today (05 Sep 2026)
       return apt.status === "Confirmed" && (isSameDay(apt.date) || isFutureDay(apt.date));
     }
     if (activeTab === "Completed") return apt.status === "Completed";
@@ -145,7 +186,7 @@ function AppointmentsPageContent() {
       {/* Header */}
       <header className="border-b border-slate-200 bg-white sticky top-0 z-30">
         <div className="flex h-16 items-center justify-between px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white font-bold text-xs">
               NS
             </div>
@@ -153,12 +194,16 @@ function AppointmentsPageContent() {
               <h1 className="text-sm font-bold text-slate-900">Patient Appointments</h1>
               <p className="text-[10px] text-slate-500">Tele-Health & In-Person Specialist Care</p>
             </div>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-3">
+            <LanguageSelector />
             <button
               type="button"
-              onClick={() => setShowBookingModal(true)}
+              onClick={() => {
+                setFormError("");
+                setShowBookingModal(true);
+              }}
               className="flex items-center gap-1.5 rounded-xl bg-teal-700 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-teal-800 transition"
             >
               <Plus size={15} />
@@ -222,83 +267,87 @@ function AppointmentsPageContent() {
                       >
                         {apt.status}
                       </span>
-                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600">
-                        {apt.mode} Consultation
+                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
+                        {apt.mode}
                       </span>
                     </div>
 
-                    <span className="font-mono text-xs font-semibold text-slate-400">
-                      {apt.id}
-                    </span>
+                    <div className="text-right">
+                      <div className="flex items-center gap-1 text-xs font-bold text-slate-900">
+                        <Calendar size={13} className="text-teal-600" />
+                        <span>{apt.date}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-[11px] text-slate-500 justify-end">
+                        <Clock size={11} />
+                        <span>{apt.timeSlot}</span>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Doctor & Specialty */}
-                  <div className="mt-4 flex items-start gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700 font-bold">
-                      <Stethoscope size={20} />
+                  {/* Doctor & Facility */}
+                  <div className="mt-4 flex items-start gap-3.5">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-teal-50 text-teal-700 font-bold border border-teal-100">
+                      <Stethoscope size={22} />
                     </div>
                     <div>
                       <h3 className="text-base font-bold text-slate-900">{apt.doctorName}</h3>
                       <p className="text-xs font-semibold text-teal-700">{apt.doctorSpecialty}</p>
-                      <p className="text-[11px] text-slate-500">{apt.facilityName}</p>
+                      <p className="mt-0.5 flex items-center gap-1 text-[11px] text-slate-500">
+                        <Building2 size={12} />
+                        {apt.facilityName}
+                      </p>
                     </div>
                   </div>
 
-                  {/* Schedule Details */}
-                  <div className="mt-4 grid grid-cols-2 gap-2 rounded-2xl bg-slate-50 p-3 text-xs">
-                    <div className="flex items-center gap-2">
-                      <Calendar size={14} className="text-slate-400 shrink-0" />
-                      <span className="font-semibold text-slate-700">{apt.date}</span>
+                  {/* Patient Info Card */}
+                  <div className="mt-4 rounded-2xl border border-slate-100 bg-slate-50/80 p-3 text-xs space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Patient:</span>
+                      <span className="font-semibold text-slate-800">{apt.patientName}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Clock size={14} className="text-slate-400 shrink-0" />
-                      <span className="font-semibold text-slate-700">{apt.timeSlot}</span>
+                    <div className="flex justify-between font-mono text-[10px]">
+                      <span className="text-slate-500">Patient ID:</span>
+                      <span className="text-slate-700">{apt.patientId}</span>
                     </div>
-                  </div>
-
-                  {/* Temporary Privacy Session Box */}
-                  <div className="mt-3 rounded-2xl border border-teal-100 bg-teal-50/50 p-3 text-[11px]">
-                    <div className="flex items-center justify-between text-teal-900 font-semibold">
-                      <span>Temporary Session ID:</span>
-                      <span className="font-mono font-bold text-teal-800">{apt.consultationSessionId}</span>
-                    </div>
-                    <div className="mt-1 flex items-center justify-between text-slate-500 text-[10px]">
-                      <span>Patient Token: {apt.temporaryPatientId}</span>
-                      <span>Doctor Token: {apt.temporaryDoctorId}</span>
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-slate-500">Reason:</span>
+                      <span className="text-slate-700 italic truncate max-w-[200px]">{apt.reason}</span>
                     </div>
                   </div>
-
-                  {/* Reason */}
-                  <p className="mt-3 text-xs text-slate-600">
-                    <strong className="text-slate-700">Reason:</strong> {apt.reason}
-                  </p>
                 </div>
 
                 {/* Actions */}
-                <div className="mt-5 pt-3 border-t border-slate-100 flex flex-wrap gap-2">
-                  {apt.status === "Confirmed" && (apt.mode === "Video" || apt.mode === "Audio") && (
-                    <Link
-                      href={`/consultations/${apt.consultationSessionId}`}
-                      className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-teal-700 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-teal-800 transition"
-                    >
-                      <Video size={14} />
-                      Join Consultation
-                    </Link>
-                  )}
-
+                <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
                   {apt.status === "Confirmed" && (
-                    <button
-                      type="button"
-                      onClick={() => handleCancel(apt.id)}
-                      className="rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-700 hover:bg-red-100 transition"
-                    >
-                      Cancel
-                    </button>
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => handleCancel(apt.id)}
+                        className="text-xs font-semibold text-rose-600 hover:text-rose-800"
+                      >
+                        Cancel
+                      </button>
+
+                      {apt.consultationSessionId && (
+                        <Link
+                          href={`/consultations/${apt.consultationSessionId}`}
+                          className="flex items-center gap-1.5 rounded-xl bg-teal-700 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-teal-800 transition"
+                        >
+                          <Video size={14} />
+                          Enter Consultation Room
+                        </Link>
+                      )}
+                    </>
                   )}
 
                   {apt.status === "Completed" && (
                     <span className="text-xs font-medium text-slate-400 self-center">
-                      Consultation completed • Notes available in health records
+                      Consultation completed • Clinical record updated
+                    </span>
+                  )}
+                  {apt.status === "Cancelled" && (
+                    <span className="text-xs font-medium text-rose-400 self-center">
+                      Appointment cancelled
                     </span>
                   )}
                 </div>
@@ -312,7 +361,10 @@ function AppointmentsPageContent() {
             <p className="mt-1 text-xs text-slate-400">Schedule your consultation with a verified medical specialist.</p>
             <button
               type="button"
-              onClick={() => setShowBookingModal(true)}
+              onClick={() => {
+                setFormError("");
+                setShowBookingModal(true);
+              }}
               className="mt-4 rounded-xl bg-teal-700 px-5 py-2.5 text-xs font-bold text-white hover:bg-teal-800"
             >
               Book New Appointment
@@ -320,12 +372,12 @@ function AppointmentsPageContent() {
           </div>
         )}
 
-        {/* Prototype Notice */}
-        <div className="rounded-xl border border-blue-100 bg-blue-50/70 p-4 text-xs text-blue-800">
-          <p className="font-semibold">Privacy-Preserving Prototype Appointment System</p>
-          <p className="mt-0.5 text-[11px] text-blue-700">
-            Appointments generate temporary session IDs (<code className="font-mono">NIR-CON-XXXXXX</code>) to protect patient identity and prevent raw telephone number sharing. Real-time tele-video utilizes our prototype WebRTC consultation room.
-          </p>
+        {/* Subtle Demo Note */}
+        <div className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-white p-3.5 text-xs text-slate-600">
+          <ShieldCheck size={16} className="text-teal-600 shrink-0" />
+          <span>
+            Privacy-Preserving Tele-Consultation: Appointments generate temporary session IDs (<code className="font-mono text-teal-800 bg-slate-100 px-1.5 py-0.5 rounded">NIR-CON-XXXXXX</code>) to protect patient phone privacy.
+          </span>
         </div>
 
         {/* Booking Modal */}
@@ -335,7 +387,7 @@ function AppointmentsPageContent() {
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
                   <h3 className="text-lg font-bold text-slate-900">Book Doctor Appointment</h3>
-                  <p className="text-xs text-slate-500">Select specialist, mode, and preferred time slot</p>
+                  <p className="text-xs text-slate-500">Select specialist, mode, and patient details</p>
                 </div>
                 <button
                   type="button"
@@ -353,11 +405,69 @@ function AppointmentsPageContent() {
                   </div>
                   <h4 className="mt-4 text-base font-bold text-slate-900">Appointment Confirmed!</h4>
                   <p className="mt-1 text-xs text-slate-500">
-                    Temporary consultation session ID generated. Redirecting to your appointments list...
+                    Temporary consultation session ID generated. Updating your appointments...
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleBookAppointment} className="mt-5 space-y-4 text-xs">
+                  {formError && (
+                    <div className="rounded-xl border border-rose-200 bg-rose-50 p-2.5 text-xs font-semibold text-rose-700">
+                      {formError}
+                    </div>
+                  )}
+
+                  {/* Patient Profile Selection Block */}
+                  {hasPatientSession ? (
+                    <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-3 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <UserCheck size={16} className="text-emerald-700 shrink-0" />
+                        <div>
+                          <div className="font-bold text-emerald-900">{patientName}</div>
+                          <div className="text-[10px] text-emerald-700 font-mono">
+                            ID: {activePatientId} • {patientMobile}
+                          </div>
+                        </div>
+                      </div>
+                      <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
+                        Active Profile
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-3.5 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-amber-900 text-xs">Patient Context Required</span>
+                        <Link
+                          href="/patient/login"
+                          className="text-[11px] font-bold text-teal-800 hover:underline"
+                        >
+                          Sign in with OTP →
+                        </Link>
+                      </div>
+                      <p className="text-[11px] text-amber-800">
+                        No active session detected. Select a verified demo patient or fill in applicant details below:
+                      </p>
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        {CANONICAL_DEMO_PATIENTS.map((p) => (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => handleSelectDemoPatient(p)}
+                            className={`rounded-xl border p-2 text-left transition ${
+                              activePatientId === p.id
+                                ? "border-teal-700 bg-teal-100/70 text-teal-900 font-bold"
+                                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                            }`}
+                          >
+                            <div className="text-xs font-semibold">{p.name}</div>
+                            <div className="text-[10px] text-slate-500 font-mono">
+                              {p.id} • {p.age} yrs
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Select Doctor */}
                   <div>
                     <label className="mb-1.5 block font-semibold text-slate-700">Select Doctor / Specialist</label>
@@ -435,7 +545,11 @@ function AppointmentsPageContent() {
                         type="text"
                         required
                         value={patientName}
-                        onChange={(e) => setPatientName(e.target.value)}
+                        onChange={(e) => {
+                          setPatientName(e.target.value);
+                          setFormError("");
+                        }}
+                        placeholder="e.g. Ramesh Kumar"
                         className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-teal-600"
                       />
                     </div>
@@ -445,7 +559,11 @@ function AppointmentsPageContent() {
                         type="text"
                         required
                         value={patientMobile}
-                        onChange={(e) => setPatientMobile(e.target.value)}
+                        onChange={(e) => {
+                          setPatientMobile(e.target.value);
+                          setFormError("");
+                        }}
+                        placeholder="e.g. 9876543210"
                         className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-teal-600"
                       />
                     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import LanguageSelector from "../../components/LanguageSelector";
 
 const patient = {
   name: "Ramesh Kumar",
@@ -138,6 +139,8 @@ export default function PatientProgressPage() {
                 href="/patient/documents"
                 label="Documents"
               />
+
+              <LanguageSelector className="ml-1" />
 
               <Link
                 href="/login"

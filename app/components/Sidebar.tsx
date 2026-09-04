@@ -30,6 +30,7 @@ import {
 import { useRole, Role } from "../context/RoleContext";
 import { useLanguage } from "../context/LanguageContext";
 import { logoutUser } from "../utils/auth";
+import LanguageSelector from "./LanguageSelector";
 
 type NavItem = {
   label: string;
@@ -179,8 +180,8 @@ function getRoleConfig(role: Role) {
                 icon: <Activity size={18} />,
               },
               {
-                label: "Discharge",
-                href: "/facility/discharge",
+                label: "Discharge & Referrals",
+                href: "/doctor/referrals",
                 icon: <FileCheck2 size={18} />,
               },
             ],
@@ -266,7 +267,7 @@ function getRoleConfig(role: Role) {
             items: [
               {
                 label: "Treatment Queue",
-                href: "/doctor",
+                href: "/facility/incoming-referrals",
                 icon: <Activity size={18} />,
               },
               {
@@ -318,7 +319,7 @@ function getRoleConfig(role: Role) {
               },
               {
                 label: "Analytics",
-                href: "/dashboard",
+                href: "/admin/analytics",
                 icon: <BarChart3 size={18} />,
               },
             ],
@@ -499,6 +500,11 @@ export default function Sidebar() {
 
       {/* USER & LOGOUT */}
       <div className="shrink-0 border-t border-slate-200 bg-slate-50/50 p-4">
+        {/* Global Language Selector */}
+        <div className="mb-3">
+          <LanguageSelector className="w-full justify-between" />
+        </div>
+
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-xs font-bold text-teal-800">

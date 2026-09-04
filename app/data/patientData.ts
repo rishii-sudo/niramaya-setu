@@ -151,7 +151,7 @@ export const patients: Record<string, PatientRecord> = {
   "NS-10284": {
     name: "Ramesh Kumar",
     patientId: "NS-10284",
-    age: 52,
+    age: 54,
     gender: "Male",
     bloodGroup: "B+",
     village: "Bassi, Jaipur",
@@ -356,7 +356,7 @@ export const patients: Record<string, PatientRecord> = {
   "NS-10279": {
     name: "Sunita Devi",
     patientId: "NS-10279",
-    age: 46,
+    age: 47,
     gender: "Female",
     bloodGroup: "A+",
     village: "Chomu, Jaipur",
@@ -528,7 +528,7 @@ export const patients: Record<string, PatientRecord> = {
   "NS-10271": {
     name: "Mohan Lal",
     patientId: "NS-10271",
-    age: 61,
+    age: 58,
     gender: "Male",
     bloodGroup: "O+",
     village: "Bagru, Jaipur",
@@ -659,7 +659,7 @@ export const patients: Record<string, PatientRecord> = {
   "NS-10263": {
     name: "Kamla Devi",
     patientId: "NS-10263",
-    age: 58,
+    age: 61,
     gender: "Female",
     bloodGroup: "B-",
     village: "Sanganer, Jaipur",

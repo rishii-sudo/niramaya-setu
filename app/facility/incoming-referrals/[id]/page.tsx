@@ -613,10 +613,10 @@ export default function FacilityIntakePage({
                 currentStatus ===
                   "Under Treatment") && (
                 <Link
-                  href={`/doctor/patients/${currentPatient.patientId}/treatment`}
+                  href={`/patients/${currentPatient.patientId}`}
                   className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-3 text-sm font-semibold text-teal-700 transition hover:bg-teal-50"
                 >
-                  Open Treatment Workspace
+                  View Clinical Records
                   <ArrowRight size={16} />
                 </Link>
               )}

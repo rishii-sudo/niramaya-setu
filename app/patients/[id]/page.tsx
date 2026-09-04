@@ -9,7 +9,7 @@ type Status = "Normal" | "Abnormal" | "Pending" | "Active";
 const defaultPatient = {
   id: "NS-10284",
   name: "Ramesh Kumar",
-  age: 47,
+  age: 54,
   gender: "Male",
   bloodGroup: "B+",
   mobile: "+91 98••••••42",
@@ -800,11 +800,8 @@ export default function DoctorPatientPage({
           </div>
         </section>
 
-        <div className="mt-6 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-xs leading-5 text-amber-900">
-          <strong>Prototype Notice:</strong> Clinical information shown here
-          is mock data for the NIRAMAYA-SETU demonstration. Production use
-          requires authenticated access, consent enforcement, validated
-          clinical workflows, secure storage and audit logging.
+        <div className="no-print mt-6 text-[11px] text-slate-400">
+          Demo clinical summary • Production deployment requires authenticated access and clinical audit logging.
         </div>
       </div>
     </div>
