@@ -2,9 +2,12 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useRole } from "../context/RoleContext";
+import { clearStaffSessionKeys } from "../utils/auth";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { setActiveRole } = useRole();
 
   const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState("");
@@ -49,8 +52,16 @@ export default function LoginPage() {
     setLoading(true);
 
     setTimeout(() => {
+      // Clear previous active staff portal session context
+      clearStaffSessionKeys();
+
+      // Establish authenticated patient credentials and role
       localStorage.setItem("niramaya-patient-mobile", mobile);
       localStorage.setItem("niramaya-patient-auth", "demo-authenticated");
+      localStorage.setItem("niramaya-active-role", "patient");
+
+      // Update RoleContext active state
+      setActiveRole("patient");
 
       setLoading(false);
       setVerified(true);
@@ -352,10 +363,21 @@ export default function LoginPage() {
                         />
                       </div>
 
-                      <p className="mt-2 text-[10px] text-slate-400">
-                        Use the mobile number registered with your patient
-                        record.
-                      </p>
+                      <div className="mt-2 flex items-center justify-between">
+                        <p className="text-[10px] text-slate-400">
+                          Use the mobile number registered with your patient record.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMobile("9876543210");
+                            setError("");
+                          }}
+                          className="text-[10px] font-semibold text-teal-700 hover:text-teal-800"
+                        >
+                          Demo: 9876543210
+                        </button>
+                      </div>
                     </div>
 
                     {error && <ErrorMessage message={error} />}

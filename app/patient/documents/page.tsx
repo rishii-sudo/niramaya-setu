@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import LanguageSelector from "../../components/LanguageSelector";
 import { useState } from "react";
+import { logoutUser } from "../../utils/auth";
 
 type DocumentType =
   | "Health Summary"
@@ -88,10 +90,16 @@ const patient = {
 };
 
 export default function PatientDocumentsPage() {
+  const router = useRouter();
   const [selectedDocument, setSelectedDocument] =
     useState<DocumentItem | null>(null);
 
   const [printing, setPrinting] = useState(false);
+
+  const handleLogout = () => {
+    const target = logoutUser("patient");
+    router.push(target);
+  };
 
   const handlePrint = (document: DocumentItem) => {
     if (!document.available) return;
@@ -165,14 +173,25 @@ export default function PatientDocumentsPage() {
                 active
               />
 
+              <PatientNav
+                href="/appointments"
+                label="Appointments"
+              />
+
+              <PatientNav
+                href="/patient/medicines"
+                label="Medicines"
+              />
+
               <LanguageSelector className="ml-1" />
 
-              <Link
-                href="/login"
-                className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50"
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="ml-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-red-600"
               >
                 Sign out
-              </Link>
+              </button>
             </nav>
           </div>
         </header>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { logoutUser } from "../utils/auth";
 import LanguageSelector from "../components/LanguageSelector";
 import { getDynamicGreeting } from "../utils/timeUtils";
@@ -98,12 +99,6 @@ const journey = [
 const recentActivity = [
   {
     title: "Field visit recorded",
-    detail: "Vitals and referral follow-up information added.",
-    date: "03 Sep 2026 • 11:42 PM",
-  },
-  {
-    title: "Referral created",
-    detail: "Referral sent to SMS Hospital Cardiology.",
     date: "02 Sep 2026 • 09:20 AM",
   },
   {
@@ -119,8 +114,14 @@ const recentActivity = [
 ];
 
 export default function PatientPage() {
+  const router = useRouter();
   const { language } = useLanguage();
   const [mobile, setMobile] = useState("");
+
+  const handleLogout = () => {
+    const target = logoutUser("patient");
+    router.push(target);
+  };
 
   useEffect(() => {
     const storedMobile = localStorage.getItem(
@@ -211,7 +212,7 @@ export default function PatientPage() {
 
               <button
                 type="button"
-                onClick={() => logoutUser("patient")}
+                onClick={handleLogout}
                 className="ml-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-red-600"
               >
                 Sign out

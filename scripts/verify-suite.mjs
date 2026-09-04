@@ -178,6 +178,30 @@ async function runVerification() {
   assert(fs.existsSync(path.resolve("public/about/continuity-flow.svg")), "public/about/continuity-flow.svg exists");
   assert(fs.existsSync(path.resolve("public/team/contributor-spec.svg")), "public/team/contributor-spec.svg exists");
 
+  console.log("\n--- 16. Testing Patient Login Role-Context & Session Isolation ---");
+  assert(authFile.includes("export function clearStaffSessionKeys"), "auth.ts exports clearStaffSessionKeys");
+  const loginFile = fs.readFileSync(path.resolve("app/login/page.tsx"), "utf-8");
+  assert(loginFile.includes("clearStaffSessionKeys()"), "login page clears staff sessions on OTP verification");
+  assert(loginFile.includes("localStorage.setItem(\"niramaya-active-role\", \"patient\")"), "login page sets niramaya-active-role to patient");
+  assert(loginFile.includes("setActiveRole(\"patient\")"), "login page updates RoleContext active role to patient");
+  assert(roleContextFile.includes("pathRole === \"patient\" && isRoleAuthenticated(\"patient\")"), "RoleContext ensures authenticated patient session takes precedence over prior staff roles");
+
+  const patientDashboardFile = fs.readFileSync(path.resolve("app/patient/page.tsx"), "utf-8");
+  assert(patientDashboardFile.includes("logoutUser(\"patient\")"), "patient dashboard calls logoutUser on sign out");
+  assert(patientDashboardFile.includes("router.push(target)"), "patient dashboard redirects after clearing session on logout");
+
+  const recordsFile = fs.readFileSync(path.resolve("app/patient/records/page.tsx"), "utf-8");
+  assert(recordsFile.includes("logoutUser(\"patient\")"), "patient records calls logoutUser on sign out");
+  assert(recordsFile.includes("href=\"/appointments\"") && recordsFile.includes("href=\"/patient/medicines\""), "patient records nav includes Appointments and Medicines");
+
+  const progressFile = fs.readFileSync(path.resolve("app/patient/progress/page.tsx"), "utf-8");
+  assert(progressFile.includes("logoutUser(\"patient\")"), "patient progress calls logoutUser on sign out");
+  assert(progressFile.includes("href=\"/appointments\"") && progressFile.includes("href=\"/patient/medicines\""), "patient progress nav includes Appointments and Medicines");
+
+  const documentsFile = fs.readFileSync(path.resolve("app/patient/documents/page.tsx"), "utf-8");
+  assert(documentsFile.includes("logoutUser(\"patient\")"), "patient documents calls logoutUser on sign out");
+  assert(documentsFile.includes("href=\"/appointments\"") && documentsFile.includes("href=\"/patient/medicines\""), "patient documents nav includes Appointments and Medicines");
+
   console.log(`\n==================================================`);
   console.log(`VERIFICATION SUMMARY: ${passed} PASSED, ${failed} FAILED`);
   console.log(`==================================================\n`);

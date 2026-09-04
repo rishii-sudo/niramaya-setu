@@ -76,6 +76,40 @@ export function setDemoAuthForRole(role: Role) {
   }
 }
 
+export function clearStaffSessionKeys() {
+  if (typeof window === "undefined") return;
+  const staffKeys = [
+    // Doctor keys
+    "niramaya-doctor-id",
+    "niramaya-doctor-role",
+    "niramaya-doctor-verification",
+    "niramaya-doctor-referral",
+    "niramaya-doctor-remember",
+    "niramaya-doctor-auth",
+    // ASHA keys
+    "niramaya-asha-id",
+    "niramaya-asha-role",
+    "niramaya-asha-verification",
+    "niramaya-asha-referral",
+    "niramaya-asha-remember",
+    "niramaya-asha-auth",
+    // Facility keys
+    "niramaya-facility-id",
+    "niramaya-facility-role",
+    "niramaya-facility-verification",
+    "niramaya-facility-referral",
+    "niramaya-facility-remember",
+    "niramaya-facility-token",
+    "niramaya-facility-auth",
+    // Admin keys
+    "niramaya-admin-id",
+    "niramaya-admin-role",
+    "niramaya-admin-auth",
+    "niramaya-admin-remember",
+  ];
+  staffKeys.forEach((key) => window.localStorage.removeItem(key));
+}
+
 export function logoutUser(activeRole?: Role): string {
   if (typeof window !== "undefined") {
     // Clear all role-specific demo auth/session keys
@@ -110,6 +144,7 @@ export function logoutUser(activeRole?: Role): string {
       "niramaya-admin-id",
       "niramaya-admin-role",
       "niramaya-admin-auth",
+      "niramaya-admin-remember",
     ];
 
     keysToRemove.forEach((key) => window.localStorage.removeItem(key));

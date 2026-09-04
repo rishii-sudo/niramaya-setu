@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import LanguageSelector from "../../components/LanguageSelector";
+import { logoutUser } from "../../utils/auth";
 
 const patient = {
   name: "Ramesh Kumar",
@@ -91,6 +93,13 @@ const milestones = [
 ];
 
 export default function PatientProgressPage() {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    const target = logoutUser("patient");
+    router.push(target);
+  };
+
   return (
     <main className="min-h-screen bg-transparent">
       <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
@@ -140,14 +149,25 @@ export default function PatientProgressPage() {
                 label="Documents"
               />
 
+              <PatientNav
+                href="/appointments"
+                label="Appointments"
+              />
+
+              <PatientNav
+                href="/patient/medicines"
+                label="Medicines"
+              />
+
               <LanguageSelector className="ml-1" />
 
-              <Link
-                href="/login"
-                className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50"
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="ml-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-red-600"
               >
                 Sign out
-              </Link>
+              </button>
             </nav>
           </div>
         </header>

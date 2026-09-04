@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { isRoleAuthenticated } from "../utils/auth";
+import { isRoleAuthenticated, clearStaffSessionKeys } from "../utils/auth";
 
 export type Role = "asha" | "doctor" | "facility" | "admin" | "patient" | "public";
 
@@ -121,6 +121,20 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     const isStoredValid = stored && ["asha", "doctor", "facility", "admin", "patient"].includes(stored) && isRoleAuthenticated(stored);
 
     if (pathRole) {
+      // Patient authentication precedence:
+      // If the user has an explicitly authenticated patient session and is navigating to a patient route,
+      // a previous Admin/Doctor/ASHA/Facility active role must NOT block them.
+      if (pathRole === "patient" && isRoleAuthenticated("patient")) {
+        if (stored !== "patient") {
+          clearStaffSessionKeys();
+          if (typeof window !== "undefined") {
+            localStorage.setItem(ROLE_STORAGE_KEY, "patient");
+          }
+        }
+        setActiveRoleState("patient");
+        return;
+      }
+
       // If user is already authenticated in an active role that differs from pathRole,
       // DO NOT silently switch activeRole. Preserve current role so AppShell can enforce the access boundary!
       if (isStoredValid && stored !== pathRole) {
