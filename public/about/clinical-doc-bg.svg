@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none">
+  <defs>
+    <pattern id="clinicalGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#0f766e" stroke-width="0.5" opacity="0.025"/>
+      <circle cx="60" cy="0" r="1" fill="#0f766e" opacity="0.04"/>
+    </pattern>
+    <linearGradient id="pulseFade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f766e" stop-opacity="0"/>
+      <stop offset="25%" stop-color="#0f766e" stop-opacity="0.06"/>
+      <stop offset="50%" stop-color="#0284c7" stop-opacity="0.08"/>
+      <stop offset="75%" stop-color="#0f766e" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#0f766e" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Base Grid Texture -->
+  <rect width="100%" height="100%" fill="url(#clinicalGrid)"/>
+
+  <!-- Top Left Clinical Cross & Concentric Geometry -->
+  <g transform="translate(60, 80)" stroke="#0d9488" opacity="0.05" fill="none" stroke-width="1.2">
+    <circle cx="50" cy="50" r="45" stroke-dasharray="2 4"/>
+    <circle cx="50" cy="50" r="28"/>
+    <path d="M 50 25 V 75 M 25 50 H 75" stroke-width="1.5"/>
+    <rect x="42" y="30" width="16" height="40" rx="2"/>
+    <rect x="30" y="42" width="40" height="16" rx="2"/>
+  </g>
+
+  <!-- Top Right Care Network Node Constellation -->
+  <g transform="translate(1260, 100)" stroke="#0284c7" opacity="0.05" fill="none" stroke-width="1">
+    <circle cx="40" cy="30" r="5" fill="#0284c7"/>
+    <circle cx="100" cy="70" r="4" fill="#0284c7"/>
+    <circle cx="60" cy="110" r="6" fill="#0284c7"/>
+    <line x1="40" y1="30" x2="100" y2="70"/>
+    <line x1="100" y1="70" x2="60" y2="110"/>
+    <line x1="60" y1="110" x2="40" y2="30"/>
+    <circle cx="60" cy="110" r="16" stroke-dasharray="3 3"/>
+  </g>
+
+  <!-- Subtle ECG Pulse Waveform across mid-top -->
+  <path d="M 0 320 H 420 L 440 320 L 450 295 L 460 350 L 470 270 L 485 335 L 495 315 L 505 320 H 920 L 935 320 L 945 290 L 955 355 L 965 275 L 980 330 L 990 315 L 1000 320 H 1440" 
+        stroke="url(#pulseFade)" stroke-width="1.5" fill="none"/>
+
+  <!-- Bottom Left Clinical Document Watermark / Micro Geometry -->
+  <g transform="translate(80, 680)" stroke="#0f766e" opacity="0.04" fill="none">
+    <rect x="0" y="0" width="120" height="140" rx="8" stroke-width="1.2"/>
+    <line x1="20" y1="30" x2="80" y2="30" stroke-width="1.5"/>
+    <line x1="20" y1="50" x2="100" y2="50" stroke-width="1"/>
+    <line x1="20" y1="68" x2="90" y2="68" stroke-width="1"/>
+    <line x1="20" y1="86" x2="70" y2="86" stroke-width="1"/>
+    <!-- Subtle Stethoscope / Shield Outline -->
+    <path d="M 50 100 C 50 115, 70 115, 70 100 V 90" stroke-width="1.2"/>
+  </g>
+
+  <!-- Bottom Right Subtle Hospital / Cross Node Geometry -->
+  <g transform="translate(1240, 660)" stroke="#0284c7" opacity="0.045" fill="none">
+    <rect x="30" y="30" width="80" height="80" rx="12" stroke-width="1.2"/>
+    <path d="M 70 45 V 95 M 45 70 H 95" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="70" cy="70" r="32" stroke-dasharray="4 4"/>
+  </g>
+</svg>

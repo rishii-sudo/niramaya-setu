@@ -70,9 +70,9 @@
   </g>
 
   <!-- Bottom Prototype Banner -->
-  <g transform="translate(100, 195)">
-    <rect width="300" height="28" rx="14" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>
-    <text x="150" y="18" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#92400e" text-anchor="middle">
+  <g transform="translate(70, 192)">
+    <rect width="360" height="28" rx="14" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>
+    <text x="180" y="18" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#92400e" text-anchor="middle">
       Consultation Prototype • Production WebRTC Planned
     </text>
   </g>

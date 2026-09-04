@@ -1,57 +1,59 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 200" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 200" fill="none">
   <!-- Container Card -->
-  <rect width="500" height="200" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <rect width="520" height="200" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
 
   <!-- Left: Indian Language Speech Bubbles -->
-  <g transform="translate(30, 25)">
-    <rect width="200" height="150" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-    <text x="20" y="26" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0f172a">Native Vernacular UI</text>
+  <g transform="translate(25, 25)">
+    <rect width="215" height="150" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="16" y="26" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0f172a">Native Vernacular UI</text>
     
     <!-- Bubble 1: Hindi -->
-    <rect x="20" y="38" width="70" height="42" rx="8" fill="#f0fdfa" stroke="#0b8f86" stroke-width="1.5"/>
-    <text x="55" y="60" font-family="system-ui, sans-serif" font-size="15" font-weight="800" fill="#0b8f86" text-anchor="middle">हिन्दी</text>
-    <text x="55" y="73" font-family="system-ui, sans-serif" font-size="8" font-weight="600" fill="#64748b" text-anchor="middle">Hindi Active</text>
+    <rect x="16" y="38" width="86" height="44" rx="8" fill="#f0fdfa" stroke="#0b8f86" stroke-width="1.5"/>
+    <text x="59" y="59" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#0b8f86" text-anchor="middle">हिन्दी</text>
+    <text x="59" y="73" font-family="system-ui, sans-serif" font-size="8" font-weight="600" fill="#64748b" text-anchor="middle">Hindi Active</text>
 
     <!-- Bubble 2: Marathi -->
-    <rect x="105" y="38" width="75" height="42" rx="8" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.5"/>
-    <text x="142" y="60" font-family="system-ui, sans-serif" font-size="15" font-weight="800" fill="#0284c7" text-anchor="middle">मराठी</text>
-    <text x="142" y="73" font-family="system-ui, sans-serif" font-size="8" font-weight="600" fill="#64748b" text-anchor="middle">Marathi Active</text>
+    <rect x="113" y="38" width="86" height="44" rx="8" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.5"/>
+    <text x="156" y="59" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#0284c7" text-anchor="middle">मराठी</text>
+    <text x="156" y="73" font-family="system-ui, sans-serif" font-size="8" font-weight="600" fill="#64748b" text-anchor="middle">Marathi Active</text>
 
     <!-- Bubble 3: English -->
-    <rect x="20" y="92" width="160" height="38" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
-    <text x="35" y="114" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#0f172a">English</text>
-    <text x="120" y="114" font-family="system-ui, sans-serif" font-size="9" font-weight="600" fill="#10b981">● Persistent Locale</text>
+    <rect x="16" y="94" width="183" height="38" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+    <text x="28" y="117" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0f172a">English</text>
+    <rect x="82" y="102" width="110" height="22" rx="11" fill="#ecfdf5"/>
+    <circle cx="93" cy="113" r="3" fill="#10b981"/>
+    <text x="101" y="116.5" font-family="system-ui, sans-serif" font-size="8" font-weight="600" fill="#059669">Persistent Locale</text>
   </g>
 
   <!-- Center Bridge Waveform -->
-  <g transform="translate(235, 80)">
-    <path d="M 5 20 C 15 5, 25 35, 35 20" stroke="#0b8f86" stroke-width="2.5" stroke-linecap="round"/>
+  <g transform="translate(245, 80)">
+    <path d="M 5 20 C 15 5, 20 35, 30 20" stroke="#0b8f86" stroke-width="2.5" stroke-linecap="round"/>
   </g>
 
   <!-- Right: Voice & Text Assistant Waveform -->
-  <g transform="translate(270, 25)">
-    <rect width="200" height="150" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-    <text x="20" y="26" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0f172a">Voice &amp; Text Assistant</text>
+  <g transform="translate(280, 25)">
+    <rect width="215" height="150" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="16" y="26" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0f172a">Voice &amp; Text Assistant</text>
 
     <!-- Waveform Box -->
-    <rect x="20" y="38" width="160" height="50" rx="8" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="1.5"/>
+    <rect x="16" y="38" width="183" height="50" rx="8" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="1.5"/>
     <!-- Microphone in Waveform Box -->
     <rect x="35" y="50" width="8" height="14" rx="4" fill="#0b8f86"/>
     <path d="M31 59c0 4 3.5 7 8 7s8-3 8-7" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"/>
     
     <!-- Audio Wave Lines -->
     <line x1="60" y1="63" x2="60" y2="63" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
-    <line x1="68" y1="56" x2="68" y2="70" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
-    <line x1="76" y1="50" x2="76" y2="76" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
-    <line x1="84" y1="58" x2="84" y2="68" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
-    <line x1="92" y1="53" x2="92" y2="73" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
-    <line x1="100" y1="60" x2="100" y2="66" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
-    <line x1="108" y1="54" x2="108" y2="72" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
-    <line x1="116" y1="62" x2="116" y2="64" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
+    <line x1="70" y1="56" x2="70" y2="70" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
+    <line x1="80" y1="50" x2="80" y2="76" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
+    <line x1="90" y1="58" x2="90" y2="68" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
+    <line x1="100" y1="53" x2="100" y2="73" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
+    <line x1="110" y1="60" x2="110" y2="66" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
+    <line x1="120" y1="54" x2="120" y2="72" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
+    <line x1="130" y1="62" x2="130" y2="64" stroke="#0b8f86" stroke-width="3" stroke-linecap="round"/>
     
     <!-- Status Note -->
-    <rect x="20" y="100" width="160" height="30" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
-    <text x="100" y="119" font-family="system-ui, sans-serif" font-size="9" font-weight="600" fill="#64748b" text-anchor="middle">
+    <rect x="16" y="98" width="183" height="32" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="107" y="118" font-family="system-ui, sans-serif" font-size="8" font-weight="600" fill="#64748b" text-anchor="middle">
       Speech Recognition API • Bhashini Planned
     </text>
   </g>

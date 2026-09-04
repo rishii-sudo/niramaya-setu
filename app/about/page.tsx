@@ -280,9 +280,18 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans">
+    <div 
+      className="min-h-screen text-slate-900 flex flex-col font-sans relative selection:bg-teal-100 selection:text-teal-900"
+      style={{
+        backgroundColor: "#fcfdfd",
+        backgroundImage: "url('/about/clinical-doc-bg.svg')",
+        backgroundRepeat: "repeat-y",
+        backgroundSize: "100% auto",
+        backgroundPosition: "top center",
+      }}
+    >
       {/* CANONICAL PUBLIC HEADER */}
-      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 px-4 py-3 backdrop-blur-md shadow-xs">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <img
@@ -327,11 +336,14 @@ export default function AboutPage() {
 
       <main className="flex-1">
         {/* 1. HERO SECTION */}
-        <section className="relative overflow-hidden bg-slate-900 text-white px-5 py-16 sm:py-20 sm:px-8 lg:px-12 border-b border-slate-800">
+        <section className="relative overflow-hidden bg-slate-950 text-white px-5 py-16 sm:py-24 sm:px-8 lg:px-12 border-b border-slate-800">
+          {/* Subtle Ambient Radial Glow */}
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-teal-500/10 blur-[120px] pointer-events-none rounded-full" />
+
           <div className="relative mx-auto max-w-5xl text-center">
             {/* Tagline Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-4 py-1.5 text-xs font-semibold text-teal-300 backdrop-blur">
-              <span className="h-2 w-2 rounded-full bg-teal-400" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-4 py-1.5 text-xs font-semibold text-teal-300 backdrop-blur-md">
+              <span className="h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
               Connected Rural Care • Closed-Loop Referral Platform
             </div>
 
@@ -341,7 +353,7 @@ export default function AboutPage() {
             </h1>
 
             {/* Mission Statement */}
-            <p className="mx-auto mt-6 max-w-3xl text-base text-slate-300 sm:text-lg leading-relaxed">
+            <p className="mx-auto mt-6 max-w-3xl text-base text-slate-300 sm:text-lg leading-relaxed font-normal">
               NIRAMAYA-SETU (निरामय-सेतु) is dedicated to bridging the gap between remote villages, primary health centers, and secondary hospitals through transparent referral tracking, privacy-first patient records, and front-line health worker empowerment.
             </p>
 
@@ -349,21 +361,21 @@ export default function AboutPage() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/get-started"
-                className="rounded-xl bg-teal-600 px-6 py-3.5 text-sm font-bold text-white shadow-sm hover:bg-teal-500 transition inline-flex items-center gap-2"
+                className="rounded-xl bg-teal-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-teal-900/30 hover:bg-teal-500 transition inline-flex items-center gap-2"
               >
                 Continue to NIRAMAYA-SETU
                 <ArrowRight size={16} />
               </Link>
               <a
                 href="#what-we-offer"
-                className="rounded-xl border border-slate-700 bg-slate-800/90 px-6 py-3.5 text-sm font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition"
+                className="rounded-xl border border-slate-700 bg-slate-800/90 px-6 py-3.5 text-sm font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition backdrop-blur-sm"
               >
                 Explore Capabilities
               </a>
             </div>
 
-            {/* Healthcare Network Visual Illustration */}
-            <div className="mt-12 w-full max-w-4xl mx-auto rounded-3xl border border-slate-800/80 bg-slate-950 p-2 sm:p-4 shadow-2xl">
+            {/* Healthcare Network Visual Illustration Container */}
+            <div className="mt-12 w-full max-w-4xl mx-auto rounded-3xl border border-slate-800/90 bg-slate-900/95 p-3 sm:p-5 shadow-2xl overflow-hidden ring-1 ring-white/5">
               <img
                 src="/about/hero-care-network.svg"
                 alt="NIRAMAYA-SETU Connected Care Network: Village Level, Referral Transit, Specialized Care, and Patient Follow-up"
@@ -373,19 +385,51 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 2. WHAT IS NIRAMAYA-SETU? */}
-        <section className="py-16 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-white">
-          <div className="mx-auto max-w-4xl text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-teal-700">Platform Definition</span>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-              What is NIRAMAYA-SETU?
-            </h2>
-            <p className="mt-4 text-base text-slate-700 leading-relaxed sm:text-lg font-medium">
-              NIRAMAYA-SETU is a rural healthcare care-continuity and closed-loop referral platform connecting patients, ASHA/ANM workers, doctors, facilities and care workflows.
-            </p>
-            <p className="mt-4 text-sm text-slate-600 leading-relaxed text-left sm:text-center">
-              Designed specifically for the ground realities of rural and semi-urban public health systems, NIRAMAYA-SETU replaces fragile paper slips and informal telephone calls with an integrated digital workflow. It ensures that whenever a patient is identified with high clinical risk in a village, their medical records, referral transit, hospital reception, treatment, and community rehabilitation follow a transparent, accountable care continuum.
-            </p>
+        {/* 2. WHAT IS NIRAMAYA-SETU? (Split Storytelling Layout) */}
+        <section className="py-20 px-5 sm:px-8 lg:px-12 border-b border-slate-200/80 bg-white/70 backdrop-blur-xs">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid gap-12 lg:grid-cols-12 items-center">
+              <div className="lg:col-span-7 space-y-5 text-left">
+                <div className="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-teal-800">
+                  <span className="h-1.5 w-1.5 rounded-full bg-teal-600" />
+                  Platform Definition
+                </div>
+                <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+                  What is NIRAMAYA-SETU?
+                </h2>
+                <p className="text-base text-slate-700 leading-relaxed font-medium">
+                  NIRAMAYA-SETU is a rural healthcare care-continuity and closed-loop referral platform connecting patients, ASHA/ANM workers, doctors, facilities and care workflows.
+                </p>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Designed specifically for the ground realities of rural and semi-urban public health systems, NIRAMAYA-SETU replaces fragile paper slips and informal telephone calls with an integrated digital workflow. It ensures that whenever a patient is identified with high clinical risk in a village, their medical records, referral transit, hospital reception, treatment, and community rehabilitation follow a transparent, accountable care continuum.
+                </p>
+                <div className="pt-2 flex flex-wrap gap-4 text-xs font-semibold text-slate-700">
+                  <div className="flex items-center gap-2 rounded-lg bg-slate-50 border border-slate-200 px-3 py-2">
+                    <span className="h-2 w-2 rounded-full bg-teal-600" />
+                    Zero Patient Drop-Off in Transit
+                  </div>
+                  <div className="flex items-center gap-2 rounded-lg bg-slate-50 border border-slate-200 px-3 py-2">
+                    <span className="h-2 w-2 rounded-full bg-teal-600" />
+                    Offline-First Village Capture
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5">
+                <div className="relative rounded-3xl overflow-hidden border border-slate-200 shadow-lg bg-slate-100 group">
+                  <img
+                    src="/about/asha-doorstep-care.jpg"
+                    alt="Frontline ASHA community health worker reviewing vitals on a digital tablet with a rural patient"
+                    className="w-full h-auto object-cover aspect-[4/3] group-hover:scale-105 transition duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-4 left-4 right-4 text-white">
+                    <p className="text-xs font-bold tracking-wide text-teal-200 uppercase">Doorstep Care Continuum</p>
+                    <p className="text-[11px] text-slate-200 mt-0.5">Empowering community frontline workers with offline health tools</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1328,47 +1372,69 @@ export default function AboutPage() {
         </section>
 
         {/* 17. FINAL CTA */}
-        <section className="bg-slate-900 py-16 px-5 text-white sm:px-8 lg:px-12 border-t border-slate-800">
-          <div className="mx-auto max-w-5xl text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-teal-400">Join the Continuum</span>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-4xl text-white">
-              Be Part of Better Healthcare Continuity
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-slate-300">
-              How are you connected with NIRAMAYA-SETU? Select your entry point to access your dedicated workspace or learn more.
-            </p>
+        <section className="relative overflow-hidden bg-slate-950 py-20 px-5 text-white sm:px-8 lg:px-12 border-t border-slate-800">
+          <div className="mx-auto max-w-5xl">
+            <div className="grid gap-10 lg:grid-cols-12 items-center">
+              <div className="lg:col-span-7 space-y-6 text-left">
+                <span className="inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-teal-300">
+                  <span className="h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
+                  Join the Continuum
+                </span>
+                <h2 className="text-2xl font-bold tracking-tight sm:text-4xl text-white">
+                  Be Part of Better Healthcare Continuity
+                </h2>
+                <p className="text-sm text-slate-300 leading-relaxed max-w-xl">
+                  Whether you are a citizen seeking care, a frontline health worker, a specialist clinician, or a healthcare institution, NIRAMAYA-SETU provides dedicated access to keep care moving forward.
+                </p>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/login"
-                className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-xs font-bold text-slate-200 hover:bg-slate-700 hover:text-white transition"
-              >
-                Patient
-              </Link>
-              <Link
-                href="/asha/login"
-                className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-xs font-bold text-slate-200 hover:bg-slate-700 hover:text-white transition"
-              >
-                ASHA / ANM
-              </Link>
-              <Link
-                href="/doctor/login"
-                className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-xs font-bold text-slate-200 hover:bg-slate-700 hover:text-white transition"
-              >
-                Doctor
-              </Link>
-              <Link
-                href="/facility/login"
-                className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-xs font-bold text-slate-200 hover:bg-slate-700 hover:text-white transition"
-              >
-                Hospital / Clinic
-              </Link>
-              <Link
-                href="/get-started"
-                className="rounded-xl bg-teal-600 px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-teal-500 transition"
-              >
-                Continue to NIRAMAYA-SETU
-              </Link>
+                <div className="pt-2 flex flex-wrap items-center gap-3">
+                  <Link
+                    href="/login"
+                    className="rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-2.5 text-xs font-bold text-slate-200 hover:bg-slate-800 hover:text-white transition"
+                  >
+                    Patient
+                  </Link>
+                  <Link
+                    href="/asha/login"
+                    className="rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-2.5 text-xs font-bold text-slate-200 hover:bg-slate-800 hover:text-white transition"
+                  >
+                    ASHA / ANM
+                  </Link>
+                  <Link
+                    href="/doctor/login"
+                    className="rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-2.5 text-xs font-bold text-slate-200 hover:bg-slate-800 hover:text-white transition"
+                  >
+                    Doctor
+                  </Link>
+                  <Link
+                    href="/facility/login"
+                    className="rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-2.5 text-xs font-bold text-slate-200 hover:bg-slate-800 hover:text-white transition"
+                  >
+                    Hospital / Clinic
+                  </Link>
+                  <Link
+                    href="/get-started"
+                    className="rounded-xl bg-teal-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-teal-900/30 hover:bg-teal-500 transition inline-flex items-center gap-1.5"
+                  >
+                    Continue to NIRAMAYA-SETU <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5">
+                <div className="relative rounded-3xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-900">
+                  <img
+                    src="/about/community-continuity.jpg"
+                    alt="Rural Indian healthcare team and community family united outside a primary healthcare sub-center"
+                    className="w-full h-auto object-cover aspect-[4/3]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-4 left-4 right-4 text-white">
+                    <p className="text-xs font-bold tracking-wide text-teal-300 uppercase">Seamless Community Health</p>
+                    <p className="text-[11px] text-slate-300 mt-0.5">Connecting every village, clinic, and patient in one continuum</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>

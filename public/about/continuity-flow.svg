@@ -1,49 +1,49 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 160" fill="none">
   <!-- Step 1: ACCESS -->
-  <g transform="translate(20, 20)">
+  <g transform="translate(18, 20)">
     <rect width="160" height="120" rx="16" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="2"/>
     <rect x="16" y="16" width="36" height="36" rx="10" fill="#0b8f86"/>
     <path d="M34 26v16M26 34h16" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-    <text x="16" y="78" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#0f172a">1. ACCESS</text>
+    <text x="16" y="78" font-family="system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#0f172a">1. ACCESS</text>
     <text x="16" y="98" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Village &amp; Self Entry</text>
     <text x="16" y="114" font-family="system-ui, sans-serif" font-size="10" fill="#0b8f86">Privacy ID Created</text>
   </g>
 
   <!-- Arrow 1 -->
-  <path d="M195 80h30m-8-8l8 8-8 8" stroke="#0b8f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M190 80h22m-6-6l6 6-6 6" stroke="#0b8f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 
   <!-- Step 2: RECORD -->
-  <g transform="translate(235, 20)">
+  <g transform="translate(222, 20)">
     <rect width="160" height="120" rx="16" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="2"/>
     <rect x="16" y="16" width="36" height="36" rx="10" fill="#0b8f86"/>
     <path d="M26 28h16m-16 6h16m-16 6h10" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-    <text x="16" y="78" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#0f172a">2. RECORD</text>
+    <text x="16" y="78" font-family="system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#0f172a">2. RECORD</text>
     <text x="16" y="98" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Field Health Vitals</text>
     <text x="16" y="114" font-family="system-ui, sans-serif" font-size="10" fill="#0b8f86">Offline-First Cache</text>
   </g>
 
   <!-- Arrow 2 -->
-  <path d="M410 80h30m-8-8l8 8-8 8" stroke="#0b8f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M394 80h22m-6-6l6 6-6 6" stroke="#0b8f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 
   <!-- Step 3: REFER -->
-  <g transform="translate(450, 20)">
+  <g transform="translate(426, 20)">
     <rect width="160" height="120" rx="16" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="2"/>
     <rect x="16" y="16" width="36" height="36" rx="10" fill="#0b8f86"/>
     <path d="M26 40l16-16m0 0h-12m12 0v12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="16" y="78" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#0f172a">3. REFER</text>
+    <text x="16" y="78" font-family="system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#0f172a">3. REFER</text>
     <text x="16" y="98" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Triage to Specialist</text>
     <text x="16" y="114" font-family="system-ui, sans-serif" font-size="10" fill="#0b8f86">Closed-Loop QR Token</text>
   </g>
 
   <!-- Arrow 3 -->
-  <path d="M625 80h30m-8-8l8 8-8 8" stroke="#0b8f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M598 80h22m-6-6l6 6-6 6" stroke="#0b8f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 
   <!-- Step 4: FOLLOW -->
-  <g transform="translate(665, 20)">
-    <rect width="160" height="120" rx="16" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="2"/>
+  <g transform="translate(630, 20)">
+    <rect width="155" height="120" rx="16" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="2"/>
     <rect x="16" y="16" width="36" height="36" rx="10" fill="#0b8f86"/>
     <path d="M26 34l6 6 10-12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="16" y="78" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#0f172a">4. FOLLOW</text>
+    <text x="16" y="78" font-family="system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#0f172a">4. FOLLOW</text>
     <text x="16" y="98" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Post-Discharge Care</text>
     <text x="16" y="114" font-family="system-ui, sans-serif" font-size="10" fill="#0b8f86">48-Hr Alert Continuity</text>
   </g>
