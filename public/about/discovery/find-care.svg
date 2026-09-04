@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" fill="none">
+  <!-- Container Background -->
+  <rect width="52" height="52" rx="14" fill="#f0fdfa" stroke="#ccfbf1" stroke-width="1.5"/>
+  <!-- Location Pin -->
+  <path d="M26 10c-6.6 0-12 5.4-12 12 0 9 12 20 12 20s12-11 12-20c0-6.6-5.4-12-12-12z" fill="#0b8f86"/>
+  <!-- Hospital Cross Inside Pin -->
+  <circle cx="26" cy="22" r="6" fill="#ffffff"/>
+  <path d="M26 19v6m-3-3h6" stroke="#0b8f86" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" fill="none">
+  <!-- Background Container -->
+  <rect width="56" height="56" rx="16" fill="#ecfeff" stroke="#a5f3fc" stroke-width="1.5"/>
+  <!-- Clinician / Specialist -->
+  <circle cx="28" cy="18" r="7" fill="#0891b2"/>
+  <path d="M16 38c0-6.5 5.5-12 12-12s12 5.5 12 12" stroke="#0891b2" stroke-width="2.8" stroke-linecap="round"/>
+  <!-- Stethoscope on Clinical Coat -->
+  <path d="M23 27v4a5 5 0 0 0 10 0v-4" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="33" cy="31" r="2" fill="#ffffff"/>
+  <!-- Medical Prescription Seal -->
+  <circle cx="43" cy="15" r="6" fill="#06b6d4"/>
+  <path d="M43 12v6m-3-3h6" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

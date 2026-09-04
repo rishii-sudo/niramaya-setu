@@ -2,46 +2,30 @@
 
 import Link from "next/link";
 import {
-  Activity,
-  HeartPulse,
+  ArrowRight,
+  Share2,
+  Lock,
+  ShieldCheck,
+  Clock,
+  UserCheck,
+  AlertCircle,
+  Building2,
   Users,
   Stethoscope,
-  Building2,
-  ShieldCheck,
-  WifiOff,
-  ArrowRight,
-  CheckCircle2,
-  Share2,
-  Globe,
-  Lock,
-  Calendar,
-  Video,
-  Mic,
-  FileText,
-  Pill,
   MapPin,
-  Clock,
-  PhoneCall,
-  UserCheck,
-  Search,
-  ChevronRight,
-  Check,
-  AlertCircle,
-  Briefcase,
-  Layers,
   Cpu,
 } from "lucide-react";
 import { teamMembers, projectCreators } from "../data/teamData";
 import LanguageSelector from "../components/LanguageSelector";
 
 export default function AboutPage() {
-  // 17 Capabilities (strictly matching Prompt Item 7)
+  // 17 Capabilities (strictly matching Prompt Requirements)
   const capabilities = [
     {
       id: "cap-1",
       title: "Patient Registration",
       desc: "Village & self-service registration with privacy-first identity masking and SEVA ID generation.",
-      icon: UserCheck,
+      visual: "patient-registration",
       badge: "Active",
       category: "Identity & Access",
     },
@@ -49,7 +33,7 @@ export default function AboutPage() {
       id: "cap-2",
       title: "Digital Patient Records",
       desc: "Longitudinal health records, diagnostic summaries, vital trends, and printable clinical sheets.",
-      icon: FileText,
+      visual: "digital-records",
       badge: "Active",
       category: "Clinical Data",
     },
@@ -57,7 +41,7 @@ export default function AboutPage() {
       id: "cap-3",
       title: "ASHA / ANM Field Support",
       desc: "Offline-capable visit recording, maternal-child screening, and post-discharge recovery monitoring.",
-      icon: Users,
+      visual: "asha-support",
       badge: "Active",
       category: "Field Operations",
     },
@@ -65,7 +49,7 @@ export default function AboutPage() {
       id: "cap-4",
       title: "Referral Management",
       desc: "Structured clinical transfer routing from rural sub-centers to secondary and tertiary hospitals.",
-      icon: Share2,
+      visual: "referral-management",
       badge: "Active",
       category: "Referral Network",
     },
@@ -73,7 +57,7 @@ export default function AboutPage() {
       id: "cap-5",
       title: "Closed-Loop Referral Tracking",
       desc: "End-to-end lifecycle visibility across 6 milestones from initiation to recovery confirmation.",
-      icon: Activity,
+      visual: "closed-loop",
       badge: "Active",
       category: "Continuity Care",
     },
@@ -81,7 +65,7 @@ export default function AboutPage() {
       id: "cap-6",
       title: "Follow-up Tracking",
       desc: "Proactive 48-hour missed appointment alerts and front-line worker action queues.",
-      icon: Clock,
+      visual: "follow-up",
       badge: "Active",
       category: "Continuity Care",
     },
@@ -89,7 +73,7 @@ export default function AboutPage() {
       id: "cap-7",
       title: "Nearby Hospital / Clinic Discovery",
       desc: "Geolocation-based nearest PHC, CHC, and district hospital mapping with travel distance calculation.",
-      icon: MapPin,
+      visual: "nearby-healthcare",
       badge: "Active",
       category: "Care Navigation",
     },
@@ -97,7 +81,7 @@ export default function AboutPage() {
       id: "cap-8",
       title: "Doctor Discovery",
       desc: "Specialist directory with department filters, qualifications, and consultation mode options.",
-      icon: Stethoscope,
+      visual: "doctor-discovery",
       badge: "Active",
       category: "Care Navigation",
     },
@@ -105,7 +89,7 @@ export default function AboutPage() {
       id: "cap-9",
       title: "Online Appointment Booking",
       desc: "Step-by-step specialist scheduling with date selection, time slots, and patient context preservation.",
-      icon: Calendar,
+      visual: "appointment",
       badge: "Active",
       category: "Care Navigation",
     },
@@ -113,7 +97,7 @@ export default function AboutPage() {
       id: "cap-10",
       title: "Video Consultation Prototype",
       desc: "Frontend video consultation preview with privacy session identifiers and in-call clinical notes.",
-      icon: Video,
+      visual: "video-consultation",
       badge: "Prototype",
       category: "Tele-Health",
     },
@@ -121,7 +105,7 @@ export default function AboutPage() {
       id: "cap-11",
       title: "Audio Consultation Prototype",
       desc: "Low-bandwidth audio consultation interface designed for remote rural connectivity environments.",
-      icon: PhoneCall,
+      visual: "audio-consultation",
       badge: "Prototype",
       category: "Tele-Health",
     },
@@ -129,7 +113,7 @@ export default function AboutPage() {
       id: "cap-12",
       title: "Clinical Summary / Documents",
       desc: "Standardized A4 clinical summary and referral discharge documentation ready for medical records.",
-      icon: FileText,
+      visual: "clinical-summary",
       badge: "Active",
       category: "Clinical Data",
     },
@@ -137,7 +121,7 @@ export default function AboutPage() {
       id: "cap-13",
       title: "Medicine Discovery / Ordering Prototype",
       desc: "Essential medicine dispensary with prescription validation checks and sub-center delivery coordination.",
-      icon: Pill,
+      visual: "medicine-support",
       badge: "Prototype",
       category: "Pharmacy Care",
     },
@@ -145,7 +129,7 @@ export default function AboutPage() {
       id: "cap-14",
       title: "Multilingual Support",
       desc: "Native English, हिन्दी (Hindi), and मराठी (Marathi) interfaces with persistent language memory.",
-      icon: Globe,
+      visual: "multilingual",
       badge: "Active",
       category: "Accessibility",
     },
@@ -153,7 +137,7 @@ export default function AboutPage() {
       id: "cap-15",
       title: "Voice & Text Assistance",
       desc: "Prototype voice and text guidance supporting multilingual query matching and patient navigation.",
-      icon: Mic,
+      visual: "voice-assistance",
       badge: "Prototype",
       category: "Accessibility",
     },
@@ -161,7 +145,7 @@ export default function AboutPage() {
       id: "cap-16",
       title: "Consent & Privacy",
       desc: "Granular patient consent management with masked identity and tokenized QR verification payloads.",
-      icon: Lock,
+      visual: "privacy-consent",
       badge: "Active",
       category: "Security & Trust",
     },
@@ -169,19 +153,18 @@ export default function AboutPage() {
       id: "cap-17",
       title: "Offline-first Rural Workflow",
       desc: "Browser-local caching designed for low-connectivity rural health outposts with planned background sync.",
-      icon: WifiOff,
+      visual: "offline-workflow",
       badge: "Prototype",
       category: "Rural Reliability",
     },
   ];
 
-  // 6 Stakeholders (strictly matching Prompt Item 8)
+  // 6 Stakeholders (strictly matching Prompt Requirements)
   const stakeholders = [
     {
       title: "Patients & Families",
       roleBadge: "Citizen Centric",
-      icon: HeartPulse,
-      accent: "teal",
+      visual: "patients",
       problem: "Families frequently struggle with lost paper records, travel confusion, and disconnected follow-up care when traveling to unfamiliar regional hospitals.",
       benefit: "Access unified longitudinal records, track referral status in real time, discover nearby clinics, and book specialist consultations without losing history.",
       workflow: "Registration → Discover Care → Schedule / Teleconsult → Track Referral → Coordinated Follow-up",
@@ -189,8 +172,7 @@ export default function AboutPage() {
     {
       title: "ASHA / ANM Workers",
       roleBadge: "Frontline Community",
-      icon: Users,
-      accent: "emerald",
+      visual: "asha-workers",
       problem: "Heavy paper registers, lack of connectivity in remote hamlets, and zero visibility into referred patients once they leave the village boundary.",
       benefit: "Offline-first visit recording, automated 48-hour follow-up reminders, and post-discharge instructions directly relayed from specialist doctors.",
       workflow: "Home Visit → Record Vitals Offline → Initiate Referral → Receive Hospital Discharge Alert → Home Follow-up",
@@ -198,8 +180,7 @@ export default function AboutPage() {
     {
       title: "Doctors & Clinicians",
       roleBadge: "Clinical Care",
-      icon: Stethoscope,
-      accent: "cyan",
+      visual: "doctors",
       problem: "Receiving transfer patients without baseline vital trends, preliminary medications, or clear primary triage reason from rural health centers.",
       benefit: "Instant verified medical history upon scanning referral QR tokens, structured tele-consultation queues, and direct assignment of recovery tasks.",
       workflow: "Review Referral Queue → Verify QR Token → Conduct Examination / Teleconsult → Log Diagnosis → Issue Discharge Orders",
@@ -207,8 +188,7 @@ export default function AboutPage() {
     {
       title: "Hospitals & Clinics",
       roleBadge: "Institutional Care",
-      icon: Building2,
-      accent: "blue",
+      visual: "hospitals",
       problem: "Unpredictable emergency surges, overcrowded triage wards, and lack of pre-arrival patient notifications from referring primary clinics.",
       benefit: "Incoming referral pipeline predictability, real-time bed capacity broadcast, coordinated departmental handoffs, and audit compliance.",
       workflow: "Intake Notification → Bed Allocation → Emergency / OPD Admission → Treatment Coordination → Discharge Summary",
@@ -216,8 +196,7 @@ export default function AboutPage() {
     {
       title: "Administrators & Health Officials",
       roleBadge: "Public Health Governance",
-      icon: ShieldCheck,
-      accent: "slate",
+      visual: "administrators",
       problem: "Lagging public health surveillance data, undocumented lost-to-follow-up cases, and opaque referral resource allocation across districts.",
       benefit: "Consolidated district referral metrics, facility load balancing, closed-loop resolution tracking, and role-based operational audit trails.",
       workflow: "District Analytics → Resource Triage → Incident Review → Policy Optimization → Compliance Audit",
@@ -225,15 +204,50 @@ export default function AboutPage() {
     {
       title: "Healthcare Partners & Organizations",
       roleBadge: "Ecosystem Collaboration",
-      icon: Layers,
-      accent: "indigo",
+      visual: "partners",
       problem: "Fragmented NGO and corporate health initiatives operating in silos without interoperable standards or measurable care continuum metrics.",
       benefit: "Standardized FHIR R4-ready data models, aligned ABDM integration pathways, and verifiable closed-loop public health outcomes.",
       workflow: "Protocol Alignment → Sandbox Interoperability → Program Deployment → Population Continuity Metrics",
     },
   ];
 
-  // Ecosystem Integrations (strictly matching Prompt Item 15)
+  // Discovery & Access 4 Steps
+  const discoverySteps = [
+    {
+      step: "1",
+      title: "Find Nearby Care",
+      visual: "find-care",
+      desc: "Search nearby Sub-centers, PHCs, CHCs, and District Hospitals by travel distance and emergency capability.",
+      linkHref: "/facilities",
+      linkText: "Explore Facilities →",
+    },
+    {
+      step: "2",
+      title: "Discover Doctors",
+      visual: "discover-doctors",
+      desc: "Filter verified medical specialists by clinical department, experience, qualifications, and consultation modes.",
+      linkHref: "/doctors",
+      linkText: "Browse Doctors →",
+    },
+    {
+      step: "3",
+      title: "Book Appointment",
+      visual: "book-appointment",
+      desc: "Select preferred date, time slot, and reason for visit with automated booking confirmation.",
+      linkHref: "/appointments",
+      linkText: "Book Online →",
+    },
+    {
+      step: "4",
+      title: "Continue Care",
+      visual: "continue-care",
+      desc: "Seamless transition to teleconsultation or hospital referral with longitudinal records preserved.",
+      linkHref: "/patient/progress",
+      linkText: "Track Journey →",
+    },
+  ];
+
+  // Ecosystem Integrations
   const ecosystemItems = [
     {
       name: "Ayushman Bharat Digital Mission (ABDM)",
@@ -267,7 +281,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans">
-      {/* 20. CANONICAL PUBLIC HEADER */}
+      {/* CANONICAL PUBLIC HEADER */}
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
@@ -312,7 +326,7 @@ export default function AboutPage() {
       </header>
 
       <main className="flex-1">
-        {/* 2. HERO SECTION */}
+        {/* 1. HERO SECTION */}
         <section className="relative overflow-hidden bg-slate-900 text-white px-5 py-16 sm:py-20 sm:px-8 lg:px-12 border-b border-slate-800">
           <div className="relative mx-auto max-w-5xl text-center">
             {/* Tagline Badge */}
@@ -352,14 +366,14 @@ export default function AboutPage() {
             <div className="mt-12 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 p-2 sm:p-4 shadow-xl">
               <img
                 src="/about/hero-care-network.svg"
-                alt="NIRAMAYA-SETU Care Network: Village Health Post, Care Transit, and District Specialized Center"
+                alt="NIRAMAYA-SETU Connected Care Network: Village Level, Referral Transit, Specialized Care, and Patient Follow-up"
                 className="mx-auto w-full max-w-4xl rounded-xl"
               />
             </div>
           </div>
         </section>
 
-        {/* 3. WHAT IS NIRAMAYA-SETU? */}
+        {/* 2. WHAT IS NIRAMAYA-SETU? */}
         <section className="py-16 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-white">
           <div className="mx-auto max-w-4xl text-center">
             <span className="text-xs font-bold uppercase tracking-widest text-teal-700">Platform Definition</span>
@@ -375,7 +389,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 4. THE PROBLEM WE SOLVE (Factual, No Unsupported Stats) */}
+        {/* 3. THE PROBLEM WE SOLVE */}
         <section className="py-16 px-5 sm:px-8 lg:px-12 bg-slate-50 border-b border-slate-200">
           <div className="mx-auto max-w-5xl">
             <div className="text-center">
@@ -452,7 +466,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 5. HOW IT WORKS: ACCESS → RECORD → REFER → FOLLOW */}
+        {/* 4. HOW IT WORKS: ACCESS → RECORD → REFER → FOLLOW */}
         <section className="py-16 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-white">
           <div className="mx-auto max-w-5xl">
             <div className="text-center">
@@ -530,7 +544,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 6. CLOSED-LOOP REFERRAL LIFECYCLE */}
+        {/* 5. CLOSED-LOOP REFERRAL LIFECYCLE */}
         <section className="py-16 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-slate-50">
           <div className="mx-auto max-w-5xl">
             <div className="text-center">
@@ -573,7 +587,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 7. WHAT WE OFFER (17 Capabilities Catalog) */}
+        {/* 6. WHAT WE OFFER (17 Capabilities Catalog with Custom Visual System) */}
         <section id="what-we-offer" className="py-20 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-white">
           <div className="mx-auto max-w-6xl">
             <div className="text-center">
@@ -588,17 +602,21 @@ export default function AboutPage() {
 
             <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {capabilities.map((cap) => {
-                const Icon = cap.icon;
                 const isProto = cap.badge === "Prototype";
                 return (
                   <div
                     key={cap.id}
-                    className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md hover:border-slate-300"
+                    className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md hover:border-teal-300"
                   >
                     <div>
                       <div className="flex items-center justify-between">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-                          <Icon size={20} />
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl overflow-hidden shadow-xs">
+                          <img
+                            src={`/about/features/${cap.visual}.svg`}
+                            alt=""
+                            aria-hidden="true"
+                            className="h-11 w-11 object-contain"
+                          />
                         </div>
                         <span
                           className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
@@ -630,7 +648,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 8. WHO WE SERVE (6 Distinct Stakeholders) */}
+        {/* 7. WHO WE SERVE (6 Distinct Stakeholders with Custom Visuals) */}
         <section className="py-20 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-slate-50">
           <div className="mx-auto max-w-6xl">
             <div className="text-center">
@@ -645,16 +663,20 @@ export default function AboutPage() {
 
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {stakeholders.map((sh) => {
-                const Icon = sh.icon;
                 return (
                   <div
                     key={sh.title}
-                    className="flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                    className="flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md hover:border-slate-300"
                   >
                     <div>
                       <div className="flex items-center justify-between">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-teal-100 text-teal-800">
-                          <Icon size={22} />
+                        <div className="flex h-13 w-13 items-center justify-center rounded-2xl overflow-hidden shadow-xs">
+                          <img
+                            src={`/about/stakeholders/${sh.visual}.svg`}
+                            alt=""
+                            aria-hidden="true"
+                            className="h-12 w-12 object-contain"
+                          />
                         </div>
                         <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-slate-600 border border-slate-200">
                           {sh.roleBadge}
@@ -694,13 +716,13 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 9. DISCOVERY & ACCESS */}
+        {/* 8. DISCOVERY & ACCESS */}
         <section className="py-16 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-white">
           <div className="mx-auto max-w-5xl">
             <div className="text-center">
               <span className="text-xs font-bold uppercase tracking-widest text-teal-700">Citizen Journey</span>
               <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-                Discovery & Access
+                Discovery &amp; Access
               </h2>
               <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-600">
                 Empowering rural citizens and families to navigate healthcare options independently.
@@ -708,69 +730,33 @@ export default function AboutPage() {
             </div>
 
             <div className="mt-12 grid gap-6 sm:grid-cols-4 text-center">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <span className="flex h-10 w-10 mx-auto items-center justify-center rounded-xl bg-teal-700 text-white font-bold text-sm">
-                  1
-                </span>
-                <h4 className="mt-3 text-sm font-bold text-slate-900">Find Nearby Care</h4>
-                <p className="mt-2 text-xs text-slate-600">
-                  Search nearby Sub-centers, PHCs, CHCs, and District Hospitals by travel distance and emergency capability.
-                </p>
-                <Link
-                  href="/facilities"
-                  className="mt-3 inline-block text-xs font-semibold text-teal-700 hover:underline"
-                >
-                  Explore Facilities →
-                </Link>
-              </div>
-
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <span className="flex h-10 w-10 mx-auto items-center justify-center rounded-xl bg-teal-700 text-white font-bold text-sm">
-                  2
-                </span>
-                <h4 className="mt-3 text-sm font-bold text-slate-900">Discover Doctors</h4>
-                <p className="mt-2 text-xs text-slate-600">
-                  Filter verified medical specialists by clinical department, experience, qualifications, and consultation modes.
-                </p>
-                <Link
-                  href="/doctors"
-                  className="mt-3 inline-block text-xs font-semibold text-teal-700 hover:underline"
-                >
-                  Browse Doctors →
-                </Link>
-              </div>
-
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <span className="flex h-10 w-10 mx-auto items-center justify-center rounded-xl bg-teal-700 text-white font-bold text-sm">
-                  3
-                </span>
-                <h4 className="mt-3 text-sm font-bold text-slate-900">Book Appointment</h4>
-                <p className="mt-2 text-xs text-slate-600">
-                  Select preferred date, time slot, and reason for visit with automated booking confirmation.
-                </p>
-                <Link
-                  href="/appointments"
-                  className="mt-3 inline-block text-xs font-semibold text-teal-700 hover:underline"
-                >
-                  Book Online →
-                </Link>
-              </div>
-
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <span className="flex h-10 w-10 mx-auto items-center justify-center rounded-xl bg-teal-700 text-white font-bold text-sm">
-                  4
-                </span>
-                <h4 className="mt-3 text-sm font-bold text-slate-900">Continue Care</h4>
-                <p className="mt-2 text-xs text-slate-600">
-                  Seamless transition to teleconsultation or hospital referral with longitudinal records preserved.
-                </p>
-                <Link
-                  href="/patient/progress"
-                  className="mt-3 inline-block text-xs font-semibold text-teal-700 hover:underline"
-                >
-                  Track Journey →
-                </Link>
-              </div>
+              {discoverySteps.map((step) => (
+                <div key={step.step} className="rounded-2xl border border-slate-200 bg-slate-50 p-5 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-center mb-3">
+                      <img
+                        src={`/about/discovery/${step.visual}.svg`}
+                        alt=""
+                        aria-hidden="true"
+                        className="h-12 w-12 object-contain"
+                      />
+                    </div>
+                    <span className="inline-block px-2 py-0.5 rounded-full bg-teal-100 text-[10px] font-bold text-teal-800 uppercase tracking-wider">
+                      Step {step.step}
+                    </span>
+                    <h4 className="mt-2 text-sm font-bold text-slate-900">{step.title}</h4>
+                    <p className="mt-2 text-xs text-slate-600 leading-relaxed">
+                      {step.desc}
+                    </p>
+                  </div>
+                  <Link
+                    href={step.linkHref}
+                    className="mt-3 inline-block text-xs font-semibold text-teal-700 hover:underline"
+                  >
+                    {step.linkText}
+                  </Link>
+                </div>
+              ))}
             </div>
 
             <p className="mt-8 text-center text-xs text-slate-500 italic">
@@ -779,15 +765,18 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 10. ONLINE CONSULTATION (PROTOTYPE) */}
+        {/* 9. ONLINE CONSULTATION (PROTOTYPE) */}
         <section className="py-16 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-slate-50">
           <div className="mx-auto max-w-5xl">
             <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-800">
-                    <Video size={20} />
-                  </div>
+                  <img
+                    src="/about/features/video-consultation.svg"
+                    alt=""
+                    aria-hidden="true"
+                    className="h-10 w-10 object-contain"
+                  />
                   <div>
                     <h3 className="text-lg font-bold text-slate-900">Online Consultation Prototype</h3>
                     <p className="text-xs text-slate-500">Virtual clinic interface for remote medical triage</p>
@@ -796,6 +785,15 @@ export default function AboutPage() {
                 <span className="rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-bold text-amber-800">
                   Consultation Prototype
                 </span>
+              </div>
+
+              {/* Visual Asset Illustration */}
+              <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-2 sm:p-4">
+                <img
+                  src="/about/consultation-preview.svg"
+                  alt="NIRAMAYA-SETU Online Consultation Interface Preview: Doctor Workspace, Ephemeral Session ID, and Patient Stream"
+                  className="mx-auto w-full max-w-2xl rounded-xl"
+                />
               </div>
 
               <div className="mt-6 grid gap-6 sm:grid-cols-2">
@@ -830,15 +828,18 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 11. MEDICINE SUPPORT (PROTOTYPE) */}
+        {/* 10. MEDICINE SUPPORT (PROTOTYPE) */}
         <section className="py-16 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-white">
           <div className="mx-auto max-w-5xl">
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 sm:p-8 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-800">
-                    <Pill size={20} />
-                  </div>
+                  <img
+                    src="/about/features/medicine-support.svg"
+                    alt=""
+                    aria-hidden="true"
+                    className="h-10 w-10 object-contain"
+                  />
                   <div>
                     <h3 className="text-lg font-bold text-slate-900">Medicine Discovery &amp; Ordering Prototype</h3>
                     <p className="text-xs text-slate-500">Essential pharmaceutical catalog &amp; sub-center fulfillment workflow</p>
@@ -847,6 +848,15 @@ export default function AboutPage() {
                 <span className="rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-bold text-amber-800">
                   Dispensary Prototype
                 </span>
+              </div>
+
+              {/* Medicine Fulfillment Visual Workflow */}
+              <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 sm:p-4">
+                <img
+                  src="/about/medicine-fulfillment.svg"
+                  alt="Medicine Ordering Workflow: Formulary Search, Prescription Verification Gate, and Sub-Center Pickup"
+                  className="mx-auto w-full max-w-2xl rounded-xl"
+                />
               </div>
 
               <div className="mt-6 grid gap-6 sm:grid-cols-3 text-center">
@@ -882,7 +892,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 12. MULTILINGUAL + VOICE */}
+        {/* 11. MULTILINGUAL + VOICE */}
         <section className="py-16 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-slate-50">
           <div className="mx-auto max-w-5xl">
             <div className="text-center">
@@ -895,12 +905,24 @@ export default function AboutPage() {
               </p>
             </div>
 
+            {/* Multilingual Voice Visual Asset */}
+            <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 sm:p-4 shadow-sm">
+              <img
+                src="/about/multilingual-voice.svg"
+                alt="Multilingual Native Support (English, Hindi, Marathi) and Voice-Assisted Interaction Architecture"
+                className="mx-auto w-full max-w-2xl rounded-xl"
+              />
+            </div>
+
             <div className="mt-10 grid gap-6 sm:grid-cols-2">
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-800">
-                    <Globe size={20} />
-                  </div>
+                  <img
+                    src="/about/features/multilingual.svg"
+                    alt=""
+                    aria-hidden="true"
+                    className="h-10 w-10 object-contain"
+                  />
                   <div>
                     <h3 className="text-base font-bold text-slate-900">Supported Languages</h3>
                     <p className="text-xs text-slate-500">Native language interfaces across all screens</p>
@@ -930,9 +952,12 @@ export default function AboutPage() {
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-800">
-                      <Mic size={20} />
-                    </div>
+                    <img
+                      src="/about/features/voice-assistance.svg"
+                      alt=""
+                      aria-hidden="true"
+                      className="h-10 w-10 object-contain"
+                    />
                     <div>
                       <h3 className="text-base font-bold text-slate-900">Voice &amp; Text Assistance</h3>
                       <p className="text-xs text-slate-500">Prototype speech interaction</p>
@@ -956,7 +981,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 13. PRIVACY & CONSENT */}
+        {/* 12. PRIVACY & CONSENT */}
         <section className="py-16 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-white">
           <div className="mx-auto max-w-5xl">
             <div className="text-center">
@@ -967,6 +992,15 @@ export default function AboutPage() {
               <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-600">
                 Architectural principles designed to protect citizen dignity and healthcare autonomy.
               </p>
+            </div>
+
+            {/* Privacy Architecture Diagram */}
+            <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-2 sm:p-4 shadow-sm">
+              <img
+                src="/about/privacy-guardrails.svg"
+                alt="NIRAMAYA-SETU Privacy Guardrails: Masked Identity, Consent Shield, and Tokenized QR Payloads"
+                className="mx-auto w-full max-w-2xl rounded-xl"
+              />
             </div>
 
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -998,7 +1032,7 @@ export default function AboutPage() {
                 <UserCheck className="text-teal-700" size={22} />
                 <h4 className="mt-3 text-sm font-bold text-slate-900">Masked Identity Display</h4>
                 <p className="mt-1 text-xs text-slate-600 leading-relaxed">
-                  Raw Aadhaar and personal phone numbers are never rendered in full on screens or printed referral slips. Identifiers are masked (e.g. XXXX-XXXX-1234).
+                  Raw Aadhaar and personal phone numbers are never rendered in full on screens or printed referral slips. Identifiers are masked (e.g. XXXX-XXXX-1284).
                 </p>
               </div>
 
@@ -1025,18 +1059,30 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 14. OFFLINE-FIRST RURAL DESIGN */}
+        {/* 13. OFFLINE-FIRST RURAL DESIGN */}
         <section className="py-16 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-slate-50">
           <div className="mx-auto max-w-5xl">
             <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-800">
-                  <WifiOff size={20} />
-                </div>
+                <img
+                  src="/about/features/offline-workflow.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="h-10 w-10 object-contain"
+                />
                 <div>
                   <h3 className="text-lg font-bold text-slate-900">Offline-First Rural Design</h3>
                   <p className="text-xs text-slate-500">Uninterrupted field healthcare in remote terrains</p>
                 </div>
+              </div>
+
+              {/* Offline Resilience Diagram */}
+              <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-2 sm:p-4">
+                <img
+                  src="/about/offline-resilience.svg"
+                  alt="NIRAMAYA-SETU Offline Resilience: Zero-Connectivity Field Entry, Local Storage Cache, and Auto Background Sync"
+                  className="mx-auto w-full max-w-2xl rounded-xl"
+                />
               </div>
 
               <div className="mt-6 grid gap-6 sm:grid-cols-2">
@@ -1067,7 +1113,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 15. ECOSYSTEM & FUTURE INTEGRATIONS */}
+        {/* 14. ECOSYSTEM & FUTURE INTEGRATIONS */}
         <section className="py-20 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-white">
           <div className="mx-auto max-w-5xl">
             <div className="text-center">
@@ -1109,7 +1155,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 16. MEET THE TEAM / PROJECT CREATORS */}
+        {/* 15. MEET THE TEAM / PROJECT CREATORS */}
         <section className="py-20 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-slate-50">
           <div className="mx-auto max-w-5xl">
             <div className="text-center">
@@ -1127,10 +1173,10 @@ export default function AboutPage() {
 
             <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {teamMembers.map((member) => (
-                <div key={member.id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between">
+                <div key={member.id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between transition hover:shadow-md hover:border-slate-300">
                   <div>
                     <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-800 font-bold text-sm text-white shadow-sm">
+                      <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-teal-800 font-bold text-sm text-white shadow-sm overflow-hidden">
                         {member.initials}
                       </div>
                       <div>
@@ -1150,7 +1196,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 18. HOW CAN YOU JOIN NIRAMAYA-SETU? */}
+        {/* 16. HOW CAN YOU JOIN NIRAMAYA-SETU? */}
         <section className="py-20 px-5 sm:px-8 lg:px-12 border-b border-slate-200 bg-white">
           <div className="mx-auto max-w-5xl">
             <div className="text-center">
@@ -1281,7 +1327,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 19. FINAL CTA */}
+        {/* 17. FINAL CTA */}
         <section className="bg-slate-900 py-16 px-5 text-white sm:px-8 lg:px-12 border-t border-slate-800">
           <div className="mx-auto max-w-5xl text-center">
             <span className="text-xs font-bold uppercase tracking-widest text-teal-400">Join the Continuum</span>

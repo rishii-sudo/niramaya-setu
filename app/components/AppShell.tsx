@@ -10,35 +10,42 @@ import { useRole, Role } from "../context/RoleContext";
 import { isRoleAuthenticated } from "../utils/auth";
 
 function getProtectedRoleForPath(pathname: string): Role | null {
+  // Public directory routes must never require staff authentication or trigger AccessGate:
+  if (
+    pathname === "/doctors" ||
+    pathname.startsWith("/doctors/") ||
+    pathname === "/facilities" ||
+    pathname.startsWith("/facilities/")
+  ) {
+    return null;
+  }
+
   if (
     pathname === "/dashboard" ||
-    (pathname.startsWith("/admin") &&
+    ((pathname === "/admin" || pathname.startsWith("/admin/")) &&
       !pathname.startsWith("/admin/login") &&
       !pathname.startsWith("/admin/verify"))
   ) {
     return "admin";
   }
   if (
-    pathname === "/doctor" ||
-    (pathname.startsWith("/doctor") &&
-      !pathname.startsWith("/doctor/login") &&
-      !pathname.startsWith("/doctor/verify"))
+    (pathname === "/doctor" || pathname.startsWith("/doctor/")) &&
+    !pathname.startsWith("/doctor/login") &&
+    !pathname.startsWith("/doctor/verify")
   ) {
     return "doctor";
   }
   if (
-    pathname === "/asha" ||
-    (pathname.startsWith("/asha") &&
-      !pathname.startsWith("/asha/login") &&
-      !pathname.startsWith("/asha/verify"))
+    (pathname === "/asha" || pathname.startsWith("/asha/")) &&
+    !pathname.startsWith("/asha/login") &&
+    !pathname.startsWith("/asha/verify")
   ) {
     return "asha";
   }
   if (
-    pathname === "/facility" ||
-    (pathname.startsWith("/facility") &&
-      !pathname.startsWith("/facility/login") &&
-      !pathname.startsWith("/facility/verify"))
+    (pathname === "/facility" || pathname.startsWith("/facility/")) &&
+    !pathname.startsWith("/facility/login") &&
+    !pathname.startsWith("/facility/verify")
   ) {
     return "facility";
   }
@@ -73,6 +80,7 @@ export default function AppShell({
     pathname === "/login" ||
     pathname === "/get-started" ||
     pathname === "/doctors" ||
+    pathname.startsWith("/doctors/") ||
     pathname === "/appointments" ||
     pathname.startsWith("/patient") ||
     pathname.startsWith("/consultations") ||

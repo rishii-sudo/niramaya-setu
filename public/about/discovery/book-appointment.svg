@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" fill="none">
+  <!-- Container Background -->
+  <rect width="52" height="52" rx="14" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+  <!-- Calendar Sheet -->
+  <rect x="10" y="12" width="32" height="28" rx="5" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+  <path d="M10 20h32" stroke="#16a34a" stroke-width="2"/>
+  <line x1="18" y1="9" x2="18" y2="13" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="34" y1="9" x2="34" y2="13" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Slot Confirmed Checkmark -->
+  <circle cx="26" cy="29" r="6" fill="#16a34a"/>
+  <path d="M23.5 29l1.5 1.5 3.5-3.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

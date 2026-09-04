@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" fill="none">
+  <!-- Background Container -->
+  <rect width="56" height="56" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <!-- Governance Shield -->
+  <path d="M28 12l15-5v14c0 12-9.5 20-15 23-5.5-3-15-11-15-23V7l15 5z" fill="#ffffff" stroke="#334155" stroke-width="2"/>
+  <!-- District Analytics Bar Chart -->
+  <rect x="20" y="27" width="3" height="8" rx="1" fill="#0b8f86"/>
+  <rect x="26.5" y="22" width="3" height="13" rx="1" fill="#0284c7"/>
+  <rect x="33" y="18" width="3" height="17" rx="1" fill="#4f46e5"/>
+  <!-- Checkmark of Audit Compliance -->
+  <circle cx="43" cy="15" r="5" fill="#10b981"/>
+  <path d="M41 15l1.5 1.5 2.5-2.5" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

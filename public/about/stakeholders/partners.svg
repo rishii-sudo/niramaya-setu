@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" fill="none">
+  <!-- Background Container -->
+  <rect width="56" height="56" rx="16" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1.5"/>
+  <!-- Interoperability Layer 1 (Top) -->
+  <path d="M28 14l16 8-16 8-16-8 16-8z" fill="#ffffff" stroke="#4f46e5" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Interoperability Layer 2 (Middle) -->
+  <path d="M12 28l16 8 16-8" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Interoperability Layer 3 (Bottom) -->
+  <path d="M12 34l16 8 16-8" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Ecosystem Node -->
+  <circle cx="28" cy="22" r="3" fill="#6366f1"/>
+</svg>
