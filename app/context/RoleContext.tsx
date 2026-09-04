@@ -20,6 +20,22 @@ const RoleContext = createContext<RoleContextType | undefined>(undefined);
 const ROLE_STORAGE_KEY = "niramaya-active-role";
 
 export function getRoleFromPathname(pathname: string): Role | null {
+  // Public / shared directory routes must always return null (no role requirement)
+  if (
+    pathname === "/" ||
+    pathname === "/about" ||
+    pathname === "/login" ||
+    pathname === "/get-started" ||
+    pathname === "/doctors" ||
+    pathname.startsWith("/doctors/") ||
+    pathname === "/facilities" ||
+    pathname.startsWith("/facilities/") ||
+    pathname === "/appointments" ||
+    pathname.startsWith("/consultations")
+  ) {
+    return null;
+  }
+
   if (pathname === "/asha" || pathname.startsWith("/asha/")) {
     // Exclude login and verify
     if (pathname === "/asha/login" || pathname === "/asha/verify") return null;
@@ -43,19 +59,6 @@ export function getRoleFromPathname(pathname: string): Role | null {
   }
   if (pathname === "/patient" || pathname.startsWith("/patient/")) {
     return "patient";
-  }
-  if (
-    pathname === "/" ||
-    pathname === "/about" ||
-    pathname === "/login" ||
-    pathname === "/get-started" ||
-    pathname === "/doctors" ||
-    pathname === "/facilities" ||
-    pathname.startsWith("/facilities/") ||
-    pathname === "/appointments" ||
-    pathname.startsWith("/consultations")
-  ) {
-    return null; // Public / shared routes - preserve existing role or default to public
   }
   return null;
 }
