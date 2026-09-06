@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { apiClient } from "../../services/apiClient";
 import { useEffect, useMemo, useState } from "react";
 import {
   Search,
@@ -546,7 +547,7 @@ function PatientRow({ patient }: { patient: Patient }) {
             </div>
 
             <p className="mt-1 text-xs text-slate-500">
-              {patient.age} years • {patient.gender}
+              {patient.age} years â€¢ {patient.gender}
             </p>
           </div>
 
@@ -621,7 +622,7 @@ function PatientMobileCard({
             </p>
 
             <p className="mt-0.5 text-[11px] text-slate-500">
-              {patient.id} • {patient.age} years • {patient.gender}
+              {patient.id} â€¢ {patient.age} years â€¢ {patient.gender}
             </p>
 
           </div>

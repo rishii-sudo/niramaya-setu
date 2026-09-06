@@ -1,28 +1,36 @@
 import { Role } from "../context/RoleContext";
+import { apiClient } from "../services/apiClient";
 
 export function isRoleAuthenticated(role: Role): boolean {
   if (typeof window === "undefined") return false;
+  
+  const token = apiClient.getToken();
+  
   switch (role) {
     case "doctor":
       return !!(
+        token ||
         localStorage.getItem("niramaya-doctor-auth") ||
         localStorage.getItem("niramaya-doctor-verification") === "verified" ||
         localStorage.getItem("niramaya-doctor-id")
       );
     case "asha":
       return !!(
+        token ||
         localStorage.getItem("niramaya-asha-auth") ||
         localStorage.getItem("niramaya-asha-verification") === "verified" ||
         localStorage.getItem("niramaya-asha-id")
       );
     case "facility":
       return !!(
+        token ||
         localStorage.getItem("niramaya-facility-auth") ||
         localStorage.getItem("niramaya-facility-verification") === "verified" ||
         localStorage.getItem("niramaya-facility-id")
       );
     case "admin":
       return !!(
+        token ||
         localStorage.getItem("niramaya-admin-auth") ||
         localStorage.getItem("niramaya-admin-id")
       );
@@ -78,6 +86,7 @@ export function setDemoAuthForRole(role: Role) {
 
 export function clearStaffSessionKeys() {
   if (typeof window === "undefined") return;
+  apiClient.clearSession();
   const staffKeys = [
     // Doctor keys
     "niramaya-doctor-id",
@@ -112,6 +121,7 @@ export function clearStaffSessionKeys() {
 
 export function logoutUser(activeRole?: Role): string {
   if (typeof window !== "undefined") {
+    apiClient.clearSession();
     // Clear all role-specific demo auth/session keys
     const keysToRemove = [
       "niramaya-active-role",

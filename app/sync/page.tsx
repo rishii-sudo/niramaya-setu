@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { apiClient } from "../services/apiClient";
 
 type SyncStatus = "pending" | "synced" | "failed" | "syncing";
 
@@ -365,7 +366,7 @@ export default function SyncCenterPage() {
               }`}
             >
               <span className="mr-2">
-                {syncing ? "↻" : "⟳"}
+                {syncing ? "â†»" : "âŸ³"}
               </span>
 
               {syncing ? "Syncing..." : "Sync Now"}
@@ -382,7 +383,7 @@ export default function SyncCenterPage() {
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                {online ? "⌁" : "×"}
+                {online ? "âŒ" : "Ã—"}
               </div>
 
               <div>
@@ -416,13 +417,13 @@ export default function SyncCenterPage() {
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-xl text-emerald-600">
-                →
+                â†’
               </div>
 
               <div>
                 <h2 className="font-semibold">Offline-first data flow</h2>
                 <p className="mt-1 text-xs text-slate-500">
-                  Capture locally → Queue → Connectivity → Sync → Confirm
+                  Capture locally â†’ Queue â†’ Connectivity â†’ Sync â†’ Confirm
                 </p>
               </div>
             </div>
@@ -449,7 +450,7 @@ export default function SyncCenterPage() {
             label="Synced"
             value={syncedCount}
             description="Successfully uploaded"
-            icon="✓"
+            icon="âœ“"
             variant="synced"
           />
 
@@ -457,7 +458,7 @@ export default function SyncCenterPage() {
             label="Failed"
             value={failedCount}
             description="Requires retry"
-            icon="⊗"
+            icon="âŠ—"
             variant="failed"
           />
 
@@ -465,7 +466,7 @@ export default function SyncCenterPage() {
             label="Syncing"
             value={syncingCount}
             description="Currently processing"
-            icon="⟳"
+            icon="âŸ³"
             variant="syncing"
           />
         </section>
@@ -475,7 +476,7 @@ export default function SyncCenterPage() {
           <div className="flex flex-col gap-3 md:flex-row">
             <div className="relative flex-1">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                ⌕
+                âŒ•
               </span>
 
               <input
@@ -565,7 +566,7 @@ export default function SyncCenterPage() {
                     </div>
 
                     <p className="mt-1 text-xs text-slate-500">
-                      {record.code} • {record.type}
+                      {record.code} â€¢ {record.type}
                     </p>
 
                     <p className="mt-2 text-sm text-slate-700">
@@ -573,7 +574,7 @@ export default function SyncCenterPage() {
                     </p>
 
                     <p className="mt-1 text-[10px] text-slate-400">
-                      Captured: {record.captured} • Attempts:{" "}
+                      Captured: {record.captured} â€¢ Attempts:{" "}
                       {record.attempts}
                     </p>
                   </div>
@@ -582,7 +583,7 @@ export default function SyncCenterPage() {
                 <div className="shrink-0 lg:w-[170px]">
                   {record.status === "synced" ? (
                     <div className="rounded-xl bg-emerald-50 px-4 py-3 text-center text-xs font-semibold text-emerald-700">
-                      ⊙ Successfully Synced ✓
+                      âŠ™ Successfully Synced âœ“
                     </div>
                   ) : record.status === "failed" ? (
                     <button
@@ -593,7 +594,7 @@ export default function SyncCenterPage() {
                     </button>
                   ) : record.status === "syncing" ? (
                     <div className="rounded-xl bg-blue-50 px-4 py-3 text-center text-xs font-semibold text-blue-700">
-                      ⟳ Synchronizing...
+                      âŸ³ Synchronizing...
                     </div>
                   ) : (
                     <div className="rounded-xl bg-amber-50 px-4 py-3 text-center text-xs font-semibold text-amber-700">
@@ -703,7 +704,7 @@ export default function SyncCenterPage() {
             onClick={simulateOfflineCapture}
             className="rounded-xl border border-emerald-200 bg-white px-5 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-50"
           >
-            ☁ &nbsp; Simulate Offline Capture
+            â˜ &nbsp; Simulate Offline Capture
           </button>
         </div>
 
@@ -711,7 +712,7 @@ export default function SyncCenterPage() {
         <section className="mt-5 rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4">
           <div className="flex gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-              ⓘ
+              â“˜
             </div>
 
             <div>

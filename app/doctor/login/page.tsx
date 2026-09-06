@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { apiClient } from "../../services/apiClient";
 
 export default function DoctorLoginPage() {
   const router = useRouter();
@@ -529,7 +530,7 @@ export default function DoctorLoginPage() {
                     Credentials
 
                     <span className="mx-1 text-slate-300">
-                      →
+                      â†’
                     </span>
 
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-slate-400">
@@ -670,7 +671,7 @@ export default function DoctorLoginPage() {
                         <>
                           Continue
                           <span className="text-base">
-                            →
+                            â†’
                           </span>
                         </>
                       )}
@@ -735,7 +736,7 @@ export default function DoctorLoginPage() {
                   {/* Footer */}
                   <div className="mt-6 text-center">
                     <p className="text-[9px] text-slate-400">
-                      NIRAMAYA-SETU • Clinical Care Platform
+                      NIRAMAYA-SETU â€¢ Clinical Care Platform
                     </p>
 
                     <p className="mt-1 text-[9px] text-slate-300">

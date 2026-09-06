@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { apiClient } from "../../services/apiClient";
 import AadhaarAbhaModal from "../../components/AadhaarAbhaModal";
 
 type Patient = {
@@ -122,7 +123,7 @@ export default function RegisterPatientPage() {
             onClick={() => router.back()}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
           >
-            ←
+            â†
           </button>
 
           <div>
@@ -221,7 +222,7 @@ export default function RegisterPatientPage() {
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="text-xs font-semibold text-slate-700">Aadhaar Identity</label>
                     {verifiedAadhaar ? (
-                      <span className="text-[10px] font-bold text-emerald-700">✓ VERIFIED (MASKED)</span>
+                      <span className="text-[10px] font-bold text-emerald-700">âœ“ VERIFIED (MASKED)</span>
                     ) : (
                       <button
                         type="button"
@@ -244,7 +245,7 @@ export default function RegisterPatientPage() {
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="text-xs font-semibold text-slate-700">ABHA Health ID</label>
                     {verifiedAbha ? (
-                      <span className="text-[10px] font-bold text-emerald-700">✓ VERIFIED</span>
+                      <span className="text-[10px] font-bold text-emerald-700">âœ“ VERIFIED</span>
                     ) : (
                       <button
                         type="button"
@@ -264,7 +265,7 @@ export default function RegisterPatientPage() {
                 </div>
                 <div className="sm:col-span-2 pt-1 text-center">
                   <p className="text-[10px] text-slate-400">
-                    Prototype verification — backend UIDAI/ABDM integration required.
+                    Prototype verification â€” backend UIDAI/ABDM integration required.
                   </p>
                 </div>
               </div>
@@ -322,7 +323,7 @@ export default function RegisterPatientPage() {
               disabled={saved}
               className="rounded-xl bg-slate-950 px-7 py-3 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-70"
             >
-              {saved ? "Patient Registered ✓" : "Register Patient"}
+              {saved ? "Patient Registered âœ“" : "Register Patient"}
             </button>
           </div>
 

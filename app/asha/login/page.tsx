@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { apiClient } from "../../services/apiClient";
 
 export default function AshaLoginPage() {
   const router = useRouter();
@@ -515,7 +516,7 @@ export default function AshaLoginPage() {
                     Sign in
 
                     <span className="mx-1 text-slate-300">
-                      →
+                      â†’
                     </span>
 
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-slate-400">
@@ -664,7 +665,7 @@ export default function AshaLoginPage() {
                         <>
                           Continue
                           <span className="text-base">
-                            →
+                            â†’
                           </span>
                         </>
                       )}
@@ -730,7 +731,7 @@ export default function AshaLoginPage() {
                   {/* Footer */}
                   <div className="mt-6 text-center">
                     <p className="text-[9px] text-slate-400">
-                      NIRAMAYA-SETU • Field Care Platform
+                      NIRAMAYA-SETU â€¢ Field Care Platform
                     </p>
 
                     <p className="mt-1 text-[9px] text-slate-300">
